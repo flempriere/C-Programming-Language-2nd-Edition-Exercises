@@ -10,7 +10,7 @@ then the split should be 'abc e\nfg'
 #include <stdio.h>
 
 #define TABINC 8
-#define MAX_COL 10
+#define MAX_COL 80
 
 void print_line(char line[], int len);
 int detab(char line[], int len, int index);
