@@ -21,6 +21,11 @@ by `\\`
 - Ex 1-17: Prints all input lines longer than 80 characters
 - Ex 1-18: Removes trailing blanks and tabs from each input line and deletes blank lines
 - Ex 1-19: Reverses a programs input one line at a time
+- Ex 1-20: Replaces tabs in input with the correct number of blank spaces
+- Ex 1-21: Replaces blanks with the minimum number of tabs and blanks to achieve the same result
+- Ex 1-22: Folds long lines into multiple lines after the last non-blank character before the n-th column
+- Ex 1-23: Removes all comments from a C file
+- Ex 1-24: Basic C syntax checker
 
 
 
