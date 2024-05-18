@@ -23,41 +23,46 @@ like 'aaa' are valid even if they are arithmetically meaningless
 #define MISSING_SINGE_QUOTE 4
 #define MISSING_DOUBLE_QUOTE 5
 #define STACK_OVERFLOW 6
-#define PUSHED 7
-#define POPPED 8
-#define ESCAPE_CHARACTER 9
+
 
 #define NOT_IN_TEXT 0
 #define IN_CHAR 1
 #define IN_STR 2
 
+#define NOT_ESCAPED 0
+#define ESCAPED 1
+
 
 
 void initialise_array(int a[], int len, int val);
-int check_error(int c, int a[], int top, int len);
-int check_compatible(int c, int a[], int top);
-int in_text(int a[], int top);
-int pop_stack(int a[], int top);
-int push_stack(int val, int a[], int top, int len);
-int get_error(int a[], int top);
+int check_error(int c, int a[], int len);
+int check_compatible(int c, int a[]);
+int in_text(int a[]);
+int pop_stack(int a[]);
+int push_stack(int val, int a[], int len);
+int get_error(int a[]);
 void print_error(int error_code, int line);
+//void print_stack(int a[]);
+
+int stack_top, escaped;
 
 int main(void) {
     int stack[N_SYMBOLS];
-    int c, stack_top, line, error;
-    c = stack_top = line = error = 0;
+    int c, line, error;
+    extern int stack_top;
+    extern int escaped; 
+    c = stack_top = line = error = escaped = 0;
     initialise_array(stack, N_SYMBOLS, 0);
 
     while ((c = getchar())!= EOF && !error) {
-        printf("%c", c);
-        error = check_error(c, stack, stack_top, N_SYMBOLS);
-        if (error == PUSHED) {++stack_top; error = 0;}
-        else if (error == POPPED) {--stack_top; error = 0;}
-        if (!error && c == '\n') {++line; printf("\n");}
+        error = check_error(c, stack, N_SYMBOLS);
+        if (!error && c == '\n') ++line; 
     }
+    //print_stack(stack);
+    //printf("Error code is: %d", error);
     if (!error) {
         if (stack_top != 0) {
-            error = get_error(stack, stack_top);
+            error = get_error(stack);
         }
     }
     print_error(error, line);
@@ -69,81 +74,92 @@ void initialise_array(int a[], int len, int val)
     for (int i = 0; i < len; i++) a[i] = val;
 }
 
-int check_error(int c, int a[], int top, int len)
+int check_error(int c, int a[], int len)
 {
     int error = 0;
     int txt_status = 0;
+    extern int escaped;
 
     //check if we're in a text element
-    if (!((txt_status = in_text(a, top)) == NOT_IN_TEXT)) {
-        if (txt_status == IN_CHAR) {
-            if (c == '\'') {pop_stack(a, top); error = POPPED;}
+    if (!((txt_status = in_text(a)) == NOT_IN_TEXT)) {
+        //printf("We're in text\n");
+        if (c == '\\' && !escaped) escaped = ESCAPED;
+        else if (txt_status == IN_CHAR && !escaped) {
+            if (c == '\'') pop_stack(a);
         }
-        else if (txt_status == IN_STR) {
-            if (c == '\"') {pop_stack(a, top); error = POPPED;}
+        else if (txt_status == IN_STR && !escaped) {
+            if (c == '\"') pop_stack(a);
         }
+        else if (escaped) escaped = NOT_ESCAPED;
     }
     //not in text -> check left braces
     else if  (c == '(' || c == '[' || c == '{') {
-        error = push_stack(c, a, top, len);
-        if (!error) {error = PUSHED;}
+        error = push_stack(c, a, len);
     }
     //not in text -> check right braces
     else if (c == ')' || c == ']' || c == '}') {
-        error = check_compatible(c, a, top);
-        if (!error) {pop_stack(a, top); error = POPPED;}
+        error = check_compatible(c, a);
+        if (!error) pop_stack(a);
     }
     //not in text -> check if we start text
     else if (c == '\'' || c == '\"') {
-        error = push_stack(c, a, top, len);
-        if (!error) {error = PUSHED;}
+        error = push_stack(c, a, len);
     }
     return error;
 }
 
-int check_compatible(int c, int a[], int top)
+int check_compatible(int c, int a[])
 {
+    extern int stack_top;
     int return_value = 0;
-    if (c == '}' && a[top-1] != '{') return_value = UNBALANCED_BRACES;
-    else if (c == ']' && a[top-1] != '[') return_value = UNBALANCED_BRACKETS;
-    else if (c == ')' && a[top-1] != '(') return_value = UNBALANCED_PARENTHESES;
+    if (c == '}' && a[stack_top-1] != '{') return_value = UNBALANCED_BRACES;
+    else if (c == ']' && a[stack_top-1] != '[') return_value = UNBALANCED_BRACKETS;
+    else if (c == ')' && a[stack_top-1] != '(') return_value = UNBALANCED_PARENTHESES;
     return return_value;
 }
 
-int in_text(int a[], int top)
+int in_text(int a[])
 {
+    extern int stack_top;
     int return_status = 0;
-    if (!top == 0) {
-        if (a[top - 1] == '\"') {return_status = IN_STR;}
-        else if (a[top - 1] == '\'') {return_status = IN_CHAR;}
+    if (stack_top) {
+        if (a[stack_top - 1] == '\"') {return_status = IN_STR;}
+        else if (a[stack_top - 1] == '\'') {return_status = IN_CHAR;}
     }
     return return_status;
 }
 
-int pop_stack(int a[], int top)
+int pop_stack(int a[])
 {
+    extern int stack_top;
     int return_status = 1;
-    if (top) {
-        a[top - 1] = 0;
-        return 0;
+    if (stack_top) {
+        a[stack_top - 1] = 0;
+        return_status = 0;
     }
+    --stack_top;
     return return_status;
 }
 
-int push_stack(int val, int a[], int top, int len) {
+int push_stack(int val, int a[], int len) 
+{
+    extern int stack_top;
     int return_status = 0;
     
-    if (top >= len) return_status = STACK_OVERFLOW;
+    if (stack_top >= len) return_status = STACK_OVERFLOW;
     else {
-        a[top] = val;
+        a[stack_top] = val;
     }
+    ++stack_top;
     return return_status;
 }
 
-int get_error(int a[], int top)
+int get_error(int a[])
 {
+    extern int stack_top;
     int error = 0;
-    int c = a[top - 1];
+    int c = a[stack_top - 1];
+
     if (c == '{') error = UNBALANCED_BRACES;
     else if (c == '[') error = UNBALANCED_BRACKETS;
     else if (c == '(') error = UNBALANCED_PARENTHESES;
@@ -154,7 +170,10 @@ int get_error(int a[], int top)
 
 void print_error(int error_code, int line)
 {
-    if (error_code == UNBALANCED_BRACES) {
+    if (!error_code) {
+        printf("Syntactic analysis complete, no errors found\n");
+    }
+    else if (error_code == UNBALANCED_BRACES) {
         printf("unbalanced braces found on line %d\n", line);
     }
     else if (error_code == UNBALANCED_BRACKETS) {
@@ -177,3 +196,10 @@ void print_error(int error_code, int line)
     }
     return;
 }
+
+/*void print_stack(int a[])
+{
+    extern int stack_top;
+    int i;
+    for (i = 0; i < stack_top; i++) printf("[%c]", a[i]);
+}*/
