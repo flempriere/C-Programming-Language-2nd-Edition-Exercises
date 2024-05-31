@@ -43,11 +43,8 @@ unsigned int getbits(unsigned int x, int p, int n)
 unsigned int setbits(unsigned int x, int p, int n,
     unsigned int y)
 {
-    unsigned int x_mask = (x & ((~0 << (p + 1)) | ~(~0 << (p - n + 1))));
-    unsigned int y_mask = (y & ~(~0 << n)) << (p - n + 1);
-    printf("x mask is %x\n", x_mask);
-    printf("y mask is %x\n", y_mask);
-    return x_mask | y_mask;
+    return (x & ~(~(~0 << n) << (p + 1 - n))) |
+        (y & ~(~0 << n)) << (p + 1 - n);
 
 }
 
@@ -62,12 +59,3 @@ int getLine(char s[], int lim)
     s[i] = '\0';
     return i;
 }
-
-
-/*
-must be better way
-x & (~0 << p) preserves top bits 
-x & ~(~0 << p - n) preserves bottom bits
-y & ~(~0 << n) << p - n + 1
-so x & ((~0 << p) | ~(~0 << p - n) 
-| (y & ~(~0 << n) << (p - n + 1)))*/
