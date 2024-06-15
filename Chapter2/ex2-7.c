@@ -11,7 +11,7 @@ on the n-digit subword of x starting at p.
 unsigned int invert(unsigned int x, unsigned int p, 
     unsigned int n);
 int getLine(char s[], int lim);
-int getNumber(char a[], int lim); 
+int getNumber(char a[], int lim);
 
 int main(void)
 {
@@ -30,11 +30,6 @@ unsigned int invert(unsigned int x, unsigned int p, unsigned int n)
 {   
     return x ^ (~(~0 << n) << (p - n + 1));
 }
-
-/*
-x ^ [1111] etc. ->  if bit is 0 -> 1, if bit is 1 -> 0
-x ^ [0000] etc. -> if bit is 0 -> 0, if bit is 1 -> 1.
-*/
 
 int getLine(char s[], int lim)
 {
