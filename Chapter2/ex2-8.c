@@ -16,7 +16,6 @@ unsigned int rightrot(unsigned int x, int n);
 unsigned int wordLength();
 int getLine(char s[], int lim);
 int getNumber(char a[], int lim);
-unsigned int getlen(unsigned int x);
 
 int main(void)
 {
