@@ -177,8 +177,8 @@ int getop(char s[])
 
     while (isblank((s[0] = c = getch())));
     s[1] = '\0';
-
     i = 0;
+    if (c == EOF) return c;
     if (!isdigit(c)) { /* check if digit */
         if (c == '-')
         {
@@ -186,8 +186,11 @@ int getop(char s[])
             {
                 s[++i] = c; 
             }
-            else 
-                if (c != EOF) {ungetch(c); return '-';}
+            else
+            {
+                if (c != EOF) ungetch(c);
+                return '-';
+            }
         }
         else if (c == '.')
         {
@@ -198,10 +201,10 @@ int getop(char s[])
             while(isalnum(s[++i] = c = getch()));
             if (c != EOF) {
                 ungetch(c);
-                if (i == 1) return s[0];
-                else {
-                    s[i] = '\0';
-                    return MATH_FUNC;
+            if (i == 1) return s[0];
+            else {
+                s[i] = '\0';
+                return MATH_FUNC;
                 }
             }
         }
