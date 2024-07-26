@@ -24,6 +24,7 @@ The final exercise is included in `CalculatorGetLine.c`.
     - Our implementation will truncate after the `lim`-most significant digits
     - Also returns the length of the copied string `s`.
 - Ex 4-13: recursive implementation of `reverse(char s[])`, that reverses the string `s` inplace.
+- Ex 4-14: macro `swap(t, x, y)` that takes in a type `t` and variables `x` and `y` of type `t` and performs a swap.
 
 
 ### Basics of Functions
