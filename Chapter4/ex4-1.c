@@ -10,7 +10,7 @@ example for strindex(s,t)
 #include <stdio.h>
 #define MAXLINE 1000
 
-int getLine(char line[], int index);
+int getLine(char line[], int lim);
 int strrindex(char source[], char searchfor[]);
 
 char pattern[] = "ould";
