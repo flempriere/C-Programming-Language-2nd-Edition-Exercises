@@ -20,6 +20,10 @@ The final exercise is included in `CalculatorGetLine.c`.
 ---
 - Ex 4-11: Modification of `getop` to avoid using `ungetch()`.
     - Implemented in `calculator.h`
+- Ex 4-12: Implemention of `atoi(char s[], int v, int lim)` that converts an integer `v` into its string representation in `s`.
+    - Our implementation will truncate after the `lim`-most significant digits
+    - Also returns the length of the copied string `s`.
+- Ex 4-13: recursive implementation of `reverse(char s[])`, that reverses the string `s` inplace.
 
 
 ### Basics of Functions
@@ -687,6 +691,122 @@ void swap(int v[], int i, int j)
 - Recursion typically is cleaner to read, but,
     - requires allocation of stack memory
     - is not faster
+
+### The C Preprocessor
+- A conceptual first step in compilation
+- most common uses
+    - `#include` to include file contents
+    - `#define` for textual substitution of a token
+- Alternative use cases include
+    - conditional compilation
+    - functionlike macros / macros with arguments
+
+#### File Inclusion
+- source line of the form:
+    - `#define "filename"`
+- or
+    - `#define <filename>`
+- are replaced by contents of the file *filename*.
+    - quoted searches from source file's location, else and if:
+    - <> search method is *implementation-defined*
+- Common to use to include:
+    - common `#defines`
+    - common `extern` variables
+    - function prototypes
+
+**Note:** Strictly speaking, headers need not be files, since access is implementation defined for < > includes.
+
+- `#include` is the prefered way to tie declarations together for a large program
+    - ensures all files have same definitions and variable declarations
+
+#### Macro Substitution
+- Macro definition has the form
+    - `#define name replacement-text`
+    - token `name` is replaced by `replacement-text`.
+    - *replacement-text* may be arbitrary
+    - Can continue a definition  across multiple lines using `\` at a line end
+    - macro name scope is from the `#define` to the end of the compiled source file.
+    - definition may use previous definitions
+- substitution only for tokens, do not occur within strings
+    - e.g. if we `#define YES`
+        - `printf("YES");` and `YESMAN` are unchanged
+        - `YES MAN` would be substituted though
+
+- Any name may be defined
+
+**Example: Forever**
+```
+#define forever for (;;) /* infinite loop*/
+```
+ which creates an infinite loop.
+
+ - Macros can be defined with arguments.
+
+ **Example: max**
+```
+ #define max(A, B) ((A) > (B) ? (A) : (B))
+```
+- Macros expand into inline code
+    - each occurence of a *formal parameter* (A or B here) is replaced by the corresponding argument.
+
+**Example: max use case**
+```
+x = max(p+q, r+s)
+/* this expands out to: */
+x = ((p+q) > (r+s) ? (p+q) : (r+s))
+```
+- If arguments are treated consistently this is type generic.
+- **Note** macros have some pitfalls
+    - in the above each expr is evaluated twice (e.g. p+q)
+        - **VERY BAD IF THERE ARE SIDE EFFECTS**
+        - e.g. `max(i++, j++) /* WRONG */ `
+            - the larger value is incremented twice
+    - need parentheses to ensure order of operations preserved
+        - e.g. `#define square(x) x * x`
+        - Then `square(z +1)` expands to `z + 1 * z + 1`
+        - From order of operations this becomes:
+            - `z + z + 1` = `2z + 1`
+- functionlike macros are thus useful but should be used sparingly.
+    - e.g. `getchar()` and `putchar()` typically macros
+        - avoids runtime cost of a function call per `char`.
+        - `#<ctype.h>` also uses macros for its functions
+- Can undefine names using `#undef`
+    - helps ensure a routine is a function
+```
+#undef getchar
+
+int getchar(void) {...}
+```
+- Formal parameters not replaced in quoted strings
+    - if parameter name preceded by `#` in replacement text expand out to quoted string with parameter substituted
+
+**Example: Debugging Macro**
+```
+#define dprint(expr) printf(#expr " = %g\n", expr)
+```
+- the above example uses string concatenation, and behaves as
+```
+dprint(x/y) /* expands to */
+printf("x/y" " = %g\n", x/y) /* strings concatenate to */
+printf("x/y = %g\n", x/y)
+```
+- Within the macro argument `'` and `"` are converted to `\'` and `\"` respectively.
+    - input is thus a valid string literal
+- preprocessor provides `##` for argument concatenation during macro expansion.
+    - parameter in replacement text adjacent to `##`:
+        - parameter replaced by actual argument
+        - `##` and whitespace removed
+        - result rescanned
+
+**Example: Paste**
+```
+#define paste(front, back) front ## back
+
+/* example usecase */
+paste(name, 1) -> name1
+```
+- Nested `##` rules are complicated
+
 
 
 
