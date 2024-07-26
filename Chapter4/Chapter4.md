@@ -807,6 +807,59 @@ paste(name, 1) -> name1
 ```
 - Nested `##` rules are complicated
 
+#### Conditional Inclusion
+- preprocess can be controlled with conditional statements
+    - allows selective code inclusion
+- `#if` evaluates a constant integer expression
+    - no `sizeof`, casts or `enum` constants
+    - if expression non-zero
+        - execute subsequent lines until `#endif, #elif or #else`
+        - expression `defined(name)` in an `#if` evaluates as
+            - 1 if *name* is defined
+            - 0 otherwise
+
+**Example: header file inclusion**
+- the following wrapper around the contents of `hdr.h` ensures `hdr.h` is included only once
+```
+#if !defined(HDR)
+#define HDR
+
+/* contents of hdr.h go here */
+
+#endif
+```
+- first inclusion defines the name `HDR`
+- future inclusions check for the existence of `HDR` skip the file contents.
+- if used consistently
+    - headers may include other headers
+    - user need not worry about interdependencies
+
+**Example: selecting the correct header**
+- this example tests the name `SYSTEM` and selects the appropriate `HDR` file to include
+```
+#if SYSTEM == SYSV
+    #define HDR "sysv.h"
+#elif SYSTEM == BSD
+    #define HDR "bsd.h"
+#elif SYSTEM == MSDOS
+    #define HDR "msdos.h"
+#else
+    #define HDR "default.h"
+#endif
+#include HDR
+```
+
+- we can use `#ifndef` and `#ifdef` as specialised forms to test for if a name is defined. The first example can be rewritten as
+```
+#ifndef HDR
+#define HDR
+
+/* contents of hdr.h */
+
+#endif
+```
+
+
 
 
 
