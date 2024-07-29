@@ -13,7 +13,6 @@ int getint(int *pn)
     while(isspace(c = getch())); /*skip whitespace*/
 
     if (!isdigit(c) && c != EOF && c != '+' && c != '-') {
-        printf("character was: %d\n", c);
         ungetch(c); /* it is not a number */
         return 0;
     }
@@ -21,7 +20,7 @@ int getint(int *pn)
     if (c == '+' || c == '-') {
         int d = c;
         if (!isdigit(c = getch())) {
-            CHECK_EOF(c);
+            ungetch(c);
             ungetch(d);
             return 0;
         }
