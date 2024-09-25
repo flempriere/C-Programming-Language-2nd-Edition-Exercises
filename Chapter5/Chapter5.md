@@ -372,6 +372,218 @@ int strcmp(char *s, char *t)
     - *Stack idiom:* `*p++ = val; /*push*/ val = *--p /* pop */`
 - `string.h` provides the example functions and other useful functions.
 
+### Pointer Arrays; Pointers to Pointers
+
+- Pointers can be stored in arrays
+
+**Example: Sort Lines**
+- sort text lines into alphabetic order
+- Rather than resort the lines *sort* the *pointers* to the lines
+- Sort process becomes:
+    - read all lines
+    - sort them
+    - print them in order
+
+- First lets handle reading and writing the lines
+```
+#include <stdio.h>
+#include <string.h>
+
+#define MAXLINES 5000 /* max #lines to sort */
+
+char *lineptr[MAXLINES]; /* ptrs to text lines */
+
+int readlines(char *lineptr[], int nlines);
+int writelines(char *lineptr[], int nlines);
+
+void qsort(char *lineptr[], int left, int right);
+
+/* sort input lines */
+main()
+{
+    int nlines; /*number of input lines read */
+
+    if ((nlines = readlines(lineptr, MAXLINES)) >= 0)
+    {
+        qsort(lineptr, 0, nlines-1);
+        writelines(lineptr, nlines);
+        return 0;
+    } else
+    {
+        printf("error: input too big to sort\n");
+        return 1;
+    }
+}
+
+#define MAXLEN 1000 /* max input line length */
+int getLine(char *s, int lim); /* standard used */
+char *alloc(int n);
+
+/* readlines: read input lines */
+int readlines(char *lineptr[], int maxlines)
+{
+    int len, nlines;
+    char *p, line[MAXLEN];
+    
+    nlines = 0;
+    while((len = getLine(line, MAXLEN)) > 0)
+    {
+        if (nlines >= maxlines || p = alloc(len) == NULL)
+        {
+            return -1;
+        } else
+        {
+            line[len - 1] = '\0'; /*delete newline*/
+            strcpy(p, line);
+            lineptr[nlines++] = p;
+        }
+    }
+    return nlines;
+}
+
+/*writelines: write output lines */
+void writelines(char *lineptr[], int nlines)
+{
+    int i;
+    for (i = 0; i < nlines; i++)
+    {
+        printf("%s\n", lineptr[i]);
+    }
+}
+```
+- The above deals with the reading and writing of lines
+- main new feature `char *lineptr[MAXLINES]`.
+    - declares an array of `MAXLINES` elements
+        - each is a pointer to `char`
+        - `lineptr[i]` is a character pointer, while `*lineptr[i]` is the first character of the `i`-th line.
+    - `lineptr` is itself a pointer, so we could rewrite `writelines` as:
+```
+void writelines(char *lineptr[], int nlines)
+{
+    while (nlines-- > 0) printf("%s\n", *lineptr++);
+}
+```
+- Now need to handle sorting
+    - have to change function signature of previous `qsort`
+    - also have to change *comparison function*.
+        - In this case using `strcmp`
+```
+/* qsort: sort v[left] ... v[right] into increasing order */
+void qsort(char *v[], int left, int right)
+{
+    int i, last;
+    void swap(char *v[], int i, int j);
+
+    /* do nothing if nelems < 2 */
+    if (left >= right) return;
+    swap(v, left, (left + right) / 2);
+    last = left;
+    for (i = left+1; i <= right; i++)
+    {
+        if (strcmp(v[i], ,v[left]) < 0)
+        {
+            swap(v, ++last, i);
+        }
+        swap(v, left, last);
+        qsort(v, left, last - 1);
+        qsort(v, last, right);
+    }
+}
+```
+- the `swap` routine becomes
+```
+/* swap: interchange v[i],  v[j] */
+void swap(char *v[], int i, int j)
+{
+    char *temp;
+    temp = v[i];
+    v[i] = v[j];
+    v[j] = temp;
+}
+```
+- Since any element of `v` is a char ptr, so must `temp`, thus we can copy one to another.
+
+### Multi-dimensional Arrays
+- C has rectangular arrays
+    - Much less used than pointer arrays
+- **Example:** Date conversion of day of the month to day of the year etc.
+    - e.g. March 1 is the 60th day of a non-leap year.
+    - define two functions `day_of_year` converts (month, day) -> day of year and `month_day` performs the inverse.
+        - Since the last function calculates two arguments, we use pointer arguments
+        - `month_day(1988, 60, &m, &d)` <- example call
+    - store the number of days in each month in a table.
+        - seperate table for case of leap years.
+```
+static char daytab[2][13] = {
+    {0, 31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31},
+    {0, 31, 29, 31, 30, 30, 31, 31, 30, 31, 30, 30}
+};
+
+/* day of year: set day of year from month & day */
+int day_of_year(int year, int month, int day)
+{
+    int i, leap;
+    leap = year %4 == 0 && leap % 100 != 0 || year % 400 == 0;
+    for (i = 1; i < month; i++) day += daytab[leap][i];
+    return day;
+}
+
+/* month_day: set month, day from day of year */
+void month_day(int year, int yearday, int *pmonth, int *pday)
+{
+    int i, leap;
+    leap = year %4 == 0 && leap % 100 != 0 || year %  400 == 0;
+    for (i = 1; yearday > daytab[leap][i]; i++) yearday -= daytab[leap][i];
+    *pmonth = i;
+    *pday = yearday;
+}
+```
+- Can use arithmetic value of a logical expression as a boolean index since it is either `0` (false) or `1` (true).
+- `daytab` array has to be external to both functions.
+    - `char` used to store small integers
+- C multidimensional arrays are essentially recursive array structures, hence
+    - `array[i][j] /*array[row][col]*/` not
+    - `array[i,j]`
+    - elements stored by `rows`, rightmost index has fastest storage access.
+    - each subarray initialised using array initialisation notation.
+    - `0` column allows for natural indexing of months from 1 to 12 (not 0 to 11).
+
+- When 2D arrays are passed to a function, parameter declaration must include the number of columns.
+    -  So we could declare a function taking `daytab` as `f(int daytab[2][13])`.
+    - Or, `f(int daytab[][13])`
+    - Or, `f(int (*daytab)[13])`. 
+    - Need parantheses since `[]` have higher precedence than `*`. (i.e. `*daytab[13]` is an array of 13 pointers as opposed to a pointer to `int a[13]`).
+
+### Initialisation of Pointer Arrays
+
+- Consider a fn `month_name(n)` which returns a pointer to a string repr of the `n`-th month.
+    - Ideal for a `static` array.
+    - `month_name` uses a private array of `char` strings.
+
+- **Example**
+```
+/* month_name: return name of n-th month */
+char *month_name(int n)
+{
+    static char *name[] = {
+        "Illegal Month", "January", "February",
+        "March", "April", "May", "June", "July",
+        "August", "September", "October",
+        "November", "December" 
+    };
+
+    return (n < 1 || n > 12) ? name[0] : name[n];
+}
+```
+- Declaration follows that of `lineptr` from before.
+    - Initialiser is a `char` string list
+        - `char` stored *somewhere*
+        - pointer to string stored in `name[i]`. 
+
+### Pointers vs. Multi-dimensional Arrays
+    
+
+
 
 
 
