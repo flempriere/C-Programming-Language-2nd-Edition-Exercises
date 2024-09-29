@@ -581,6 +581,172 @@ char *month_name(int n)
         - pointer to string stored in `name[i]`. 
 
 ### Pointers vs. Multi-dimensional Arrays
+
+- Compare the definitions
+    - `int a[10][20];`
+    - `int *b[10];`
+    - Both `a[3][4]` and `b[3][4]` are references to an `int`.
+    - *But* `a` is a 2-dim array (`200` `int` sized blocks have been set aside with `a[row][col]` given by `a + 20*row + col`.)
+    - *On the otherhand* `b` allocates `10` pointers, but does not initialise them.
+        - Initilisation done explicitly.
+        - If each element of `b` points to `20` `int` then there is `200` 'blocks' of `ints` *and* `10` 'blocks' for the pointers.
+- Advantage of pointer arrays
+    - subarrays can be independent sizes
+    - Most common use case is for arrays of strings.
+
+### Command-line Arguments
+
+- `main` called with two arguments
+    - first (conventionally) `argc` is the number of arguments. 
+    - second (conventionally) `argv` is a pointer to an array containing the command line args as strings.
+        - by convention `argv[0]` is the name of the invoking program.
+        - *therefore `argc >= 1`.
+
+- **Example:** `echo` is a program that repeats out it's command line arguments.
+
+```
+#include <stdio.h>
+
+/* echo command-line arguments; 1st version */
+int main(int argc, char *argv[])
+{
+    int i;
+    for (i = 1; i < argc; i++)
+    {
+        printf("%s%s", argv[i], (i < argc - 1) ? " " : "");
+    }
+    printf("\n");
+    return 0;
+}
+```
+
+- Can also use a pointer version
+```
+int main(int argc, char *argv[])
+{
+    while(--argc > 0)
+    {
+        printf("%s%s", *(++argv), (argc > 1) ? " " : "");
+    }
+    printf("\n");
+    return 0;
+}
+```
+- `++argv` moves us to the next argument
+- `--argc` decrements the remaining args
+- **Note: ** we could use the `printf` format:
+    - `printf((argc > 1) ? "%s " : "%s", *++argv)`
+        - observe the use of the comma operator.
+
+**Example 2:** Enhanced pattern matching 
+- modifed off the earlier example.
+
+```
+#include <stdio.h>
+#include <string.h>
+#define MAXLINE 1000
+
+int getline(char *line, int max);
+
+/* find: print lines that match pattern from first argument */
+
+int main(int argc, char *argv)
+{
+    char line[MAXLINE];
+    int found = 0;
+
+    if (argc != 2)
+    {
+        printf("Usage: find pattern\n");
+    }
+    else 
+    {
+        while(getline(line, MAXLINE) > 0)
+        {
+            if (strstr(line, argv[1]) != NULL)
+            {
+                printf("%s", line);
+                found++;
+            }
+        }
+    }
+    return found;
+}
+```
+- `strstr(s, t)` returns a pointer to the first occurence of the string `t` in `s`, else `NULL`.
+    - lives in `string.h`
+
+- *Extensions*
+    - *optional* argument: print all that **don't**
+    match the pattern. (use `x`)
+    - *optional* argument: show line numbering
+    - convention prefix arg with `-` to denote optional (use `n`)
+    - optional args should be unordered and combinable.
+
+**Example: find -nx pattern**
+```
+#include <stdio.h>
+#include <string.h>
+#define MAXLINE 1000
+
+int getline(char *line, int max);
+
+/* find: print lines that match pattern from 1st arg */
+int main(char *line, int max);
+{
+    char line[MAXLINE];
+    long lineno = 0;
+    int c, except = 0, number = 0, found = 0;
+
+    while(--argc > 0 && (*++argv)[0] == '-')
+    {
+        while(c = *++argv[0])
+        {
+            switch(c)
+            {
+            case 'x':
+                except = 1;
+                break;
+            case 'n':
+                number = 1;
+                break;
+            default:
+                printf("find: illegal option %c\n", c);
+                argc = 0;
+                found = -1;
+                break;
+            }
+        }
+    }
+    if (argc != 1)
+    {
+        printf("find: illegal option %c\n", c);
+    }
+    else
+    {
+        while(getline(line, MAXLINE) > 0)
+        {
+            lineno++;
+            if((strstr(line, *argv) != NULL) != except)
+            {
+                if (number)
+                {
+                    printf("%ld:", lineno);
+                }
+                printf("%s", line);
+                found++;
+            }
+        }
+    }
+    return found;
+}
+```
+
+- `argc` decremented and `argv` incremented before each optional arg. 
+- If no errors, post-loop `argc` contains the remaining number args and `argv` the remaining args themselves.
+    - return error if this is not `1`.
+- **Note:** `[]` binds tighter than `*` and `++` so we need to use `(*++argv)[]` or `(**++argv)`.
+    - `*++argv[]` is equiv to `*(++argv[])`.
     
 
 
