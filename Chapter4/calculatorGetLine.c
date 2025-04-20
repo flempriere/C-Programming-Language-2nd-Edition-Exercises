@@ -57,7 +57,7 @@ void initialiseArray(double a[], int len);
 
 
 
-int main()
+int main(void)
 {
     int type, var;
     var = 0;
