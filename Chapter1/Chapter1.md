@@ -41,6 +41,11 @@ Counts the number of lines, words and characters in an input stream.
 
 Computes the exponentiation $`m^n`$, for integer `m` and `n`.
 
+### [Longest Line]
+- [v1](./Examples/LongestLine/v1/longest_line.c)
+- [v2](./Examples/LongestLine/v2/longest_line_v2.c)
+
+Reads lines from input and prints the longest as output.
 
 ## Exercises
 
@@ -110,10 +115,20 @@ We adopt the behaviour of [Ex1.9](#ex-1-9) replacing all blank substrings with a
 ### [Ex 1-15](./Exercises/Ex1_15/ex1_15.c)
 *Rewrite the temperature conversion table example to utilise a function to perform the conversion.*
 
-- Ex 1-16: Prints length of all lines and stores up to MAXLINE characters of a line (see longestLine.c)
-- Ex 1-17: Prints all input lines longer than 80 characters
-- Ex 1-18: Removes trailing blanks and tabs from each input line and deletes blank lines
-- Ex 1-19: Reverses a programs input one line at a time
+### [Ex 1-16](./Exercises/Ex1_16/ex1-16.c)
+*Prints length of all lines and stores up to `MAXLINE` characters
+of a line* (See [longestLine](#longest-line).)
+
+### [Ex 1-17](./Exercises/Ex1_17/ex1-17.c)
+*Prints all input lines longer than 80 characters*
+
+### [Ex 1-18](./Exercises/Ex1_18/ex1-18.c)
+*Removes trailing blanks and tabs from each input line and deletes
+blank lines*
+
+### [Ex 1-19](./Exercises/Ex1_19/ex1-19.c)
+*Reverses a programs input, one line at a time*
+
 - Ex 1-20: Replaces tabs in input with the correct number of blank spaces
 - Ex 1-21: Replaces blanks with the minimum number of tabs and blanks to achieve the same result
 - Ex 1-22: Folds long lines into multiple lines after the last non-blank character before the n-th column
@@ -478,34 +493,31 @@ See [Ex1.15](#ex-1-15).
 
 #### Exercises
 
-See [Ex1.16], [Ex1.17], [Ex1.18] and [Ex1.19].
+See [Ex1.16](#ex-1-16), [Ex1.17](#ex-1-17), [Ex1.18](#ex-1-18) and [Ex1.19](#ex-1-19).
 
-
-### Character Arrays
-- A `string` is an array of characters that is null-terminated (`\0` as the final character)
-- String constants `"hello\n"`
-- `%s` allows printing of a string
-- `\0` is not a part of normal text
-
-### External Variables and Scope
+## 1.10 External Variables and Scope
 - variables are *private* or *local* to where they are declared
     - e.g. in `main`
-- variables exist only so long as the function that
-instances them is running
+- By default variables exist only so long as the function that
+instances them is running.
     - these variables are sometimes referred to as
     *automatic*.
-- They must be set each time, else they contain garbage
-- *external* variables may be defined in the outermost
-block.
+    - They must be set each time, else they contain garbage
+- *external* variables are globally accessible.
+    - alternative mechanism to argument lists for inter-function communication.
+    - Remain in existence permanently
+        - Retain values after function calls.
+- External variables have the following properties,
     - they must be *defined* once
+        - To allocate storage.
     - then declared in each accessing function
         - you can use `extern`
-        - extern is not needed if the declaration
-        preceeds the function in the source code
+    - extern is not needed if the declaration Spreceeds the function in the source code
         - extern is needed to connect variables across
         source files
             - typically in a `.h` file to `#include`.
 
+### Example [Longest Line v2]
 
 
 
