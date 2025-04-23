@@ -36,7 +36,7 @@ int main(void) {
     int nl, nw, nc;
     nl = nw = nc = 0;
     int prev = EOF;
-    for (char c; (c = getchar()) != EOF; ) {
+    for (char c; (c = getchar()) != EOF;) {
         ++nc;
         if (c == '\n') ++nl;
         if (c == ' ' || c == '\n' || c == '\t') {

@@ -1,4 +1,4 @@
-# The C Programming Language - 2nd Edition.
+# The C Programming Language - 2nd Edition
 
 This repository contains code fragments, notes and exercises from [The C Programming Language - 2nd Edition, by Kernighan and Ritche](https://www.cs.princeton.edu/~bwk/cbook.html).
 

@@ -16,15 +16,15 @@
 
 /**
  * @brief Indicates the read is currently in a blank substring
- * 
+ *
  */
 #define IN 1
 
 /**
  * @brief Indicates the read is not in a blank substring
- * 
+ *
  */
- #define OUT 0
+#define OUT 0
 
 /**
  * @brief Prints the input one word at a time. Substrings containing multiple
@@ -34,14 +34,13 @@
  */
 int main(void) {
     int state = IN;
-    for (char c; (c = getchar()) != EOF; ) {
+    for (char c; (c = getchar()) != EOF;) {
         if (c == ' ' || c == '\t' || c == '\n') {
             if (state != IN) {
                 putchar('\n');
                 state = IN;
             }
-        }
-        else {
+        } else {
             state = OUT;
             putchar(c);
         }

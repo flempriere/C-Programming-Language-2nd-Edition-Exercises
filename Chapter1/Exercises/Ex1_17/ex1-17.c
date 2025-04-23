@@ -4,6 +4,8 @@
  * @brief Solution to Exercise 1.17 from The C Programming Language, 2nd Edition
  *
  * Write a program to print all input lines that are longer than 80 characters.
+ *
+ * @remark We ignore the newline character in this count.
  * @version 0.1
  * @date 2025-04-21
  *
@@ -29,15 +31,15 @@
 
 /**
  * @brief Reads a line from standard input and returns the
- * length of the line read.
+ * length of the line read. This variant strips newlines.
  *
  * @param maxline maximum size of an input line.
- * @param s buffer to store the read line in, the indices [0, maxline) must
+ * @param line buffer to store the read line in, the indices [0, maxline) must
  * be valid.
  *
  * @return EXIT_SUCCESS
  */
-int get_line(int maxline, char s[maxline]);
+int get_line(int maxline, char line[maxline]);
 
 /**
  * @brief Reads in lines from input and prints all of them with a length
@@ -50,23 +52,17 @@ int main(void) {
 
     int len = 0;
     while ((len = get_line(MAXLINE, line)) > 0) {
-        if (len > PRINT_SIZE) {
-            printf("%s", line);
-        }
+        if (len > PRINT_SIZE) { printf("%s\n", line); }
     }
     return EXIT_SUCCESS;
 }
 
-int get_line(int maxline, char s[maxline]) {
+int get_line(int maxline, char line[maxline]) {
     int i;
     int c = EOF;
     for (i = 0; i < maxline - 1 && (c = getchar()) != EOF && c != '\n'; ++i) {
-        s[i] = c;
+        line[i] = c;
     }
-    if (i < maxline - 1 && c == '\n') {
-        s[i] = c;
-        ++i;
-    }
-    s[i] = '\0';
+    line[i] = '\0';
     return i;
 }

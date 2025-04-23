@@ -9,7 +9,8 @@
  * @remark This program uses a queue to process blanks, if the queue overflows
  * then elements are popped off the queue to make room for new elements.
  *
- * @warning In the case of an overflow, 
+ * @warning In the case of an overflow, EXIT_FAILURE is returned, successive
+ * applications of ex1-18 will eventually remove all trailing whitespace.
  * @version 0.1
  * @date 2025-04-21
  *
@@ -20,12 +21,11 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-
 /**
  * @brief Number of consecutive blanks that can be stored in the queue
- * 
+ *
  */
- #define MAX_BLANKS 2
+#define MAX_BLANKS 1000
 
 /**
  * @brief Size of the blank Queue, we need an extra dummy index at the end
@@ -60,16 +60,18 @@ int main(void) {
 
     int tail = 0;             // end of the queue.
     int head = QUEUE_SIZE;    // head of the queue.
-    int line_not_empty = FALSE; //indicates a line contains printed characters
-    int ret_value = EXIT_SUCCESS; //stores the return value
-    int printed_trailing = TRUE; //indicates we have printed trailing whitespace
+    int line_not_empty =
+        FALSE;    // indicates a line contains printed characters
+    int ret_value = EXIT_SUCCESS;    // stores the return value
+    int printed_trailing =
+        FALSE;    // indicates we have printed trailing whitespace
 
     for (int c; (c = getchar()) != EOF;) {
         if (c == '\n') {
-            //reset the queue
+            // reset the queue
             tail = 0;
             head = QUEUE_SIZE;
-            //ignore blank lines
+            // ignore blank lines
             if (line_not_empty == TRUE) {
                 // mark if the program needs to run again
                 if (printed_trailing == TRUE) { ret_value = EXIT_FAILURE; }
@@ -78,27 +80,27 @@ int main(void) {
                 printed_trailing = FALSE;
             }
         } else if (c == ' ' || c == '\t') {
-            //check if queue full, and get first blank if it is.
-            if (tail+1 == head) {
+            // check if queue full, and get first blank if it is.
+            if (tail + 1 == head) {
                 if (head == QUEUE_SIZE) { head = 0; }
                 putchar(blanks[head]);
                 head = head + 1;
                 printed_trailing = TRUE;
                 line_not_empty = TRUE;
             }
-            //push blanks onto the queue
+            // push blanks onto the queue
             blanks[tail] = c;
             tail = tail + 1;
             if (tail == QUEUE_SIZE) { tail = 0; }
         } else {
-            //print the queue since found a non-blank
+            // print the queue since found a non-blank
             if (head == QUEUE_SIZE) head = 0;
             while (head != tail) {
                 putchar(blanks[head]);
                 head = head + 1;
                 if (head == QUEUE_SIZE) { head = 0; }
             }
-            //print the non-blank and reset for next line
+            // print the non-blank and reset for next line
             putchar(c);
             line_not_empty = TRUE;
             printed_trailing = FALSE;

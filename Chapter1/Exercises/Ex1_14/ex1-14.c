@@ -19,12 +19,6 @@
 #include <stdlib.h>
 
 /**
- * @brief Maximum index for a char
- *
- */
-#define MAX_IDX 256
-
-/**
  * @brief Ascii index of the minimum printable value
  *
  */
@@ -35,6 +29,12 @@
  *
  */
 #define MAX_PRINT 126
+
+/**
+ * @brief The size of the printable characters array.
+ *
+ */
+#define PRINTABLE_ARRAY_SIZE (MAX_PRINT - MIN_PRINT + 1)
 /**
  * @brief Prints a histogram of the frequency of different characters in its
  * input.
@@ -42,17 +42,23 @@
  * @return EXIT_SUCCESS
  */
 int main(void) {
-    int charCount[MAX_IDX];
+    int charCount[PRINTABLE_ARRAY_SIZE + 1];    // avoiding variable length
+                                                // array
     int max = 0;
-    for (int i = 0; i < MAX_IDX; i++) charCount[i] = 0;
+    for (int i = 0; i <= PRINTABLE_ARRAY_SIZE; i++) charCount[i] = 0;
 
     for (int c; (c = getchar()) != EOF;) {
-        ++charCount[c];
+        if (c < MIN_PRINT || c > MAX_PRINT) {
+            c = PRINTABLE_ARRAY_SIZE;
+        } else {
+            c = c - MIN_PRINT;
+        }
+        charCount[c]++;
         if (charCount[c] > max) max = charCount[c];
     }
     for (int i = max + 1; i > 0; i--) {
         printf("%4d|", i);
-        for (int j = MIN_PRINT; j <= MAX_PRINT; j++) {
+        for (int j = 0; j <= PRINTABLE_ARRAY_SIZE; j++) {
             if (charCount[j] >= i) {
                 putchar('*');
             } else {
@@ -62,7 +68,9 @@ int main(void) {
         putchar('\n');
     }
     printf("     ");
-    for (int i = MIN_PRINT; i < MAX_PRINT; i++) { printf("%c", i); }
-    putchar('\n');
+    for (int i = 0; i < PRINTABLE_ARRAY_SIZE; i++) {
+        printf("%c", i + MIN_PRINT);
+    }
+    printf("Other\n");
     return EXIT_SUCCESS;
 }

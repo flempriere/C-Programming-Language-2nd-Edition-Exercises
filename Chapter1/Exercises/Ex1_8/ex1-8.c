@@ -32,6 +32,6 @@ int main(void) {
         if (c == '\t') ++nt;
         if (c == ' ') ++nb;
     }
-    printf("Lines: %.ld Tabs: %ld Blanks: %.0f\n", nl, nt, nb);
+    printf("New Lines: %.ld Tabs: %ld Blanks: %.0f\n", nl, nt, nb);
     return EXIT_SUCCESS;
 }

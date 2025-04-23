@@ -36,7 +36,7 @@ int main(void) {
 }
 
 int power(int m, int n) {
-    int p;
-    for (int p = 1; n > 0; --n) { p = p * m; }
+    int p = 1;
+    for (; n > 0; --n) { p = p * m; }
     return p;
 }
