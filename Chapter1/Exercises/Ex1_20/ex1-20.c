@@ -29,7 +29,7 @@
  * @brief Number of columns per tab stop
  *
  */
-#define TABSTOP 4
+#define TABSTOP 8
 
 /**
  * @brief detabs a file, converting all tabs to the blanks, keeping the spacing

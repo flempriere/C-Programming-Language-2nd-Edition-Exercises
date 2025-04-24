@@ -1,8 +1,0 @@
-ordinary line
-ordinary line with blank 
-ordinary line with two blanks  
-ordinary line with tab  
-ordinary line with two tabs     
-ordinary line with both     
-
-There was a blank line above me

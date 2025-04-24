@@ -184,9 +184,26 @@ We should prefer a single blank over a tabstop as that is what most people would
 something intelligent with very long, lines, and if there are
 no blanks or tabs before the specified column.*
 
-- Ex 1-22: Folds long lines into multiple lines after the last non-blank character before the n-th column
-- Ex 1-23: Removes all comments from a C file
-- Ex 1-24: Basic C syntax checker
+**Note:** Our implementation uses the following logic,
+
+1. We break on the last complete word before a column.
+2. We preserve whitespace (shifting it onto the next line).
+3. A line is folded multiple times until it fits.
+4. If there is no complete word, then we break at the last
+column index.
+
+### [Ex 1-23](./Exercises/Ex1_23/ex1-23.c)
+
+*Write a program to remove all comments from a C program. Don't forget to handle quoted strings and character constants properly.
+**C comments do not nest**.*
+
+**Note**: We extend this to support `C99` style singleline comments.
+
+### [Ex 1-24](./Exercises/Ex1_24/ex1-24.c)
+
+*Write a program to check a C program for rudimentary syntax errrors like unbalanced parantheses, brackets, and braces. Don't forget about quotes, both single and double, escape sequences, and comments. (This program is hard to do in full generality).*
+
+**Note:** Our implementation does not account for the presence of comments, we assume that these will be stripped out by the use of a program like [Ex 1-23](#ex-1-23) first.
 
 ## 1.1 Getting Started
 

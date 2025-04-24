@@ -1,0 +1,14 @@
+
+word
+//single line comment
+/* Multiline */
+/* Multiover 
+multiple */
+"string with a comment //inside"
+"string with a multiline comment inside /* hi */"
+// comment that has string "string"
+/* multiline that has string "string" */
+"string with smaller \"substring\" "
+'/'/ not a comment
+'/'* not a multiline */
+/* *'/'*/
