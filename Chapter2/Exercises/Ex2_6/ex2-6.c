@@ -18,6 +18,17 @@
 #include <stdlib.h>
 
 /**
+ * @brief enum storing false and true values
+ *
+ * FALSE = 0;
+ * TRUE = 1
+ */
+enum truth {
+    FALSE,
+    TRUE
+};
+
+/**
  * @brief sets the n bits of x starting at position p with the rightmost n
  * bits of y.
  *
@@ -37,14 +48,16 @@ unsigned setbits(unsigned x, unsigned p, unsigned n, unsigned y);
  *
  * @param result Computed result
  * @param expected expected result
- * @return 1 if the values match, else
- * @return 0.
+ * @return TRUE if the values match, else
+ * @return FALSE.
  */
-int test_setbits(unsigned result, unsigned expected);
+enum truth test_setbits(unsigned result, unsigned expected);
+
 /**
  * @brief Test driver for setbits.
  *
- * @return EXIT_SUCCESS
+ * @return EXIT_SUCCESS if all tests passed, else
+ * @return EXIT_FAILURE
  */
 int main(void) {
     unsigned int x = 0x0c3f;
@@ -65,10 +78,10 @@ unsigned int setbits(unsigned x, unsigned p, unsigned n, unsigned y) {
            ((y & ~(~0U << n)) << (p + 1 - n));
 }
 
-int test_setbits(unsigned result, unsigned expected) {
+enum truth test_setbits(unsigned result, unsigned expected) {
     if (result != expected) {
         printf("Error: bitpattern: %x, expected: %x\n", result, expected);
-        return 0;
+        return FALSE;
     }
-    return 1;
+    return TRUE;
 }

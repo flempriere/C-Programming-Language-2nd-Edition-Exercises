@@ -18,22 +18,15 @@
 #include <stdlib.h>
 
 /**
- * @brief The number of printable ASCII numbers.
+ * @brief enum storing false and true values
  *
+ * FALSE = 0;
+ * TRUE = 1
  */
-#define N_ASCII_SYM 128
-
-/**
- * @brief Indicates a character has already been seen.
- *
- */
-#define SEEN 1
-
-/**
- * @brief Indicates a character has not been seen
- *
- */
-#define NOT_SEEN 0
+enum truth {
+    FALSE,
+    TRUE
+};
 
 /**
  * @brief Indicates that no match was found.
@@ -56,28 +49,21 @@
 int any(char s1[], char s2[]);
 
 /**
- * @brief Stores in the array a, the characters that occur in s.
- *
- * @param a Boolean array that indicates which characters have been seen.
- * @param s2 String to scan
- */
-void tag_chars_in_string(int a[], char s2[]);
-
-/**
  * @brief Check that the result of idx, matches expected
  * and print a diagnostic otherwise.
  *
  * @param s1 string to search in.
  * @param s2 string containing characters to search for.
  * @param expected
- * @return 1 if result of any(s1, s2) matches expected, else
- * @return 0.
+ * @return TRUE if result of any(s1, s2) matches expected, else
+ * @return FALSE.
  */
-int test_any(char s1[], char s2[], int expected);
+enum truth test_any(char s1[], char s2[], int expected);
 /**
  * @brief Test driver for the function any.
  *
- * @return EXIT_SUCCESS
+ * @return EXIT_SUCCESS if all tests passed, else
+ * @return EXIT_FAILURE
  */
 int main(void) {
     char s[] = "abc def";
@@ -95,32 +81,20 @@ int main(void) {
 }
 
 int any(char s1[], char s2[]) {
-    int char_set[N_ASCII_SYM];
-    for (int i = 0; i < N_ASCII_SYM; i++) {
-        char_set[i] = 0;
-    }
-    tag_chars_in_string(char_set, s2);
     for (int i = 0; s1[i] != '\0'; i++) {
-        int c = s1[i];
-        if (char_set[c] == SEEN) return i;
+        for (int j = 0; s2[j] != '\0'; j++) {
+            if (s1[i] == s2[j]) { return i; }
+        }
     }
     return NO_MATCH;
 }
 
-void tag_chars_in_string(int a[], char s[]) {
-    for (int i = 0; s[i] != '\0'; i++) {
-        int c = s[i];
-        a[c] = SEEN;
-    }
-    return;
-}
-
-int test_any(char s1[], char s2[], int expected) {
+enum truth test_any(char s1[], char s2[], int expected) {
     int res;
     if ((res = any(s1, s2)) != expected) {
         printf("Error: input: %s, output: %s\n", s1, s2);
         printf("Error: result: %d, expected: %d\n", res, expected);
-        return 0;
+        return FALSE;
     }
-    return 1;
+    return TRUE;
 }

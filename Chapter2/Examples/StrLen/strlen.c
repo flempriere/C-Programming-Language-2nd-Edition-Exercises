@@ -10,6 +10,20 @@
  *
  */
 
+#include <stdio.h>
+#include <stdlib.h>
+
+/**
+ * @brief enum storing false and true values
+ *
+ * FALSE = 0;
+ * TRUE = 1
+ */
+enum truth {
+    FALSE,
+    TRUE
+};
+
 /**
  * @brief Calculates the length of a string s.
  *
@@ -18,8 +32,16 @@
  */
 int my_strlen(char s[]);
 
-#include <stdio.h>
-#include <stdlib.h>
+/**
+ * @brief Tests my_strlen by comparing the result of my_strlen(s)
+ * to expected. An error diagnostic is printed if the test fails.
+ *
+ * @param s input string
+ * @param expected expected length
+ * @return TRUE if my_strlen(s) == expected, else
+ * @return FALSE.
+ */
+enum truth test_my_strlen(char s[], int expected);
 
 /**
  * @brief Test driver for strlen.
@@ -29,7 +51,8 @@ int my_strlen(char s[]);
  * - single character string
  * - multicharacter string
  *
- * @return EXIT_SUCCESS
+ * @return EXIT_SUCCESS if all tests passed successfully, else
+ * @return EXIT_FAILURE
  */
 int main(void) {
     char empty[] = "";
@@ -56,4 +79,14 @@ int my_strlen(char s[]) {
     int i = 0;
     while (s[i] != '\0') { ++i; }
     return i;
+}
+
+enum truth test_my_strlen(char s[], int expected) {
+    int res = my_strlen(s);
+    if (res != expected) {
+        printf("Error: incorrect length for string %s\n", s);
+        printf("Calculated length: %d, expected: %d\n", res, expected);
+        return FALSE;
+    }
+    return TRUE;
 }

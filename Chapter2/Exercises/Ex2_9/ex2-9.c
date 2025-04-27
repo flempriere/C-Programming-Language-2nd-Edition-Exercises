@@ -1,15 +1,35 @@
 /**
- * @file bitcount.c
+ * @file ex2-9.c
  * @author Felix Lempriere
- * @brief Example program counting the number of set (1) bits in a given
- * integer.
+ * @brief Solution to Exercise 2.9 from The C Programming Language, 2nd Edition
+ *
+ * In a two's complement number system $`x &= (x - 1)`$ deletes the rightmost
+ * 1-bit in x. Explain why. Use this observation to write a faster version of
+ *
+ * Why?
+ * Two's complement:
+ * - highest bit represents the sign
+ * - positive numbers represented as 0[number in binary]
+ * - negative acheived by taking complement of abs value and adding 1.
+ *
+ * x - 1 -> x + (-1)
+ * has repr
+ *      xxxx 1000 <- explicit example
+ *      1111 1111 etc.
+ *      ---- ----
+ *      xxxx 0111
+ * Since x + '1' + '1' = x + '0' with carry propagating.
+ * i.e. carry from 1-bit columns, ensures all values up to (and including) next
+ * 1-bit column remain the same. The lowest 1-bit column has no carry digit to
+ * set it back to 1 so stays as zero. Anding therefore eliminates it, and leaves
+ * all other columns set to 1 in x unchanged.
+ *
  * @version 0.1
- * @date 2025-04-26
+ * @date 2025-04-27
  *
  * @copyright Copyright (c) 2025
  *
  */
-
 #include <stdio.h>
 #include <stdlib.h>
 
@@ -25,15 +45,16 @@ enum truth {
 };
 
 /**
- * @brief Counts the number of set (1) bits in a given unsigned int x.
+ * @brief Fast implementation of bitcount relying on a Two's-complement
+ * representation of signed integers.
  *
- * @param x
- * @return int
+ * @param x Value to count the number of set bits.
+ * @return Number of set bits in x.
  */
-int bitcount(unsigned x);
+int fast_bitcount(unsigned int x);
 
 /**
- * @brief Tests bitcount, by applying it to argument x, and
+ * @brief Tests fast_bitcount, by applying it to argument x, and
  * checking it matches the expected value expected. If the test
  * fails an error diagnostic is printed.
  *
@@ -45,7 +66,7 @@ int bitcount(unsigned x);
 enum truth test_bitcount(unsigned x, unsigned expected);
 
 /**
- * @brief Test driver for bitcount.
+ * @brief Test driver for fast_bitcount.
  *
  * @return EXIT_SUCCESS if all tests passed, else
  * @return EXIT_FAILURE
@@ -65,9 +86,7 @@ int main(void) {
 
 int bitcount(unsigned x) {
     int b;
-    for (b = 0; x != 0; x >>= 1) {
-        if (x & 01) { b++; }
-    }
+    for (b = 0; x != 0; x &= x - 1) { b++; }
     return b;
 }
 

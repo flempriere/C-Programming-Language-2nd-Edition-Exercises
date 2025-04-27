@@ -1,11 +1,12 @@
 /**
- * @file lower.c
+ * @file ex2-10.c
  * @author Felix Lempriere
- * @brief Convert a character c to lower case.
+ * @brief Solution to Exercise 2.10 from The C Programming Language, 2nd Edition
  *
- * @warning This version only works for ASCII encoded characters.
+ * Rewrite the function lower, which converts upper case letters to lower case,
+ * with a conditional expression instead of if-else.
  * @version 0.1
- * @date 2025-04-26
+ * @date 2025-04-27
  *
  * @copyright Copyright (c) 2025
  *
@@ -52,8 +53,8 @@ enum truth test_lower(int c, int expected);
 /**
  * @brief Test driver for lower case conversion
  *
- * @return EXIT_SUCCESS if all tests passed, else
- * @return EXIT_FAILURE.
+ * @return EXIT_SUCCESSS if all tests passed, else
+ * @return EXIT_FAILURE
  */
 int main(void) {
     if (!test_lower('a', 'a')) { return EXIT_FAILURE; }
@@ -63,13 +64,7 @@ int main(void) {
     return EXIT_SUCCESS;
 }
 
-int lower(int c) {
-    if (c >= 'A' && c <= 'Z') {
-        return c + ('a' - 'A');
-    } else {
-        return c;
-    }
-}
+int lower(int c) { return ((c >= 'A' && c <= 'Z') ? c + ('a' - 'A') : c); }
 
 enum truth test_lower(int c, int expected) {
     int res = lower(c);

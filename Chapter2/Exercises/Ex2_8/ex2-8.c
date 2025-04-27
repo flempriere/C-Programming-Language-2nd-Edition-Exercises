@@ -15,6 +15,17 @@
 #include <stdlib.h>
 
 /**
+ * @brief enum storing false and true values
+ *
+ * FALSE = 0;
+ * TRUE = 1
+ */
+enum truth {
+    FALSE,
+    TRUE
+};
+
+/**
  * @brief Rotates the integer x by n bit positions.
  *
  * @param x integer to rotate.
@@ -33,10 +44,10 @@ unsigned rightrot(unsigned x, unsigned n);
  * @param x input integer
  * @param n bits to rotate by.
  * @param expected expected output
- * @return 1 if the result matches the expected, else
- * @return 0.
+ * @return TRUE if the result matches the expected, else
+ * @return FALSE.
  */
-int test_rightrot(unsigned x, unsigned n, unsigned expected);
+enum truth test_rightrot(unsigned x, unsigned n, unsigned expected);
 
 /**
  * @brief Computes the width of an unsigned int on this computer.
@@ -49,6 +60,12 @@ int test_rightrot(unsigned x, unsigned n, unsigned expected);
  */
 unsigned unsigned_width(void);
 
+/**
+ * @brief Test driver for rightrot.
+ *
+ * @return EXIT_SUCCESS if all tests passed, else
+ * @return EXIT_FAILURE
+ */
 int main(void) {
     unsigned int x = 0x0c3f;
     unsigned width = unsigned_width();
@@ -81,14 +98,14 @@ unsigned rightrot(unsigned x, unsigned n) {
     return x;
 }
 
-int test_rightrot(unsigned x, unsigned n, unsigned expected) {
+enum truth test_rightrot(unsigned x, unsigned n, unsigned expected) {
     unsigned res;
     if ((res = rightrot(x, n)) != expected) {
         printf("Error: input: %x, n: %u\n", x, n);
         printf("Error: bitpattern: %x, expected: %x\n", res, expected);
-        return 0;
+        return FALSE;
     }
-    return 1;
+    return TRUE;
 }
 
 unsigned unsigned_width(void) {

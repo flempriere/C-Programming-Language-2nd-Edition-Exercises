@@ -14,6 +14,17 @@
 #include <stdlib.h>
 
 /**
+ * @brief enum storing false and true values
+ *
+ * FALSE = 0;
+ * TRUE = 1
+ */
+enum truth {
+    FALSE,
+    TRUE
+};
+
+/**
  * @brief Deletes all instances of a character c from the string s
  *
  * @param s string buffer
@@ -26,39 +37,41 @@ void squeeze(char s[], int c);
  *
  * @param s
  * @param t
- * @return 1 if equal, else
- * @return 0.
+ * @return TRUE if equal, else
+ * @return FALSE.
  */
-int my_streq(char s[], char t[]);
+enum truth my_streq(char s[], char t[]);
 
+/**
+ * @brief Checks if the result string res matches
+ * the expected string expected string, prints error
+ * diagnostics if not.
+ *
+ * @param res result string
+ * @param expected expected string
+ * @return TRUE if match, else
+ * @return FALSE.
+ */
+enum truth test_string(char res[], char expected[]);
+
+/**
+ * @brief Test driver for squeeze
+ *
+ * @return EXIT_SUCCESS if all tests passed successfully, else
+ * @return EXIT_FAILURE.
+ */
 int main(void) {
     int c = 'a';
     char s[] = "A string with a value";
-    char s_expected[] = "A string with  vlue";
-
     char s1[] = "test string";
-    char s1_expected[] = "test string";
-
     char s2[] = "";
-    char s2_expected[] = "";
 
     squeeze(s, c);
-    if (!my_streq(s, s_expected)) {
-        printf("Error: string %s, expected: %s\n", s, s_expected);
-        return EXIT_FAILURE;
-    }
-
+    if (!test_string(s, "A string with  vlue")) { return EXIT_FAILURE; }
     squeeze(s1, c);
-    if (!my_streq(s1, s1_expected)) {
-        printf("Error: string %s, expected: %s\n", s1, s1_expected);
-        return EXIT_FAILURE;
-    }
-
+    if (!test_string(s1, "test string")) { return EXIT_FAILURE; }
     squeeze(s2, c);
-    if (!my_streq(s2, s2_expected)) {
-        printf("Error: string %s, expected: %s\n", s2, s2_expected);
-        return EXIT_FAILURE;
-    }
+    if (!test_string(s2, "")) { return EXIT_FAILURE; }
     printf("All tests passed\n");
     return EXIT_SUCCESS;
 }
@@ -71,9 +84,17 @@ void squeeze(char s[], int c) {
     s[j] = '\0';
 }
 
-int my_streq(char s[], char t[]) {
+enum truth my_streq(char s[], char t[]) {
     for (int i = 0; s[i] != '\0'; i++) {
-        if (s[i] != t[i]) { return 0; }
+        if (s[i] != t[i]) { return FALSE; }
     }
-    return 1;
+    return TRUE;
+}
+
+enum truth test_string(char res[], char expected[]) {
+    if (!my_streq(res, expected)) {
+        printf("Error: string %s, expected: %s\n", res, expected);
+        return FALSE;
+    }
+    return TRUE;
 }

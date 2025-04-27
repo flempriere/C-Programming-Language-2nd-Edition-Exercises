@@ -29,26 +29,31 @@ unsigned long int next = 1;
 
 /**
  * @brief Returns a pseudo random number from [0, MY_RAND_MAX)
- * 
- * @return int 
+ *
+ * @return int
  */
 int my_rand(void);
 
 /**
  * @brief Sets the seed for my_rand
- * 
- * @param seed 
+ *
+ * @param seed
  */
 void my_srand(unsigned int seed);
 
 /**
  * @brief Number of test numbers to generate.
- * 
+ *
  */
 #define N_TESTS 1000000
 
+/**
+ * @brief Test driver for my_srand and my_rand.
+ *
+ * @return EXIT_SUCCESS if all tests passed successfully, else
+ * @return EXIT_FAILURE
+ */
 int main(void) {
-    
     int s = 0;
     my_srand(s);
     if (my_rand() != s) {

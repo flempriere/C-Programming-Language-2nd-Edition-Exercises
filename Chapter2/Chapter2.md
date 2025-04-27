@@ -38,7 +38,7 @@ Extract a bit pattern from an integer.
 
 ### [Ex 2-1](./Exercises/Ex2_1/ex2-1.c)
 
-*Write a program to determinte the ranges of `char`, `short`, `int` and `long` variables, both `signed` and `unsigned`, by printing appropriate values from standard headers and by direct computation. **Harder if you compute them:** Determine the ranges of the various floating point types.*
+*Write a program to determine the ranges of `char`, `short`, `int` and `long` variables, both `signed` and `unsigned`, by printing appropriate values from standard headers and by direct computation. **Harder if you compute them:** Determine the ranges of the various floating point types.*
 
 **Note**: This is deceptively hard to do in a portable way that doesn't lead to undefined behaviour. The obvious method of integer wrap around is undefined for signed integers.
 
@@ -52,23 +52,43 @@ For the floating point, we notice that at least on our machine, the calculated m
 
 *Write a loop equivalent to original `get_line` for loop without using `&&` and `||`.*
 
-We can see that the resulting implementation requires a lot of nested if conditions and is significantly uglier.
+We can see that the resulting implementation is significantly uglier.
 
 ### [Ex 2-3](./Exercises/Ex2_3/ex2-3.c)
 
 *Write the function `htoi(s)` which converts a string of hexadecimal digits (including an optional `0x` or `0x`) into its
 equivalent integer value. The allowable digits are $`0`$ though $`9`$, $`a`$ through $`f`$, and $`A`$ through $`F`$.*
 
+Our implementation, is relatively simple, we first check for a prefix, and skip it if its exists. Then while we continue to read
+hexdigits we convert them to the appropriate number. We handle uppercase latters by converting them to lower case.
+
 ### [Ex 2-4](./Exercises/Ex2_4/ex2-4.c)
 
 *Write an alternate version of `squeeze(s1, s2)` that deletes each character in `s1` that matches any character in the string
 `s2`.*
+
+Our implementation loops over the characters in `s2` and runs the previous single character version of `squeeze` on `s1`. An alternative would be to loop over `s1`, check `s2` if the current character is in `s2` and discard it if it is.
+
+Our implementation has the advantage that as `s1` shrinks each time we squeeze, successive searches become faster.
+
+If `s2` has duplicate characters, we could use an array to track the characters we've seen and ignore them. However the overhead of setting up this array for all possible characters (128 in ASCII) means this would only be worthwhile if `s2` is long with a large number of duplicates.
 
 ### [Ex 2-5](./Exercises/Ex2_5/ex2-5.c)
 
 *Write the function `any(char s1[], char s2[])` which returns the
 first location in the string `s1` where any character from the string `s2` occurs, or `-1` if `s1` contains no characters from `s2`. (The standard library function `strpbrk` does the same job
 but returns a pointer.)*
+
+This one is simple again. We loop through `s1` and at each character scan through `s2` to see if there is a match. If there is we return the current index in `s1`. Else if we reach the end of `s1` without a match we return `s2`.
+
+**Note**: This implementation does require us to scan `s2` entirely for every character in `s1` until we get a match. This means that in this case we might consider an array approach as
+follows
+
+1. Initialise an array indexed by the character set
+2. Scan through `s2` and mark the characters that appear in the array.
+3. Scan through `s1` and check the array.
+
+This means that we only have to scan `s1` once, and `s2` once, respectively. Which notionally seems faster. However, we have to initialise the array (for ASCII 128 characters). So for small `s2` strings or `s1` strings this overhead would be more costly than the naive approach we've implemented.
 
 ### [Ex 2-6](./Exercises/Ex2_6/ex2-6.c)
 
@@ -82,10 +102,42 @@ but returns a pointer.)*
 
 *Write a function `rightrot(x, n)` that returns the value of the integer `x` rotated to the right by `n` bit positions.*
 
-### Summary of Exercises
+Implementing `rightrot` requires us to calculate the word length of an unsigned. Ideally we would do this once at compile time. This can be done in **C23** using the *_WIDTH macros, but for us
+we unfortunately have to calculate it every time the function runs.
 
-- Exercise 2-9: Two's complement implementation of `bitcount(x)`.
-- Exercise 2-10: Implementation of `lower(s)` using a conditional operator
+A potential extension to this function would be to allow negative values for `n` and to interpret that as a `leftrot` by the absolute value of `n`.
+
+### [Ex 2-9](./Exercises/Ex2_9/ex2-9.c)
+
+*In a two's complement number system `x &= (x - 1)` deletes the righmost $`1`$-bit in `x`. Explain Why. Use this observation to write a faster version of bitcount.*
+
+In a Two's Complement representation, signed integers are represented by the following scheme
+
+1. The highest bit represents the sign.
+2. Positive Numbers are represented as $`0[\text{Number in base }2]`$.
+3. Negative Numbers are represented by taking the complement of the representatation of their absolute value, and adding 1, ignoring overflow.
+
+Then $`x - 1`$ is equivalent to $` x + (-1)`$ which in the binary representation can be seen as,
+
+```text
+    ... xxxx xxxx
+  + ... 1111 1111
+```
+
+i.e. If we look at every "column" we are adding a $`1`$. Ignoring carry digits for now, this means a $`1`$ becomes a $`0`$ and a $`0`$ becomes a $`1`$. Now consider a carry.
+
+- Every $`1`$ will contribute a carry.
+- This carry will propagate up setting every subsequent $`0`$ that was set to $`1`$ back to $`0`$.
+- The carry stops propagating when we reach a $`1`$ that was set to $`0`$. But this column has it's own carry digit that continues.
+- The only $`1`$ column that does not have a lower carry digit to set it back to $`1`$ is the lowest.
+- All columns after this are by the analysis above set back to the same value in `x` before adding $`-1`$.
+- Columns with the value of $`0`$ below this lowest $`1`$ bit are set to $`1`$.
+
+Hence the binary representation of `x` and `x - 1` differ only in the value of the bit corresponding to the lowest $`1`$-bit in `x` and the lower $`0`$-bits. So `x &= (x - 1)` clears the lowest $`1`$-bit in `x` leaving the rest untouched.
+
+### [Ex 2-10](./Exercises/Ex2_10/ex2-10.c)
+
+*Rewrite the function `lower`, which converts upper case letters to lower case, with a conditional expression instead of `if-else`.*
 
 ### 2.0 Introduction
 
@@ -625,9 +677,6 @@ assignment operator
 
 #### Example [bitcount](./Examples/BitCount/bitcount.c)
 
-- Example: `bitcount` counts the number of set ($1$) bits in
-the integer argument.
-
 ```C
 /* bitcount: count 1 bits in x */
 int bitcount(unsigned int x)
@@ -646,7 +695,11 @@ int bitcount(unsigned int x)
   - Also may help compiler optimisation
 - The type and value of all assignment operators is the type of the left operand and the value of the left operand after assignment.
 
-### Conditional Statements
+#### Relevant Exercises
+
+See [Ex 2.9](#ex-2-9)
+
+### 2.11 Conditional Statements
 
 - The ternary operator `?:` lets us rewrite expressions of
 the form
@@ -672,50 +725,75 @@ else
 ```
 
 as
-`z = (a > b) ? a : b /* z = max(a, b) */`
+
+```C
+z = (a > b) ? a : b /* z = max(a, b) */
+```
 
 - Conditional expression is an expression
-  - so can be used where any expression is.
-  - if *expr2* and *expr3* are different types the result
+  - So can be used where any expression is.
+  - If *expr2* and *expr3* are different types the result
     is converted.
-  - e.g. if `f` is a `float` and `n` is an `int` then
-    `(n > 0) ? f : n` will be a `float`.
-- precedence of `?` is just above `=`
-  - use brackets for clarity though.
+  - e.g. If `f` is a `float` and `n` is an `int` then
+    `(n > 0) ? f : n` will be a `float`. (Irrespective of which branch is taken.)
+- Precedence of `?` is just above `=`
+  - Use brackets for clarity though.
 
-### Precedence and Order of Evaluation
+#### Example uses
 
-Precedence: Operator `[associativity]`
+Print the contents of an array, 10 elements per line.
 
-1. `(), [], ->, . [left to right]`
-2. `! ~ ++ -- + - * & (type) sizeof [right to left]`
-3. `* / % [left to right]`
-4. `+ - [left to right]`
-5. `<< >> [left to right]`
-6. `< <= > >= [left to right]`
-7. `== != [left to right]`
-8. `& [left to right]`
-9. `^ [left to right]`
-10. `| [left to right]`
-11. `&& [left to right]`
-12. `|| [left to right]`
-13. `?: [right to left]`
-14. `= += -= *= /= %= &= ^= |= <<= >>= [right to left]`
-15. `,`
+```C
+for (int i = 0; i < n; i++) {
+  printf("%6d%c", a[i], (i % 10 == 9) || i == (n - 1)) ? '\n' : ' ';
+}
+```
+
+Conditionally printing the s for singular vs plural
+
+```C
+printf("You have %d items%s.\n", n, (n == 1) ? "" : "s");
+```
+
+#### Relevant Exercises
+
+See [Ex2.10](#ex-2-10).
+
+### 2.12 Precedence and Order of Evaluation
+
+#### Table of Operator Precedence
+
+| Operators                                | Associativity |
+|------------------------------------------|---------------|
+| () [] -> .                               | left to right |
+| ! ~ ++ -- + - * & (type) sizeof          | right to left |
+| * / %                                    | left to right |
+| + -                                      | left to right |
+| << >>                                    | left to right |
+| < <= > >=                                | left to right |
+| == !=                                    | left to right |
+| &                                        | left to right |
+| ^                                        | left to right |
+| \|                                       | left to right |
+| &&                                       | left to right |
+| \|\|                                     | left to right |
+| ?:                                       | right to left |
+| = += -= *= /= %= &= ^= \|= <<= >>=       | right to left |
+| ,                                        | left to right |
 
 *Note: the high precedence $-, +, *$, etc are the unary versions*
 
 - Key observation: bit operations have lower precedence than comparisons (`==` and `!=`) so need parentheses for bit-testing.
 - C does not specify the order of operand evaluations (except for `&&, ||, ?:, ','`)
   - e.g. `x = f() + g()` may evaluate either `f` or `g`.
-    - result becomes machine dependent if `f` or `g` modifies variables the other relies on.
+    - Result becomes machine dependent if `f` or `g` modifies variables the other relies on.
 - Order of function arguments also not specified
   - e.g. `printf("%d %d\n", ++n, power(2, n));` is compiler
     dependent.
 - Function calls, nested assignments, incr and decr may cause side effects (change variables). May be hard to parse,
   - e.g. `a[i] = i++`
-  - is the subscript the old or new value? -> compiler dependent.
-  - side effect unspecified by standard
-    - must take place for function args before function call proceeds
+  - Is the subscript the old or new value? -> compiler dependent.
+  - Side effect unspecified by standard
+    - Must take place for function args before function call proceeds
 
 - **MORAL: DON'T RELY ON ORDER OF EVALUATION**

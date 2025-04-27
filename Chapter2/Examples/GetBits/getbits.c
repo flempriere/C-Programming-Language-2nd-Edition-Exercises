@@ -9,6 +9,17 @@
  *
  */
 
+/**
+ * @brief enum storing false and true values
+ *
+ * FALSE = 0;
+ * TRUE = 1
+ */
+enum truth {
+    FALSE,
+    TRUE
+};
+
 #include <stdio.h>
 #include <stdlib.h>
 
@@ -30,14 +41,16 @@ unsigned getbits(unsigned x, unsigned p, unsigned n);
  * @param result Result of getbits
  * @param expected Expected.
  *
- * @return 1 if the results match, else
- * @return 0.
+ * @return TRUE if the results match, else
+ * @return FALSE.
  */
-int test_getbits(unsigned result, unsigned expected);
+enum truth test_getbits(unsigned result, unsigned expected);
+
 /**
  * @brief Test driver for getbits.
  *
- * @return EXIT_SUCCESS
+ * @return EXIT_SUCCESS if all tests passed, else
+ * @return EXIT_FAILURE
  */
 int main(void) {
     unsigned int x = 0x0c3f;
@@ -46,7 +59,7 @@ int main(void) {
     if (!test_getbits(getbits(x, 15, 4), 0x0)) { return EXIT_FAILURE; }
     if (!test_getbits(getbits(x, 11, 4), 0xc)) { return EXIT_FAILURE; }
     if (!test_getbits(getbits(x, 7, 4), 0x3)) { return EXIT_FAILURE; }
-    if (!test_getbits(getbits(0b1, 0, 1), 0x1)) { return EXIT_FAILURE; }
+    if (!test_getbits(getbits(1, 0, 1), 0x1)) { return EXIT_FAILURE; }
     printf("All tests passed successfully\n");
     return EXIT_SUCCESS;
 }
@@ -55,11 +68,11 @@ unsigned getbits(unsigned x, unsigned p, unsigned n) {
     return (x >> (p + 1 - n)) & ~(~0U << n);
 }
 
-int test_getbits(unsigned result, unsigned expected) {
+enum truth test_getbits(unsigned result, unsigned expected) {
     if (result != expected) {
         printf("Error bitpattern exttracted: %x, expected: %x\n", result,
                expected);
-        return 0;
+        return FALSE;
     }
-    return 1;
+    return TRUE;
 }

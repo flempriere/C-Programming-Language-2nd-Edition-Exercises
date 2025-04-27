@@ -23,19 +23,18 @@
  * @brief Maximum length of a line.
  *
  */
-#define MAXLINE 1000
+#define MAXLINE 10
 
 /**
- * @brief Denotes value is true.
+ * @brief enum storing false and true values
  *
+ * FALSE = 0;
+ * TRUE = 1
  */
-#define TRUE 1
-
-/**
- * @brief Denotes value is false.
- *
- */
-#define FALSE 0
+enum truth {
+    FALSE,
+    TRUE
+};
 
 /**
  * @brief Reads a line from stdin into the buffer line.
@@ -68,23 +67,19 @@ int main(void) {
 
 int get_line(char line[]) {
     int i = 0;
-    int read_flag = TRUE;
+    enum truth read_flag = TRUE;
 
     while (read_flag) {
-        if (i < MAXLINE - 1) {
-            char c = getchar();
-            if (c != EOF) {
-                if (c != '\n') {
-                    line[i] = c;
-                    ++i;
-                } else {
-                    read_flag = FALSE;
-                }
-            } else {
-                read_flag = FALSE;
-            }
-        } else {
+        int c;
+        if (i >= MAXLINE - 1) {
             read_flag = FALSE;
+        } else if ((c = getchar()) == EOF) {
+            read_flag = FALSE;
+        } else if (c == '\n') {
+            read_flag = FALSE;
+        } else {
+            line[i] = c;
+            i++;
         }
     }
     line[i] = '\0';

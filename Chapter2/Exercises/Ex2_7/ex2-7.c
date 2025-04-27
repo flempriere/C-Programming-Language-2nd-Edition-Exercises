@@ -18,6 +18,17 @@
 #include <stdlib.h>
 
 /**
+ * @brief enum storing false and true values
+ *
+ * FALSE = 0;
+ * TRUE = 1
+ */
+enum truth {
+    FALSE,
+    TRUE
+};
+
+/**
  * @brief Inverts the n bits of x starting at p, leaving the others
  * untouched.
  *
@@ -35,15 +46,16 @@ unsigned invert(unsigned x, unsigned p, unsigned n);
  *
  * @param result Computed result
  * @param expected expected result
- * @return 1 if the values match, else
- * @return 0.
+ * @return TRUE if the values match, else
+ * @return FALSE.
  */
-int test_invert(unsigned result, unsigned expected);
+enum truth test_invert(unsigned result, unsigned expected);
 
 /**
  * @brief Test driver for invert.
  *
- * @return EXIT_SUCCESS
+ * @return EXIT_SUCCESS if all tests passed, else
+ * @return EXIT_FAILURE.
  */
 int main(void) {
     unsigned int x = 0x0c3f;
@@ -62,10 +74,10 @@ unsigned int invert(unsigned x, unsigned p, unsigned n) {
     return x ^ (~(~0U << n) << (p - n + 1));
 }
 
-int test_invert(unsigned result, unsigned expected) {
+enum truth test_invert(unsigned result, unsigned expected) {
     if (result != expected) {
         printf("Error: bitpattern: %x, expected: %x\n", result, expected);
-        return 0;
+        return FALSE;
     }
-    return 1;
+    return TRUE;
 }
