@@ -14,6 +14,12 @@
 #include <stdio.h>
 #include <stdlib.h>
 
+/**
+ * @brief Version of the temperature conversion program that prints the
+ * table in reverse.
+ *
+ * @return EXIT_SUCCESS
+ */
 int main(void) {
     for (int fahr = 300; fahr >= 0; fahr = fahr - 20) {
         printf("%3d %6.1f\n", fahr, (5.0 / 9.0) * (fahr - 32.0));

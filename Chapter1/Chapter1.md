@@ -80,6 +80,8 @@ Reads lines from input and prints the longest as output.
 
 *Write a program to print the value of `EOF`.*
 
+On our system we find the value to be $`-1`$.
+
 ### [Ex 1-8](./Exercises/Ex1_8/ex1-8.c)
 
 *Write a program to count blanks, tabs and newlines.*
@@ -91,6 +93,8 @@ the final line is not terminated by a newline, than the newline count will be on
 
 *Write a program to copy its input to its output, replacing each
 string of one or more blanks by a single blank.*
+
+We use a state machine. When we first encounter a blank we print it and move to a state where we consume all blanks without printing. When we find the next non-blank we go back to our normal parse mode.
 
 ### [Ex 1-10](./Exercises/Ex1_10/ex1-10.c)
 
@@ -126,6 +130,8 @@ To fix this `count_words.c` is modified to track the previously read character, 
 
 We adopt the behaviour of [Ex1.9](#ex-1-9) replacing all blank substrings with a single blank (or in this case newline.)
 
+Otherwise this program is simple, print words as normal, but when we encounter a blank, move to a new line.
+
 #### [Ex 1-13](./Exercises/Ex1_13/ex1_13.c)
 
 *Write a program to print a histogram of the lengths of words
@@ -149,6 +155,8 @@ in its input. It is easy to print the histogram with the bars horizontal; a vert
 
 *Revise the main routine of the longest line program so it will correctly print the length of arbitrarily long lines, and as much as possible of the text.* (See [longestLine](#longest-line-v1).)
 
+This is straightforward. We move the test $`i < \text{lim} - 1`$ inside the main loop. Now the program doesn't terminate when we hit the max buffer length, instead we simply use that test to ignore the character. We also add a counter to track the length of the line.
+
 ### [Ex 1-17](./Exercises/Ex1_17/ex1-17.c)
 
 *Write a program to print all input lines that are longer than 80 characters.*
@@ -158,6 +166,12 @@ We make the decision to exclude the newline character from this count. i.e. A li
 ### [Ex 1-18](./Exercises/Ex1_18/ex1-18.c)
 
 *Write a program to remove trailing blanks and tabs from each line of input and to delete entirely blank lines.*
+
+This program is a bit more complex due to the trailing requirement. Since we cannot tell a blank is trailing until we've read the end of the line, we naively have to read in the entire line, then strip the trailing blanks.
+
+However this approach is sensitive to the maximum line length. We can write a slightly more robust version, by noting that when we only need to hold onto a blank until we work out if its trailing or not. Once we find a nonblank we can print it. This means when we encounter a blank we can put it on a **queue** and print the queue contents when we find a nonblank. If we find a newline, we simply drop the queue.
+
+Now we only need to store the length of the longest sequential blank subsequence. But this still might be too many. But by using the queue, if the queue gets full we simply pop off the first blank on the queue. If we encounter a nonblank then we empty the queue and the order is preserved. However if this blank subsequence ends up being trailing we still drop the queue. However we've printed some trailing blanks. We simply then flag this to the caller, and this means by running it back through the program again we will eventually remove all the trailing whitespace.
 
 ### [Ex 1-19](./Exercises/Ex1_19/ex1-19.c)
 
@@ -170,6 +184,9 @@ a fixed set of tab stops, say every $`n`$ columns. Should $`n`$ be a variable or
 
 Ideally $`n`$ would be a variable supplied by the user. Since we haven't yet seen how to do this, we leave it as a symbolic constant since it should not change during the runtime of the program.
 
+For our implementation we keep track of the number of blanks equivalent to a tab at the current column. When we detab we use
+this counter to apply the appropriate number of spaces, and then reset the tracker.
+
 **Note:** The folder for this file contains some simple test cases, where we have used [Ex 1.10](#ex-1-10) to catch any undetabed tabs.
 
 ### [Ex 1-21](./Exercises/Ex1_21/ex1-21.c)
@@ -177,6 +194,12 @@ Ideally $`n`$ would be a variable supplied by the user. Since we haven't yet see
 *Write a program **entab** that replaces strings of blanks by the minimum number of tabs and blanks to achieve the same spacing. Use the same tab stops as for **detab** (see [Ex 1.20](#ex-1-20)). When either a tab or a single blank would suffice to reach a tab stop, which should be given preference?*
 
 We should prefer a single blank over a tabstop as that is what most people would expect a single space to be represented by.
+
+We use a similar technique to the previous exercise. We keep track of the number of blanks equivalent to a tab at the given column. When we see a blank we start counting. Then,
+
+1. If this counter equals the number of blanks equivalent to a tab we output a tab unless this number is one, in which case we output a blank.
+2. When we encounter a non-blank we output the number of blanks, and update the blanks to a tabstop counter.
+3. If we encounter a tab, we ignore the current number of blanks,t hen output a tab unless the number of blanks equivalent to a tab is one in which case we output a blank. The spaces to tab counter, and number of spaces is tracked.
 
 ### [Ex 1-22](./Exercises/Ex1_22/ex1-22.c)
 
@@ -199,11 +222,34 @@ column index.
 
 **Note**: We extend this to support `C99` style singleline comments.
 
+We use a state machine approach again. the machine has five states, the normal state executed by the main represents parsing. We keep track of the current character and the previous character.
+
+1. If we get the pattern `//` from the normal state we transition to the `single_comment` state, where we ignore all input until the end of the line, before returning to the normal state.
+2. If we get the pattern `/*` we transition to the `multiline comment` state, where we ignore all input until we find a `*/`, then return to the normal state.
+3. If we get the pattern `"` we transition to the `in_string` state, and copy out all input until we get to another `"` then return to the normal state.
+    1. **Note**: We have to be careful of escape sequences in strings and characters.
+4. The `in_character` state behaves the same as the string state except it is triggered by `'`.
+
+By writing a function for each state, we naturally deal with cases such as comments in strings, strings in comments etc.
+
 ### [Ex 1-24](./Exercises/Ex1_24/ex1-24.c)
 
 *Write a program to check a C program for rudimentary syntax errrors like unbalanced parantheses, brackets, and braces. Don't forget about quotes, both single and double, escape sequences, and comments. (This program is hard to do in full generality).*
 
-**Note:** Our implementation does not account for the presence of comments, we assume that these will be stripped out by the use of a program like [Ex 1-23](#ex-1-23) first.
+**Note:** Our implementation does not account for the presence of comments, we assume that these will be stripped out by the use of a program like [Ex 1-23](#ex-1-23) first. (We could add this feature in but it would only serve to distract from the focus on the syntactic analysis.)
+
+Otherwise we use a slightly more advanced implementation than just counting the number of each type of brackets by using a stack and a state machine approach. In the absence of strings the algorithm works as follows
+
+1. Consume characters until we find a delimiter `{, [, (, ), ], }`.
+    1. If it is a left delimiter push it onto the stack.
+    2. If is a right delimiter pop the stack, if the popped element is not the corresponding left delimiter, return an error.
+2. If we reach the end of the file without an error we check that the stack is empty. If it is not then we have an unpaired delimiter and we report an error.
+
+How do we handle strings and characters? Well, we add a state machine layer.
+
+1. We start in a normal state, when we encounter a `"` or a `'` in the normal state, we push them onto the stack, and transition to either an `in_string` or `in_character` state.
+2. In this state we consume all characters, until we find the appropriate delimiter.
+3. We then pop the `"` or `'` from the stack and return to a normal state.
 
 ## 1.1 Getting Started
 

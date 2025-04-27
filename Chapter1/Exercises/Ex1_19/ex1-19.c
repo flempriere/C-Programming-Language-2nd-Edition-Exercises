@@ -39,14 +39,12 @@ int get_line(int maxline, char line[maxline]);
 /**
  * @brief reverses a string.
  *
- * Given a string of length len, reverses the input
- * of the string stored in the buffer s. The reverse
+ * Reverses the string stored in s. The reverse
  * is performed inplace.
  *
- * @param len length of the string to be reversed.
  * @param s buffer storing the string.
  */
-void reverse(int length, char s[length]);
+void reverse(char s[]);
 
 /**
  * @brief Reads lines from standard input and prints
@@ -56,10 +54,9 @@ void reverse(int length, char s[length]);
  */
 int main(void) {
     char line[MAXLINE];
-    int len;
 
-    while ((len = get_line(MAXLINE, line)) > 0) {
-        reverse(len, line);
+    while (get_line(MAXLINE, line) > 0) {
+        reverse(line);
         printf("%s\n", line);
     }
     return EXIT_SUCCESS;
@@ -75,8 +72,12 @@ int get_line(int maxline, char line[maxline]) {
     return i;
 }
 
-void reverse(int len, char s[len]) {
+void reverse(char s[]) {
     int i = 0;
+    // find the end of the string
+    int len = 0;
+    for (len = 0; s[len] != '\0'; len++);
+    // perform the reverse
     for (int tmp; i < len / 2; i++) {
         tmp = s[i];
         s[i] = s[len - i - 1];

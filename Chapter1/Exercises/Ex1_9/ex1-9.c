@@ -22,8 +22,7 @@
  * @return EXIT_SUCCESS
  */
 int main(void) {
-    int ignore_blanks =
-        0;    // modern C standards this can be replaced by a bool
+    int ignore_blanks = 0;    // Modern C lets us use bool.
     for (int c; (c = getchar()) != EOF;) {
         if (c == ' ')
             if (ignore_blanks != 1) {

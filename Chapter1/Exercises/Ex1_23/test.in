@@ -12,3 +12,7 @@ multiple */
 '/'/ not a comment
 '/'* not a multiline */
 /* *'/'*/
+'"'
+'\''
+"'"
+"\""

@@ -49,22 +49,21 @@
 /**
  * @brief Removes trailing white space and empty lines from an input stream.
  *
- * @remark If a sequence of blanks > QUEUE_SIZE is found, then
+ * @remark If a sequence of blanks > QUEUE_SIZE is found, then blanks are
+ * popped of the queue if a FIFO manner.
  *
  * @return EXIT_SUCCESS if all lines successfully processed, else
- * @return EXIT_FAILURE.
+ * @return EXIT_FAILURE if some traiing whitespace was not removed.
  */
 int main(void) {
     char blanks[QUEUE_SIZE];
     for (int i = 0; i < QUEUE_SIZE; i++) { blanks[i] = 0; }
 
-    int tail = 0;             // end of the queue.
-    int head = QUEUE_SIZE;    // head of the queue.
-    int line_not_empty =
-        FALSE;    // indicates a line contains printed characters
+    int tail = 0;                    // end of the queue.
+    int head = QUEUE_SIZE;           // head of the queue.
+    int line_not_empty = FALSE;      // line contains printed characters
     int ret_value = EXIT_SUCCESS;    // stores the return value
-    int printed_trailing =
-        FALSE;    // indicates we have printed trailing whitespace
+    int printed_trailing = FALSE;
 
     for (int c; (c = getchar()) != EOF;) {
         if (c == '\n') {

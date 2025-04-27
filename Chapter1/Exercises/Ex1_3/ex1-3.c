@@ -14,6 +14,12 @@
 #include <stdio.h>
 #include <stdlib.h>
 
+/**
+ * @brief Prints a temperature conversion table for Fahrenheit to Celsius with
+ * a header.
+ *
+ * @return EXIT_SUCCESS
+ */
 int main(void) {
     float lower = 0;
     float upper = 300;

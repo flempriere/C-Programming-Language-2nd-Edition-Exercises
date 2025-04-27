@@ -17,49 +17,33 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-// parsing states
+/**
+ * @brief Parsing state inside a singleline comment block.
+ *
+ * Removes all chars until end of file, or a newline is reached, returning
+ * the last character read.
+ *
+ * @return Returns the last character read
+ */
+int remove_singleline_comment(void);
 
 /**
- * @brief Denote we're in a multiline comment
+ * @brief Parsing state inside a multiline comment block.
  *
+ * Removes all chars until end of file, or a *\/ is found.
+ *
+ * @return the last character read
  */
-#define MULTILINE_COMMENT 4
+int remove_multiline_comment(void);
 
 /**
- * @brief Denote we're in a singleline comment
+ * @brief Parsing state inside a string or character literal
  *
- */
-#define SINGLELINE_COMMENT 3
-
-/**
- * @brief Denote that we're in a string literal
+ * @param delim delimiter of the block.
  *
+ * @return the last character read.
  */
-#define IN_STRING 2
-
-/**
- * @brief Denote that we're in a character literal
- *
- */
-#define IN_CHAR 1
-
-/**
- * @brief Value indicating truth
- *
- */
-#define TRUE 1
-
-/**
- * @brief Value indicating false
- *
- */
-#define FALSE 0
-
-/**
- * @brief Ordinary parsing state.
- *
- */
-#define NORMAL 0
+int in_literal(int delim);
 
 /**
  * @brief Removes all comments from the given input file. Handles both
@@ -68,49 +52,51 @@
  * @return EXIT_SUCCESS
  */
 int main(void) {
-    int state = NORMAL;
     int prev = EOF;
 
     for (char c; (c = getchar()) != EOF;) {
-        if (state == NORMAL) {
+        if (prev == '/') {
             if (c == '/') {
-                if (prev == '/') { state = SINGLELINE_COMMENT; }
+                c = remove_singleline_comment();
             } else if (c == '*') {
-                if (prev == '/') {
-                    state = MULTILINE_COMMENT;
-                } else {
-                    putchar('*');
-                }
-            } else if (c == '"') {
-                state = IN_STRING;
-                if (prev == '/') { putchar(prev); }
-                putchar(c);
-            } else if (c == '\'') {
-                state = IN_CHAR;
-                if (prev == '/') { putchar(prev); }
-                putchar(c);
+                remove_multiline_comment();
+                c = EOF;    // to avoid /* *// being interpreted as two comments
             } else {
-                if (prev == '/') { putchar(prev); }
-                putchar(c);
+                putchar(prev);
             }
-        } else if (state == IN_CHAR) {
-            if (c == '\'') { state = NORMAL; }
+        }
+        if (c == '"') {
+            c = in_literal('"');
+        } else if (c == '\'') {
+            c = in_literal('\'');
+        } else if (c != '/' && c != EOF) {
             putchar(c);
-        } else if (state == IN_STRING) {
-            if (c == '"') { state = NORMAL; }
-            putchar(c);
-        } else if (state == SINGLELINE_COMMENT) {
-            if (c == '\n') {
-                state = NORMAL;
-                putchar('\n');
-            }
-        } else if (state == MULTILINE_COMMENT) {
-            if (c == '/' && prev == '*') {
-                state = NORMAL;
-                c = EOF;    // make it so /**/* does not register as a comment
-            }
         }
         prev = c;
     }
     return EXIT_SUCCESS;
+}
+
+int remove_singleline_comment(void) {
+    int c;
+    while ((c = getchar()) != EOF && c != '\n');
+    return c;
+}
+
+int remove_multiline_comment(void) {
+    int prev = EOF;
+    int c;
+    while ((c = getchar()) != EOF && (c != '/' || prev != '*')) { prev = c; }
+    return c;
+}
+
+int in_literal(int delim) {
+    putchar(delim);
+    int c;
+    while ((c = getchar()) != delim) {
+        putchar(c);
+        if (c == '\\') { putchar(getchar()); }    // handle escape sequence
+    }
+    putchar(c);
+    return c;
 }

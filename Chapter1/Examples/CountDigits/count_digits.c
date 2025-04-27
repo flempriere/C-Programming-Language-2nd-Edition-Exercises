@@ -14,6 +14,12 @@
 #include <stdio.h>
 #include <stdlib.h>
 
+/**
+ * @brief Counts the occurences of each digit, whitespace and other
+ * characters in a given input.
+ *
+ * @return EXIT_SUCCESS
+ */
 int main(void) {
     int ndigits[10];
     int nwhite = 0;

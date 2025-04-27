@@ -36,6 +36,7 @@
  * @see LOWER, @see UPPER
  */
 #define STEP 20
+
 /**
  * @brief Converts Fahrenheit to Celsius
  *
@@ -48,7 +49,7 @@ double fahrenheit_to_celsius(double fahrenheit);
  * @brief Prints a table converting fahrenheit to celsius for
  * fahr = LOWER to UPPER in steps of STEP.
  *
- * @return int
+ * @return EXIT_SUCCESS
  */
 int main(void) {
     for (int fahr = LOWER; fahr <= UPPER; fahr = fahr + STEP) {

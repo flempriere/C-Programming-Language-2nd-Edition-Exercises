@@ -25,6 +25,7 @@
  *
  */
 #define OUT 0
+
 /**
  * @brief Counts the number of characters, newlines and tabs
  * in a given input stream.

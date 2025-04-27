@@ -35,6 +35,7 @@
  *
  */
 #define PRINTABLE_ARRAY_SIZE (MAX_PRINT - MIN_PRINT + 1)
+
 /**
  * @brief Prints a histogram of the frequency of different characters in its
  * input.

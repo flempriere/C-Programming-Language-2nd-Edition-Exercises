@@ -20,6 +20,7 @@
  * @copyright Copyright (c) 2025
  *
  */
+
 #include <stdio.h>
 #include <stdlib.h>
 
@@ -36,8 +37,9 @@
 #define OUT 0
 
 /**
- * @brief Maximum length of a word.
+ * @brief Maximum distinct word length to include in the histogram.
  *
+ * Words longer than MAX_WORD_LENGTH will all be binned together.
  */
 #define MAX_WORD_LENGTH 30
 
@@ -53,7 +55,7 @@ int main(void) {
 
     int state = OUT;
     int length = 0;
-    int max = 0;    // maximum bin value we've seen.
+    int max = 0;    // maximum value in a bin we've seen.
     for (char c; (c = getchar()) != EOF;) {
         if (c == ' ' || c == '\t' || c == '\n') {
             if (state == IN) {
@@ -76,7 +78,7 @@ int main(void) {
         wordLengths[length]++;
         if (wordLengths[length] > max) max = wordLengths[length];
     }
-
+    // print the histogram vertically.
     for (int i = max + 1; i > 0; --i) {
         printf("%4d|", i);
         for (int j = 0; j <= MAX_WORD_LENGTH + 1; j++) {

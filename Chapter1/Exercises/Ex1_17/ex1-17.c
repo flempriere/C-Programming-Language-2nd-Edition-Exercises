@@ -37,7 +37,7 @@
  * @param line buffer to store the read line in, the indices [0, maxline) must
  * be valid.
  *
- * @return EXIT_SUCCESS
+ * @return length of the read input line, 0 is returned if no line is read.
  */
 int get_line(int maxline, char line[maxline]);
 

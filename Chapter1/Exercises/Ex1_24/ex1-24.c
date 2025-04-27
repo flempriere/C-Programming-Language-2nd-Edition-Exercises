@@ -160,6 +160,17 @@ int push_stack(int len, int a[], int val);
 int stack_top = 0;
 int escaped = NOT_ESCAPED;
 
+/**
+ * @brief Performs basic syntactic analysis on a C source file. 
+ * 
+ * @warning Assumes all comments have already been removed.
+ *
+ * Currently checks for:
+ * - Ensures all grouping symbols {}, [], (), "" and '' are closed.
+ * 
+ * @return EXIT_SUCCESS if no errors are found, else
+ * @return EXIT_FAILURE
+ */
 int main(void) {
     int stack[N_SYMBOLS];
     initialise_array(N_SYMBOLS, stack, 0);
@@ -173,7 +184,11 @@ int main(void) {
     if (error == NO_ERROR && stack_top != 0) { error = get_error(stack); }
     print_error(error, line);
 
-    return EXIT_SUCCESS;
+    if (error == NO_ERROR) {
+        return EXIT_SUCCESS;
+    } else {
+        return EXIT_FAILURE;
+    }
 }
 
 void initialise_array(int len, int a[], int val) {
