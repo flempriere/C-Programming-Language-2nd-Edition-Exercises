@@ -36,3 +36,4 @@ Generally we try to write our solutions to be to the point. That means we typica
 
 1. [Chapter 1](./Chapter1/Chapter1.md) - A Tutorial Introduction.
 2. [Chapter 2](./Chapter2/Chapter2.md) - Types, Operators and Expressions.
+3. [Chapter 3](./Chapter3/Chapter3.md) - Control Flow.

@@ -42,6 +42,10 @@ Counts the number of lines in an input stream.
 
 Counts the number of lines, words and characters in an input stream.
 
+### [Count Digits](./Examples/CountDigits/count_digits.c)
+
+Counts the occurences of each digit, whitespace and other characters in an input stream.
+
 ### Exponentiation
 
 #### [Exponentiation v1](./Examples/Power/v1/power.c)
@@ -542,7 +546,7 @@ See [Ex1.11](#ex-1-11) and [Ex1.12](#ex-1-12).
 
 ## 1.6 Arrays
 
-### Example: Count Digits and White Space
+### Example: [Count Digits and White Space](#count-digits)
 
 ### Arrays
 

@@ -139,13 +139,13 @@ Hence the binary representation of `x` and `x - 1` differ only in the value of t
 
 *Rewrite the function `lower`, which converts upper case letters to lower case, with a conditional expression instead of `if-else`.*
 
-### 2.0 Introduction
+## 2.0 Introduction
 
 - *Variables and Constants*: basic data objects, names, types and optionally initial values listed by *declarations*
 - *Operators* specify actions taken on data objects
 - *Expressions* combine variables and constants to create new values
 
-### 2.1 Variable Names
+## 2.1 Variable Names
 
 - Names are made of letters and digits
   - First character must be a letter
@@ -163,7 +163,7 @@ Hence the binary representation of `x` and `x - 1` differ only in the value of t
   - Short names for local variables
   - Longer names for external variables
 
-### 2.2 Data Types and Sizes
+## 2.2 Data Types and Sizes
 
 There are limited C data types
 
@@ -194,11 +194,11 @@ Qualifiers can be used to modify types
 - The standard headers `<limits.h>` and `<float.h>` contain symbolic constants for these sizes and other
 machine and compiler.
 
-#### Relevant Exercises
+### Relevant Exercises
 
 [Ex2.1](#ex-2-1).
 
-### 2.3 Constants
+## 2.3 Constants
 
 - Integer constant like `1234` is an `int`
 - `long` constant written with terminal `l` or `L`
@@ -264,7 +264,7 @@ via `'\ooo'` where `o` is an octal digit or `'\xhh'` where `h` is a hexadecimal 
     - No restriction on string size.
     - Length must be scanned.
 
-#### Example [strlen implementation](#string-length)
+### Example [strlen implementation](#string-length)
 
 - `strlen(s)` is a library function to do this for a string `s`.
 - An Example implementation is, (see the code attached.)
@@ -303,7 +303,7 @@ and
 - Names must be unique in an enumeration but not across all enumerations
 - Enums associate constants with names like `define`, but can be checked, and potentially debugged symbolically
 
-### 2.4 Declarations
+## 2.4 Declarations
 
 - Must declare variables before use, often with type
   - Some declarations can be done implicitly
@@ -335,14 +335,14 @@ double eps = 1.0e-5
     - e.g. `int strlen(const char[]);`
   - Result of attempting to change a `const` variable is implementation defined
 
-### 2.5 Arithmetic Operators
+## 2.5 Arithmetic Operators
 
 - Binary arithmetic operators are
   - `+, -, *, /` and modulus `%`.
 - Integer division truncates fractions
 - modulus `%` returns the remainder of `x / y`
 
-#### Example [Calculating Leap Years](#leap-year)
+### Example [Calculating Leap Years](#leap-year)
 
 An example leap year calculation would then be:
 
@@ -360,7 +360,7 @@ else
 - Precedence is (*unary* +, - ) > (*, /, %) > (*binary* +, -).
 - Arithmetic operators associate left to right
 
-### 2.6 Relational and Logic Operators
+## 2.6 Relational and Logic Operators
 
 - Relational operators are `>`, `>=`, `<`, `<=`
   - All identical precedence
@@ -398,11 +398,11 @@ Unary negation operator `!` converts non-zero operand into 0 and a zero operand 
 
 - e.g. `if (!valid)` <=> `if (valid == 0)`
 
-#### Relevant Exercises
+### Relevant Exercises
 
 See [Ex2.2](#ex-2-2).
 
-### 2.7 Type Conversions
+## 2.7 Type Conversions
 
 - Operators acting on multiple types will convert them to a common type based on a small ruleset.
   - Automatic conversions typically only *narrower* -> *wider*
@@ -411,7 +411,7 @@ See [Ex2.2](#ex-2-2).
 - Expressions like using a float as a subscript don't make sense and are forbidden.
 - Assignments which lose information, e.g. wider type to narrow (float -> int, int -> char) may cause a warning but are not forbidden.
 
-#### Example [String to Integer Conversion](#string-to-integer)
+### Example [String to Integer Conversion](#string-to-integer)
 
 - Chars are small ints.
 - Small int, therefore can be used numerically.
@@ -434,7 +434,7 @@ int atoi(char s[])
 
 - `s[i] - '0'` gives the numeric value of the character stored in `s[i]`.
 
-#### Example [Uppercase to Lowercase](#uppercase-to-lowercase)
+### Example [Uppercase to Lowercase](#uppercase-to-lowercase)
 
 - We also have the `lower()` function to convert a `char c` to lowercase
 
@@ -473,7 +473,7 @@ Relational expressions like `i > j` (or those connected by `||` and `&&` ) evalu
 - `d = c >= '0' && c <= '9'` assigns $d$ $1$ if $c$ is a digit else $0$.
 - Note any non-zero value is treated as true, and this is often used by functions like `isdigit()` and tests for `if, while, for etc...`
 
-#### Implicit conversions
+### Implicit conversions
 
 Typically *lower* type is promoted to the *higher* type. For unsigned types the informal rules below apply
 
@@ -533,7 +533,7 @@ If `x` is `float` and `i` is `int` then
     - `root2 = sqrt(2)`
     coerces the integer 2 into the double 2.0
 
-#### Example [Pseudo-Random Number Generator](#pseudorandom-number-generator)
+### Example [Pseudo-Random Number Generator](#pseudorandom-number-generator)
 
 The standard library contains a portable implementation of a pseudo-random number generator, and a seed initialisation function; the former casts,
 
@@ -552,13 +552,13 @@ void srand(unsigned int seed)
 }
 ```
 
-#### Relevant Exercises
+### Relevant Exercises
 
 See [Ex2.3](#ex-2-3).
 
-### 2.8 Increment and Decrement Operators
+## 2.8 Increment and Decrement Operators
 
-#### Example [Delete a Character from a String](#squeeze)
+### Example [Delete a Character from a String](#squeeze)
 
 - Two in(de)crment operators, `++` increases by one, `--` decreases by 1.
   - May be used pre or post fix.
@@ -588,13 +588,13 @@ void squeeze(char s[], char c)
 - Each time a non-$c$ occurs, it is copied into the $j$ position and then $j$ is incremented for the next character.
   - `++j` would increment, then copy.
 
-#### Example [Concatenating a String](#string-concatenation)
+### Example [Concatenating a String](#string-concatenation)
 
-#### Relevant Exercises
+### Relevant Exercises
 
 See [Ex2.4](#ex-2-4) and [Ex2.5](#ex-2-5).
 
-### 2.9 Bitwise Operators
+## 2.9 Bitwise Operators
 
 C provides six bitwise operators, typically they may only
 be applied to integral operands.
@@ -632,7 +632,7 @@ be applied to integral operands.
   - note: `~077` is independent of the word length, while the expression `x & 0177700` assumes a 16 bit word.
     - The former is more portable and both can be determined at compile time so have the same time cost. (since ~077 is constant.)
 
-#### Example: [Selecting Bits](#getbits)
+### Example: [Selecting Bits](#getbits)
 
 Consider the example function `getbits(x, p, n)`. This returns the right-adjusted $n$-bit field of $x$ beginning at
 $p$. $0$ is taken as the rightmost index, with $p, n > 0$ so
@@ -660,11 +660,11 @@ by $n$, then sets right-most $n$ digits to 0.
 - ~(~0 << n) thus sets only the right-most $n$ digits to 1.
 - then use `&` to mask.
 
-#### Relevant Exercises
+### Relevant Exercises
 
 See [Ex 2.6](#ex-2-6), [Ex 2.7](#ex-2-7) and [Ex 2.8](#ex-2-8)
 
-### 2.10 Assignment Operators and Expressions
+## 2.10 Assignment Operators and Expressions
 
 - Expressions like `i = i + 2` can be written using an
 assignment operator
@@ -675,7 +675,7 @@ assignment operator
     - Equivalent to `x = x * (y + 1)`
     - Not equivalent to `x = x * y + 1`
 
-#### Example [bitcount](./Examples/BitCount/bitcount.c)
+### Example [bitcount](./Examples/BitCount/bitcount.c)
 
 ```C
 /* bitcount: count 1 bits in x */
@@ -695,11 +695,11 @@ int bitcount(unsigned int x)
   - Also may help compiler optimisation
 - The type and value of all assignment operators is the type of the left operand and the value of the left operand after assignment.
 
-#### Relevant Exercises
+### Relevant Exercises
 
 See [Ex 2.9](#ex-2-9)
 
-### 2.11 Conditional Statements
+## 2.11 Conditional Statements
 
 - The ternary operator `?:` lets us rewrite expressions of
 the form
@@ -739,7 +739,7 @@ z = (a > b) ? a : b /* z = max(a, b) */
 - Precedence of `?` is just above `=`
   - Use brackets for clarity though.
 
-#### Example uses
+### Example uses
 
 Print the contents of an array, 10 elements per line.
 
@@ -755,13 +755,13 @@ Conditionally printing the s for singular vs plural
 printf("You have %d items%s.\n", n, (n == 1) ? "" : "s");
 ```
 
-#### Relevant Exercises
+### Relevant Exercises
 
 See [Ex2.10](#ex-2-10).
 
-### 2.12 Precedence and Order of Evaluation
+## 2.12 Precedence and Order of Evaluation
 
-#### Table of Operator Precedence
+### Table of Operator Precedence
 
 | Operators                                | Associativity |
 |------------------------------------------|---------------|
