@@ -6,6 +6,12 @@
  * Write a function `escape(s, t)` that converts characters like newline and tab
  * into visible escape sequences like `\n` and `\t` as it copies the string t
  * to s. Use a `switch`. Write a function `unescape(s,t)` that does the reverse.
+ *
+ * @remark This version handles all the ASCII C0 control characters with an
+ * escape sequence i.e. \\a (Bell), \\b (Backspace), \t (tab), \\n (newline), 
+ * \v (vertical tab), \f (form feed), \r (carriage return). Note we exlude the
+ * \0 symbol itself.
+ * 
  * @version 0.1
  * @date 2025-04-28
  *
@@ -15,6 +21,17 @@
 
 #include <stdio.h>
 #include <stdlib.h>
+
+/**
+ * @brief enum storing false and true values
+ *
+ * FALSE = 0;
+ * TRUE = 1
+ */
+enum truth {
+    FALSE,
+    TRUE
+};
 
 /**
  * @brief Maximum size of a string buffer.
@@ -46,11 +63,71 @@ void escape(char dest[], char src[]);
 void unescape(char dest[], char src[]);
 
 /**
+ * @brief Compare two strings for equality.
+ *
+ * @param s
+ * @param t
+ * @return TRUE if equal, else
+ * @return FALSE.
+ */
+enum truth my_streq(char s[], char t[]);
+
+/**
+ * @brief Tests unescape and escape, by performing escape on the string
+ * s, check this against the expected string and then checking that unescape
+ * converts it back.
+ *
+ * @param s input string
+ * @param expected expected string
+ * @return TRUE if test passes, else
+ * @return FALSE.
+ */
+enum truth test_string(char s[], char expected[]);
+
+/**
  * @brief Test driver for escape and unescape.
  *
- * @return EXIT_SUCCESS
+ * @return EXIT_SUCCESS if all tests passed, else
+ * @return EXIT_FAILURE
  */
-int main(void) { return EXIT_SUCCESS; }
+int main(void) {
+
+    if (!test_string("", "")) {
+        return EXIT_FAILURE;
+    }
+    if (!test_string("a", "a")) {
+        return EXIT_FAILURE;
+    }
+    if (!test_string("abc", "abc")) {
+        return EXIT_FAILURE;
+    }
+    if (!test_string("\a", "\\a")) {
+        return EXIT_FAILURE;
+    }
+    if (!test_string("\b", "\\b")) {
+        return EXIT_FAILURE;
+    }
+    if (!test_string("\f", "\\f")) {
+        return EXIT_FAILURE;
+    }
+    if (!test_string("\n", "\\n")) {
+        return EXIT_FAILURE;
+    }
+    if (!test_string("\r", "\\r")) {
+        return EXIT_FAILURE;
+    }
+    if (!test_string("\t", "\\t")) {
+        return EXIT_FAILURE;
+    }
+    if (!test_string("\v", "\\v")) {
+        return EXIT_FAILURE;
+    }
+    if (!test_string("ab\acd\tef\n", "ab\\acd\\tef\\n")) {
+        return EXIT_FAILURE;
+    }
+    printf("All tests passed successfully\n");
+    return EXIT_SUCCESS; 
+}
 
 void escape(char dest[], char src[]) {
     int j = 0;
@@ -66,7 +143,7 @@ void escape(char dest[], char src[]) {
             break;
         case '\f':
             dest[j++] = '\\';
-            dest[j++] = 'b';
+            dest[j++] = 'f';
             break;
         case '\n':
             dest[j++] = '\\';
@@ -83,22 +160,6 @@ void escape(char dest[], char src[]) {
         case '\v':
             dest[j++] = '\\';
             dest[j++] = 'v';
-            break;
-        case '\\':
-            dest[j++] = '\\';
-            dest[j++] = '\\';
-            break;
-        case '\?':
-            dest[j++] = '\\';
-            dest[j++] = '?';
-            break;
-        case '\'':
-            dest[j++] = '\\';
-            dest[j++] = '\'';
-            break;
-        case '\"':
-            dest[j++] = '\\';
-            dest[j++] = '"';
             break;
         default:
             dest[j++] = src[i];
@@ -123,23 +184,17 @@ void unescape(char dest[], char src[]) {
             case 'f':
                 dest[j++] = '\f';
                 break;
+            case 'n':
+                dest[j++] = '\n';
+                break;
+            case 'r':
+                dest[j++] = '\r';
+                break;
             case 't':
                 dest[j++] = '\t';
                 break;
             case 'v':
                 dest[j++] = '\v';
-                break;
-            case '\\':
-                dest[j++] = '\\';
-                break;
-            case '?':
-                dest[j++] = '\?';
-                break;
-            case '\'':
-                dest[j++] = '\'';
-                break;
-            case '"':
-                dest[j++] = '\"';
                 break;
             default:
                 dest[j++] = '\\';
@@ -153,4 +208,29 @@ void unescape(char dest[], char src[]) {
         }
     }
     dest[j] = '\0';
+}
+
+enum truth my_streq(char s[], char t[]) {
+    for (int i = 0; s[i] != '\0'; i++) {
+        if (s[i] != t[i]) { return FALSE; }
+    }
+    return TRUE;
+}
+
+enum truth test_string(char s[], char expected[]) {
+    char intermediate[MAX_LENGTH];
+    char output[MAX_LENGTH];
+    escape(intermediate, s);
+    if (!my_streq(intermediate, expected)) {
+        printf("Error escaping %s produced %s\n", s, intermediate);
+        printf("Expected: %s\n", expected);
+        return FALSE;
+    }
+    unescape(output, intermediate);
+    if (!my_streq(s, output)) {
+        printf("Error unescaping %s produced %s\n", intermediate, output);
+        printf("Expected %s\n", s);
+        return FALSE;
+    }
+    return TRUE;
 }

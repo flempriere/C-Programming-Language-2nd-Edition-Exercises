@@ -10,6 +10,18 @@ Finds the index of a given value in a sorted array.
 
 Reimplements the [Count Digits](../Chapter1/Chapter1.md#count-digits) example from [Chapter 1](../Chapter1/Chapter1.md) with a `switch` statement instead of an `if-else` construct.
 
+### [String to Integer Conversion](./Examples/Atoi/atoi_v2.c)
+
+Reimplements the [String to Integer Conversion](../Chapter2/Chapter2.md#string-to-integer) with more complicated parsing logic.
+
+### [Sorting Numbers](./Examples/Shellsort/shellsort.c)
+
+Uses the *shellsort* algorithm to sort an array of numbers.
+
+### [String Reversal](./Examples/Reverse/reverse.c)
+
+Implements a string reversal like [Ex 1-19](../Chapter1/Chapter1.md#ex-1-19) utilising the comma operator.
+
 ## Exercises
 
 ### [Ex 3-1](./Exercises/Ex3_1/ex3-1.c)
@@ -34,6 +46,10 @@ So the old method is slower, but not significantly so. (and both methods are ver
 ### [Ex 3-2](./Exercises/Ex3_2/ex3-2.c)
 
 *Write a function `escape(s, t)` that converts characters like newline and tab into visible escape sequences like \n and \t as it copies the string t to s. Use a `switch`. Write a function `unescape(s,t)` for the other direction as well, converting escape sequences into the real characters.*
+
+### [Ex 3-3](./Exercises/Ex3_3/ex3-3.c)
+
+*Write a function `expand(s1, s2)` that expands shorthand notations like `a-z` in the string `s1` into the equivalent complete list `abc...xyz` in `s2`. Allow for letters of either case and digits, and be prepared to handle cases like `a-b-c` and `a-z0-9` and `-a-z`. Arrange that a leading or trailing `-` is taken literally.*
 
 ### Summary of Exercises
 
@@ -61,6 +77,7 @@ else
     statement2
 ```
 
+- **C2Y** will let the *expression* be a *declaration*.
 - `else` is optional
 - Logic: test if expression is non-zero, and calls *statement1* if so (else) calls *statement 2*.
 
@@ -231,7 +248,7 @@ int main()
 
 See [Ex 3.2](#ex-3-2).
 
-### 3.5 Loops - While and For
+## 3.5 Loops - While and For
 
 - While syntax:
 
@@ -240,9 +257,9 @@ while (expression)
     statement
 ```
 
-- expression evaluated, statement executed if expr is non-zero.
-  - expr then revaluated (and statement executed) until evaluates to zero.
-  - control resumes after statement
+- Expression evaluated, statement executed if *expr* is non-zero.
+  - *expr* then revaluated (and statement executed) until it evaluates to zero.
+  - Control resumes after statement
 
 - For syntax:
 
@@ -252,6 +269,23 @@ for (expr1 ; expr2 ; expr3)
 ```
 
 is equivalent to
+
+```C
+expr1;
+while (expr2) {
+    statement;
+    expr2;
+}
+```
+
+- (excepting `continue` - discussed later).
+- Grammatically the three components of a `for` are *expressions*.
+  - **C99** onwards lets the first expression be a *declaration*.
+- May omit any part, but must leave the `;`.
+
+- *For* vs *While* largely comes down to readability, and if initilisation or complex logic is needed.
+
+### Example [Atoi Revisited](#string-to-integer-conversion)
 
 ```C
 #include <ctype.h>
@@ -270,8 +304,12 @@ int atoi(char s[])
 }
 ```
 
-- Standard library contains `strtol` for converting `string` to `long integers`.
+- Standard library contains `strtol` for converting `string` to `long integers`  (and related functions).
 - Central loop control good for complicated nested loops, e.g. shellsort
+
+### Example [Shellsort](#sorting-numbers)
+
+Performs sorts by initially comparing far-away elements.
 
 ```C
 /* shellsort: sort v[0]...v[n-1] into increasing order */
@@ -290,20 +328,21 @@ void shellsort(int v[], int n)
 }
 ```
 
-- Three nested loops
-  - outermost contols gap between compared elements
-    - shrinks from $n/2$ by a factor of $2$ per pass until $0$
-  - middle loop steps along the elements
-  - innermost compares each pair seperated by gap and reverses those out of order.
-    - gap reduces to one, so all are eventually sorted
+- Three nested loops.
+  - Outermost contols gap between compared elements.
+    - Shrinks from $n/2$ by a factor of $2$ per pass until $0$.
+  - Middle loop steps along the elements
+  - Innermost compares each pair seperated by gap and reverses those out of order.
+    - Gap reduces to one, so all are eventually sorted
 
-#### Comma Operator
+### Comma Operator
 
-- the comma operator `,` is mostly used for `for` loops
-  - pair of expressions seperated by `,` are evaluated left to right.
-    - type and value of result is that of the right operand
-    - useful in `for` loops for multi-indexing
-- e.g. this implementation of `reverse(s)` which reverses inplace
+- The comma operator `,` is mostly used for `for` loops.
+  - Pair of expressions seperated by `,` are evaluated left to right.
+    - Type and value of result is that of the right operand.
+    - Useful in `for` loops for multi-indexing
+
+#### Example [Reverse](#string-reversal)
 
 ```C
 #include <string.h>
@@ -322,15 +361,22 @@ void reverse(char s[])
 }
 ```
 
-- Comma operator used to initialise i and j
-- Comma operator used to index i and j
-- *Note* comma operator is not the same thing as syntactic comma for seperating func args, vars, etc.
-  - left -> right eval is thus not guaranteed
-- Use sparingly
-  - save for tightly coupled constructs
+- Comma operator used to initialise i and j.
+- Comma operator used to index i and j.
+- **Note:** comma operator is not the same thing as syntactic comma for seperating func args, vars, etc.
+  - *This comma* does not guarantee left -> right eval.
+- Use sparingly.
+  - Save for tightly coupled constructs.
     - e.g. for loop, multistep single line macros
-  - could potentially use in `reverse` if we view reversing as a single operation:
-    `c = s[i], s[i] = s[j], s[j] = c;`
+  - Could potentially use in `reverse` if we view reversing as a single operation. But this is less idiomatic and obvious.
+
+```C
+c = s[i], s[i] = s[j], s[j] = c;
+```
+
+#### Relevant Exercises
+
+See [Ex 3.3](#ex-3-3).
 
 ### 3.6 Loops - Do-While
 
