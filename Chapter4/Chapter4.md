@@ -6,11 +6,18 @@
 
 A simple pattern matching program using simple string matching a gainst a compiled pattern.
 
+### [String to Floating Point Conversion](./Examples/Atof/atof.c)
+
+Converts a string to a floating point number. Specifically a `double`.
+
 ## Exercises
+
+### [Ex 4-1](./Exercises/Ex4_1/ex4_1.c)
+
+*Write the function `strrindex(s,t)`, which returns the position of the **rightmost** occurrence of $`t`$ in $`s`$, or $`-1`$ if there is none.*
 
 ## Summary of Exercises
 
-- Ex 4-1: implementation of `strindex(s, t)` which returns the starting index of the rightmost occurence of `t` in `s`, or `-1` if there is no match.
 - Ex 4-2: Implementation of `atof(s)` that converts a string `s` to a `float` with the ability to handle scientific notation.
 
 ---
