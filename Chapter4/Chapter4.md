@@ -1,11 +1,21 @@
-# The C Programming Language
-## Chapter 4: Functions and Program Structure
+# Chapter 4: Functions and Program Structure
 
-### Summary of Exercises
+## Examples
+
+### [Pattern Matching](./Examples/Strindex/strindex.c)
+
+A simple pattern matching program using simple string matching a gainst a compiled pattern.
+
+## Exercises
+
+## Summary of Exercises
+
 - Ex 4-1: implementation of `strindex(s, t)` which returns the starting index of the rightmost occurence of `t` in `s`, or `-1` if there is no match.
 - Ex 4-2: Implementation of `atof(s)` that converts a string `s` to a `float` with the ability to handle scientific notation.
+
 ---
 The following exercises extend on the Calculator program introduced, all are tagged in `calculator.c` rather than as independent implementations.
+
 - Ex 4-3: Implements the modulus function and negative numbers
 - Ex 4-4: Adds additional stack commands (view top without popping, clear, swap top two elements, duplicate top elements)
 - Ex 4-5: Adds access to `math.h` functions
@@ -15,36 +25,54 @@ The following exercises extend on the Calculator program introduced, all are tag
 - Ex 4-9: Switches type used in `getch()` and `ungetch()` to `int` to handle case of `unsigned` char rep mishandling `EOF = -1`.
 
 The final exercise is included in `CalculatorGetLine.c`.
-- Ex 4-10: Handles the above exercises, but replaces `getch()` and `ungetch()` with approach operating on one line at a time using `getLine()`. 
+
+- Ex 4-10: Handles the above exercises, but replaces `getch()` and `ungetch()` with approach operating on one line at a time using `getLine()`.
 
 ---
+
 - Ex 4-11: Modification of `getop` to avoid using `ungetch()`.
-    - Implemented in `calculator.h`
+  - Implemented in `calculator.h`
 - Ex 4-12: Implemention of `atoi(char s[], int v, int lim)` that converts an integer `v` into its string representation in `s`.
-    - Our implementation will truncate after the `lim`-most significant digits
-    - Also returns the length of the copied string `s`.
+  - Our implementation will truncate after the `lim`-most significant digits
+  - Also returns the length of the copied string `s`.
 - Ex 4-13: recursive implementation of `reverse(char s[])`, that reverses the string `s` inplace.
 - Ex 4-14: macro `swap(t, x, y)` that takes in a type `t` and variables `x` and `y` of type `t` and performs a swap.
 
+## 4.0 Introduction
 
-### Basics of Functions
-- Good for seperation of concerns
-- Allow details to be abstracted into small code blocks
+- Break large computing tasks into smaller ones.
+- Good functions seperate layers of abstraction.
+- **C** emphasises *procedural programming*, many small functions interacting rather than a few large functions.
+- Programs may be split across multiple files.
+  - Compiled together or seperately.
+- **C** also contains a *preprocessor* for precompilation transformations.
 
-**Example**: Consider a pattern matching algorithm that returns the lines containing a given pattern. The code outline looks like
+## 4.1 Basics of Functions
+
+### Example [Strindex](#pattern-matching)
+
+- Consider a pattern matching algorithm that returns the lines containing a given pattern.
+- The code outline looks like
+
+```C
+while (there is a line) {
+    if (the line has the pattern) {
+        print it;
+    }
+}
 ```
-while (there is a line)
-    if (the line has the pattern)
-        print it
-```
-this naturally falls into three functions.
 
-- Can write a function `strindex(s, t)` that returns the first index in `s` where the string `t` begins, else `-1`.
-    - since array indices are $>=0$.
+- This naturally falls into three functions.
+
+1. The first part is `get_line` we've seen before.
+2. For the second we write a function `strindex(s, t)` that returns the first index in `s` where the string `t` begins, else $`-1`$.
+    1. Since array indices are non-negative.
+    2. Means in the future can rewrite `strindex(s, t)` to use more sophisticated pattern matching without touching the rest of the program.
 
 **Example continued:**
-```
-#include<stdio.h>
+
+```Cs
+#include <stdio.h>
 #define MAXLINE 1000 /* maximum input line length */
 
 int getline(char line[], int index);
@@ -90,53 +118,71 @@ int strindex(char s[], char t[])
     return -1;
 }
 ```
+
 - Observe the first for loop acts as the starting index, we then scan forward to see if we have the full pattern.
 
-#### Function Declarations
+### Function Declarations
 
 - Function declarations have the form
-```
+
+```C
 return-type function-name(argument declarations)
 {
     declarations and statements
 }
 ```
-- parts may be omitted, the minimal function is
-```
+
+- Parts may be omitted, the minimal function is
+
+```C
 dummy() {}
 ```
-- this returns nothing, takes no arguments and does nothing.
-    - omitted return type is assumed `int` *not sure if still true for modern $c$ standards*
-#### Programs
-- a *program* is a series of definitions of variables and functions
-    - functions communicate by arguments and return values
+
+- This returns nothing, takes no arguments and does nothing.
+  - Omitted return type is assumed `int.
+  - **Warning**: *not sure if still true for modern $c$ standards*
+  - Just do the full proper declaration.
+  - **Note**: Until **C23** a declaration of the type `dummy()` is a function that takes an unknown number of arguments, while `dummy(void)`  means a function that takes no arguments.
+
+### Programs
+
+- A *program* is a series of definitions of variables and functions.
+  - Functions communicate by arguments and return values.
     - (plus external variables)
-    - functions may occur in any order in the source file
-        - source program may be across multiple files
-        - individual functions must reside in one file
+  - Functions may occur in any order in the source file.
+    - Source program may be across multiple files.
+    - Individual functions must reside in one file.
 
-#### Return Expression
+### Return Expression
+
 Syntax is `return expression;`
-- any expression may follow return
-- expression converted to the return-type (if needed)
-- Calling function may ignore return value
-- Control returns to caller after calling return
-    - even if `return` has no expression
-    - control returns to caller if program 'falls off' the last right bracket
+
+- Any expression may follow `return`.
+- Expression converted to the return-type (if needed).
+- Calling function may ignore return value.
+- Control returns to caller after calling return.
+  - Even if `return` has no expression.
+  - Control returns to caller if program 'falls off' the last right bracket.
 - Not *illegal* but **not good** if a function returns a value from one point, and does not at another.
-    - failure to return a value results in the "return value" being garbage
+  - Failure to return a value results in the "return value" being garbage.
 
-- *main* like other functions  can return a value, this can be used by the environment executing the program.
+- `main` like other functions  can return a value, this can be used by the environment executing the program.
+  - Convention is to return `0` for successful execution.
+  - Non-zero values typically represent error codes.
 
+### Relevant Exercises
 
-### Functions returning non-integers
+See [Ex 4.1](#ex-4-1).
 
-- many functions e.g. numerical ($sin, cos$ *etc.*) return non-integer types
+## 4.2 Functions returning Non-Integers
 
-**Example: atof**
-- converts a string to a floating point value with an optional decimal point and sign
+- Many functions e.g. numerical ($sin, cos$ *etc.*) return non-integer types (if anything.)
 
-```
+### Example [Atof](./Examples/Atof/atof.c)
+
+- Converts a string to a floating point value with an optional decimal point and sign.
+
+```C
 #include <ctype.h>
 
 /* atof: convert string s to double */
@@ -161,11 +207,12 @@ double atof(char s[])
     return sign*val / power
 }
 ```
-- calling routine must know `atof` returns a non-int value.
-    - Can be done by declaring `atof` explicitly in calling routine.
-    - e.g. see the  basic calculator below
 
-```
+- Calling routine must know `atof` returns a non-int value.
+  - Can be done by declaring `atof` explicitly in calling routine.
+  - e.g. See the  basic calculator below.
+
+```C
 #include<stdio.h>
 
 #define MAXLINE 1000
@@ -183,17 +230,20 @@ int main()
     return 0;
 }
 ```
-- the line `double atof(char []);` says that `atof` is a function that takes one `char[]` argument and returns a `double`.
-    - `atof` must be declared and defined consistently
-        - these mismatches can occur most often in multifile compilation
-    - without a *prototype*, a function is defined *implicitly* by its first declaration.
-        - if not declared, it is assumed to return an `int` and no argument assumptions are made
-        - additionally declarations like `double atof()` with empty args also make no assumptions on the args
-            - **DO NOT USE THIS BEHAVIOUR, IT IS FOR BACKWARDS COMPATABILITY**
-                - declare args for those that use them, else use `void`.
 
-We can write an `atoi` using `atof`
-```
+- The line `double atof(char []);` says that `atof` is a function that takes one `char[]` argument and returns a `double`.
+  - `atof` must be declared and defined consistently
+    - These mismatches can occur most often in multifile compilation.
+  - Without a *prototype*, a function is defined *implicitly* by its first declaration.
+    - If not declared, it is assumed to return an `int` and no argument assumptions are made
+    - Additionally declarations like `double atof()` with empty args also make no assumptions on the args
+      - **DO NOT USE THIS BEHAVIOUR, IT IS FOR BACKWARDS COMPATABILITY**
+      - Declare args for those that use them, else use `void`.
+      - **Note**: From **C23** this is removed, empty brackets now imply no arguments.
+
+We can write an `atoi` using `atof`.
+
+```C
 /* atoi: convert string s to int using atof */
 int atoi(char s[])
 {
@@ -202,32 +252,38 @@ int atoi(char s[])
     return (int) atof(s);
 }
 ```
-- we have to cast `atof`'s result to get an  `int`.
-    - The return converts automatically
-        - This operation may discard info so might have compiler warnings
-        - cast makes this *explicit* and warning should be supressed
 
-### External Variables
+- We have to cast `atof`'s result to get an  `int`.
+  - The return converts automatically
+    - This operation may discard info so might have compiler warnings
+    - Cast makes this *explicit* and warning should be supressed
 
-- C program made of sets of external objects (variables or functions) and *internal* objects (args and variables declared in a function)
-- External variables are declared outside of any function
-    - available to many functions
+### Relevant Exercises
+
+
+## 4.3 External Variables
+
+- C program made of sets of external objects (variables or functions) and *internal* objects (args and variables declared in a function).
+- External variables are declared outside of any function.
+  - available to many functions
 - Functions are always external
-    - can't define a function in a function
+  - can't define a function in a function
 - For *external* functions and variables, all references to them by the same name are references to the same thing
-    - this includes when compiled seperately
-    - referred to as *external linkage*
+  - this includes when compiled seperately
+  - referred to as *external linkage*
 - External variables let functions communicate outside of args and return values
-    - avoids long argument lists, but not great
-    - good when functions share the same data, but neither calls the other.
+  - avoids long argument lists, but not great
+  - good when functions share the same data, but neither calls the other.
 
 **Example: Polish Notation Calculator**
+
 - provide the operators `+, -, *, /` using (reverse) polish notation.
-    - e.g. $(1 - 2) * (4 + 5) -> $ `1 2 - 4 5 + *`
+  - e.g. $(1 - 2) * (4 + 5) -> $ `1 2 - 4 5 + *`
 
 - Implementation: operand pushed onto stack, when operator arrives we pop the appropriate number of args from the stack, then apply the result and push it back onto the stack
-- *pseudocode: *
-```
+- *pseudocode:*
+
+```C
 while (next token not EOF)
     if (number)
         push it
@@ -240,11 +296,13 @@ while (next token not EOF)
     else
         error
 ```
+
 - main doesn't need to know about the stack
-    - so store stack + info in external variables
+  - so store stack + info in external variables
 
 **Example Implementation**
-```
+
+```C
 #include <stdio.h>
 #include <stdlib.h>
 
@@ -297,11 +355,13 @@ int main()
     return 0;
 }
 ```
+
 Because `+` and `*` are commutative the order of popping is irrelevant, but this is not the case for `-` and `/`.
     - `push(pop() - pop())` does not guarantee which `pop` executes first, hence we need to use a temporary variable.
 
 The push and pop can be implemented as follows
-```
+
+```C
 #define MAXDEPTH 100 /* max stack depth */
 
 int sp = 0; /* next free stack position */
@@ -328,16 +388,16 @@ double pop(void)
 ```
 
 - Variable is external if it is declared outside of any function.
-    - e.g. `stack` and `stack index` are shared by push and pop so are declared external
-    - `main` itself does not refer to either variable
+  - e.g. `stack` and `stack index` are shared by push and pop so are declared external
+  - `main` itself does not refer to either variable
 
 - *last function to implement is `getop`*
-    - skip whitespace
-    - if next character is not a *digit* or *hexadecimal point* return it
-        - else collect digits (with optional decimal)
-            - signal `NUMBER` that we collected a number
+  - skip whitespace
+  - if next character is not a *digit* or *hexadecimal point* return it
+    - else collect digits (with optional decimal)
+      - signal `NUMBER` that we collected a number
 
-```
+```C
 #include <ctype.h>
 
 int getch(void);
@@ -367,17 +427,19 @@ int getop(char s[])
     return NUMBER;
 }
 ```
+
 - What are `getch()` and `ungetch()`?
-    - often need to read input until we read too much to know we've read enough.
-        - e.g. building number -> have to see **not** a digit to know we've finished
-            - need to *undo* the last read
-        - make pair of cooperating functions `getch()` and `ungetch()`.
-            - implementation simple: `getch()` and `ungetch()` share a buffer
-                - here its a `char` array
-                - `getch()` reads from the buffer, then from IO
-                - `ungetch()` queues the buffer
-            - this works like the stack, so here use external variable implementation
-```
+  - often need to read input until we read too much to know we've read enough.
+    - e.g. building number -> have to see **not** a digit to know we've finished
+      - need to *undo* the last read
+    - make pair of cooperating functions `getch()` and `ungetch()`.
+      - implementation simple: `getch()` and `ungetch()` share a buffer
+        - here its a `char` array
+        - `getch()` reads from the buffer, then from IO
+        - `ungetch()` queues the buffer
+      - this works like the stack, so here use external variable implementation
+
+```C
 #define BUFSIZE 100
 
 char buf[BUZSIZE]; /*buffer for ungetch()*/
@@ -406,29 +468,31 @@ void ungetch(int c)
 ### Scope Rules
 
 - functions and external variables comprising a C program need not be compiled at the same time
-    - source code can be split across files
-    - can load precompiled routines
+  - source code can be split across files
+  - can load precompiled routines
 
 *Questions*
+
 - How are declarations written s.t. variables are properly declared during compilation?
 - How are declarations arranged s.t. all the pieces are properly connected?
 - How are declarations organised so there is only one copy?
 - How are external variables initialised?
 
 The *scope* of a name is the part of a program within which a name can be used.
- - automatic variable declared at the start of a function
-    - the *scope* is then  the function the variable is declared within.
-    - local variables of the same name in different functions are unrelated
-        - same for function parameters
-            - they are effectively local variables
-- external variables or function
-    - from the point it is declared to the end of the file being compiled
-    - e.g. if `main`, `sp`, `val`, `push` and `pop` are defined in one file, in the order shown above, (see below)
-    - variables `sp` and `val` are visible in `push` and `pop` but not in `main`.
-        - (note `push` and `pop` are also not available in `main`)
-    - to reference an external variable before it is defined (or if defined in a different file) use the `extern` keyword
 
-```
+- automatic variable declared at the start of a function
+  - the *scope* is then  the function the variable is declared within.
+  - local variables of the same name in different functions are unrelated
+    - same for function parameters
+      - they are effectively local variables
+- external variables or function
+  - from the point it is declared to the end of the file being compiled
+  - e.g. if `main`, `sp`, `val`, `push` and `pop` are defined in one file, in the order shown above, (see below)
+  - variables `sp` and `val` are visible in `push` and `pop` but not in `main`.
+    - (note `push` and `pop` are also not available in `main`)
+  - to reference an external variable before it is defined (or if defined in a different file) use the `extern` keyword
+
+```C
 main() {...}
 int sp = 0;
 double val[MAXVAL];
@@ -437,29 +501,35 @@ double pop(void) {...}
 ```
 
 - **Note** a *declaration* is different to a *definition*
-    - *declaration* announces property of variables (namely *type*)
-    - *definition* also sets aside storage
-    - e.g. consider the lines below, outside a function
+  - *declaration* announces property of variables (namely *type*)
+  - *definition* also sets aside storage
+  - e.g. consider the lines below, outside a function
+
+    ```C
+        int sp;
+        double val[MAXVAL];
     ```
-    int sp;
-    double val[MAXVAL];
-    ```
-    - this *defines* the external variables `sp` and `val`, they are also *declarations* for the rest of the current **source file**.
-    - conversely, consider
-    ```
+
+  - this *defines* the external variables `sp` and `val`, they are also *declarations* for the rest of the current **source file**.
+  - conversely, consider
+
+    ```C
     extern int sp;
     extern double val[];
     ```
-    - this *declares* for the rest of the source file, that `sp` is an `int` (and `val` is a `double` array), the variables are not created, and storage is not reserved.
-    - There must be **only one** *definition* of an external variable among all of the component files of a source program.
-        - other files use `extern` to access the *definition*
-        - array sizes must be specified in the *definition*
-            - optional in an `extern` *declaration*
-    - initialisation  of an external variable only goes w/ definition
+
+  - this *declares* for the rest of the source file, that `sp` is an `int` (and `val` is a `double` array), the variables are not created, and storage is not reserved.
+  - There must be **only one** *definition* of an external variable among all of the component files of a source program.
+    - other files use `extern` to access the *definition*
+    - array sizes must be specified in the *definition*
+      - optional in an `extern` *declaration*
+  - initialisation  of an external variable only goes w/ definition
 
 **Example**:
+
 - can define `push` and `pop` in one file, and connect to the variables `sp` and `val` in another.
-```
+
+```C
 in file1:
     extern int sp;
     extern double val[];
@@ -473,92 +543,104 @@ in file2:
 ```
 
 ### Header Files
+
 - The calculator program could be split into multiple files
-    - `main` occupies one file
-    - `push`, `pop` and their variables in another
-    - `getop` into a third
-    - `getch` and `ungetch` into a fourth
-    - each file handles one *aspect* of the program
+  - `main` occupies one file
+  - `push`, `pop` and their variables in another
+  - `getop` into a third
+  - `getch` and `ungetch` into a fourth
+  - each file handles one *aspect* of the program
 - Need to share definitions and declarations across files
-    - Ideally centralise this
-    - common material -> *header file* (denoted .h)
-        - here called `calc.h` 
-        - this can be utilised via `#include`
-    - **Note** for larger programs, seperating  out into multiple header files may be better.
+  - Ideally centralise this
+  - common material -> *header file* (denoted .h)
+    - here called `calc.h`
+    - this can be utilised via `#include`
+  - **Note** for larger programs, seperating  out into multiple header files may be better.
 
 ### Static Variables
+
 - variables `sp` and `val` in `stack.c` and `buf` and `bufp` in `getch.c` are for private use of their functions
-    - not supposed to be used outside their own source file
+  - not supposed to be used outside their own source file
 - `static` declaration (applied to external variable or function)
-    - limits scope to rest of source file being compiled
-    - External `static` allows to hide names of private external variables
+  - limits scope to rest of source file being compiled
+  - External `static` allows to hide names of private external variables
 **Example**
-```
+
+```C
 static char buf[BUFSIZE] /* buffer for ungetch() */
 static int bufp = 0; /*next free position in buffer */
 
 int getch(void) { ... }
 void ungetch(int c) { ... }
 ```
-- no routines aside from `getch` and `ungetch` may use `buf` and `bufp`. 
+
+- no routines aside from `getch` and `ungetch` may use `buf` and `bufp`.
 - Can also use `static` to functions too
-    - makes function invisible outside of source file, as opposed to global by default behaviour of function
+  - makes function invisible outside of source file, as opposed to global by default behaviour of function
 - Can apply to local / internal variables
-    - still local to a function like automatics
-    - remain in existence pre and post function call
-        - provide private, permanent storage within a fn call.
+  - still local to a function like automatics
+  - remain in existence pre and post function call
+    - provide private, permanent storage within a fn call.
 
 ### Register Variables
 
 - `register` declaration indicates a variable is heavily used
-    - suggests that it be stored in machine registers
-    - Compiler may ignore the advice
+  - suggests that it be stored in machine registers
+  - Compiler may ignore the advice
 **Example**
-```
+
+```C
 register int x;
 register char c;
 ```
+
 etc.
+
 - register can only be used on automatic variables
-    - including function formal params e.g.
-```
+  - including function formal params e.g.
+
+```C
 f(register unsigned m, register long n)
 {
     register int i;
     ...
 }
 ```
+
 - register variables restricted by underlying hardware
-    - only a few at a time
-    - only certain types
-    - excess ignored by compiler
+  - only a few at a time
+  - only certain types
+  - excess ignored by compiler
 - cannot take address of register variable
-    - even if not actually placed there
+  - even if not actually placed there
 
 ### Block Structure
 
 - C is not block structured (like Pascal)
-    - **cannot** define functions inside functions
-    - **can** define variables within a block
-        - declarations of variables may follow the left brace introducing any compound statement
-        - variables introduced this way hide identically named variables in outer blocks
-            - lifetime extends until the corresponding right brace
+  - **cannot** define functions inside functions
+  - **can** define variables within a block
+    - declarations of variables may follow the left brace introducing any compound statement
+    - variables introduced this way hide identically named variables in outer blocks
+      - lifetime extends until the corresponding right brace
 
 **Example**
-```
+
+```C
 if (n > 0)
 {
     int i; /* declares new var i */
     for (i = 0; i < n; i++)
 }
 ```
+
 - scope of `i` is the `true` branch of the `if`.
-    - `i` unrelated to any `i` variable outside the block
-    - automatic variable initialised each time the block is entered
+  - `i` unrelated to any `i` variable outside the block
+  - automatic variable initialised each time the block is entered
 - automatic variables and function parameters hide external variables and functions of the same name
 
 **Example**
-```
+
+```C
 int x;
 int y;
 
@@ -567,33 +649,37 @@ f(double x)
     double y;
 }
 ```
+
 - within `f`, `x` refers to the param, `y` refers to the automatic variable
-    - outside they refer to the external vars `x,y`. 
+  - outside they refer to the external vars `x,y`.
 - avoid shadowing outer scope names, they lead to confusion.
 
 ### Initialisation
+
 - Absent explicit initialisation:
-    - *static* and *external* are initialised to zero
-    - *automatic* and *register* variables are undefined
+  - *static* and *external* are initialised to zero
+  - *automatic* and *register* variables are undefined
 - *scalar* variables initialised with syntax
-    - `variable = value`
+  - `variable = value`
 
 **Examples**
-```
+
+```C
 int x = 1
 char squota = '\'';
 long day = 1000L * 60L * 24L /* millseconds per day */
 ```
 
 - Must be a constant expression for *static* and *external* variables
-    - initialisation is **conceptually** done *once*  before program execution
+  - initialisation is **conceptually** done *once*  before program execution
 - For *automatic* and *register* may be any expression with previously defined values, e.g.
-    - constants
-    - other variables
-    - function calls
+  - constants
+  - other variables
+  - function calls
 
 **Example: rewritten BinSearch**
-```
+
+```C
 int binsearch(int x, int v[], int n)
 {
     int low = 0;
@@ -601,22 +687,27 @@ int binsearch(int x, int v[], int n)
     int mid;
 }
 ```
+
 The initialisation of $low$ uses a constant, $high$ uses a previous variable, $mid$ is not initialised.
 
 #### Array initialisation
+
 - arrays can be initialised with a  comma-seperated list enclosed in braces, e.g.
-```
+
+```C
 int days[] = {31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31}
 ```
+
 - for arrays of undefined size, the size is computed from the length of the initialiser list
 - if array size defined and $len(list) < len(array)$, remaining indices are set to zero.
-    - if $len(list) > len(array)$ an error is generated.
-    - repetition cannot be specified
-    - cannot declare an element at index $i$ without declaring the value of the preceding indices
+  - if $len(list) > len(array)$ an error is generated.
+  - repetition cannot be specified
+  - cannot declare an element at index $i$ without declaring the value of the preceding indices
 - `char` arrays may be initialised with string notation `"string"`
 
 **Example**
-```
+
+```C
 char pattern = "ould"; /* is equivalent to: */
 char pattern[] = {'o', 'u', 'l', 'd', '\0'};
 /* note the NULL termination */
@@ -625,12 +716,14 @@ char pattern[] = {'o', 'u', 'l', 'd', '\0'};
 ### Recursion
 
 - C functions may be used recursively
-    - i.e. call themselves (directly or not)
+  - i.e. call themselves (directly or not)
 
 **Example: Printing a number as a string**
+
 - digits generated wrong order, (low before high)
-    - can be solved recursively
-```
+  - can be solved recursively
+
+```C
 #include <stdio.h>
 
 /* printd : print n in decimal */
@@ -644,19 +737,22 @@ void printd(int n)
     putchar(n % 10 + '0');
 }
 ```
+
 - On a recursive call:
-    - fresh set of automatic vars generated
-    - These are independent to the higher calls
+  - fresh set of automatic vars generated
+  - These are independent to the higher calls
 - e.g. in `printd(123)` the call structure is
-    - `printd(123)`
-    - `printd(12)`
-    - `printd(1)`
-    - and prints $123$.
+  - `printd(123)`
+  - `printd(12)`
+  - `printd(1)`
+  - and prints $123$.
 
 **Example: Quicksort**
+
 - Invented by Tony Hoare (1962)
 - Given array, choose an element $x$
 - Partition into two subsets  
+
 $$A : a \in A \iff a < x, \\
 B : b \in B \iff b \geq x$$
 - Repeat recursively on $A$ and $B$
@@ -669,7 +765,7 @@ void qsort(int v[], int left, int right)
     int i, last;
 
     if (left >= right) return; /* < 2 elems left*/
-    swap(v, left, (left + right) / 2); 
+    swap(v, left, (left + right) / 2);
     /* partition element moved to left */
     last = left;
     for (i = left + 1; i <= right; i++) {
@@ -737,7 +833,7 @@ void swap(int v[], int i, int j)
 
 **Example: Forever**
 ```
-#define forever for (;;) /* infinite loop*/
+# define forever for (;;) /* infinite loop*/
 ```
  which creates an infinite loop.
 
@@ -774,7 +870,7 @@ x = ((p+q) > (r+s) ? (p+q) : (r+s))
 - Can undefine names using `#undef`
     - helps ensure a routine is a function
 ```
-#undef getchar
+# undef getchar
 
 int getchar(void) {...}
 ```
@@ -783,7 +879,7 @@ int getchar(void) {...}
 
 **Example: Debugging Macro**
 ```
-#define dprint(expr) printf(#expr " = %g\n", expr)
+# define dprint(expr) printf(#expr " = %g\n", expr)
 ```
 - the above example uses string concatenation, and behaves as
 ```
@@ -801,7 +897,7 @@ printf("x/y = %g\n", x/y)
 
 **Example: Paste**
 ```
-#define paste(front, back) front ## back
+# define paste(front, back) front ## back
 
 /* example usecase */
 paste(name, 1) -> name1
@@ -822,12 +918,12 @@ paste(name, 1) -> name1
 **Example: header file inclusion**
 - the following wrapper around the contents of `hdr.h` ensures `hdr.h` is included only once
 ```
-#if !defined(HDR)
-#define HDR
+# if !defined(HDR)
+# define HDR
 
 /* contents of hdr.h go here */
 
-#endif
+# endif
 ```
 - first inclusion defines the name `HDR`
 - future inclusions check for the existence of `HDR` skip the file contents.
@@ -838,40 +934,24 @@ paste(name, 1) -> name1
 **Example: selecting the correct header**
 - this example tests the name `SYSTEM` and selects the appropriate `HDR` file to include
 ```
-#if SYSTEM == SYSV
+# if SYSTEM == SYSV
     #define HDR "sysv.h"
-#elif SYSTEM == BSD
+# elif SYSTEM == BSD
     #define HDR "bsd.h"
-#elif SYSTEM == MSDOS
+# elif SYSTEM == MSDOS
     #define HDR "msdos.h"
-#else
+# else
     #define HDR "default.h"
-#endif
-#include HDR
+# endif
+# include HDR
 ```
 
 - we can use `#ifndef` and `#ifdef` as specialised forms to test for if a name is defined. The first example can be rewritten as
 ```
-#ifndef HDR
-#define HDR
+# ifndef HDR
+# define HDR
 
 /* contents of hdr.h */
 
-#endif
+# endif
 ```
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
