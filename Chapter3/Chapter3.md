@@ -22,6 +22,14 @@ Uses the *shellsort* algorithm to sort an array of numbers.
 
 Implements a string reversal like [Ex 1-19](../Chapter1/Chapter1.md#ex-1-19) utilising the comma operator.
 
+### [Integer to String Conversion](./Examples/Itoa/itoa.c)
+
+Implements an integer to string conversion routine.
+
+### [Remove Trailing Whitespace](./Examples/Trim/trim.c)
+
+Routine to remove trailing whitespace from a string.
+
 ## Exercises
 
 ### [Ex 3-1](./Exercises/Ex3_1/ex3-1.c)
@@ -51,10 +59,31 @@ So the old method is slower, but not significantly so. (and both methods are ver
 
 *Write a function `expand(s1, s2)` that expands shorthand notations like `a-z` in the string `s1` into the equivalent complete list `abc...xyz` in `s2`. Allow for letters of either case and digits, and be prepared to handle cases like `a-b-c` and `a-z0-9` and `-a-z`. Arrange that a leading or trailing `-` is taken literally.*
 
-### Summary of Exercises
+Our implementation for this is quite involved. It correctly handles expansions of the form `a-c` -> `abc` or `c-a` -> `cba`, and for digits and uppercase. Leading `-` or trailing `-` are ignored, as are `-` in expansions without clear meaning like `A-z`. hexadecimal notations like `8-C` are expanded as one would expect. We also allow `...` to be used in place of a `-`.
 
-- Exercise 3-3: function expand(s1, s2) that replaces notations like a-z, with the equivalent list abcd...xyz.
-- Exercise 3-4: Explain why the provided itoa fails for a maximally negative number is a two's complement representation, fix the function to work independent of representation.
+As one can see the logic of `expand` itself is quite simple. Most of the complex logic comes from determining the type of expansion and performing it correctly.
+
+### [Ex 3-4](./Exercises/Ex3_4/ex3-4.c)
+
+*In a two's complement number representation our version `itoa` does not handle the largest negative number, that is, the value of $`n`$ equal to $`-2^{\text{wordsize} - 1}`$. Explain why not. Modify it to print that value correctly, regardless of the machine on which it runs.*
+
+In two's complement the negative numbers are `1[000...000]`...`1[1111...11]`, while the postive numbers have representations `0[000...000]`...`0[1111...11]`. But one of the positive representations is $`0`$. So the magnitude of the largest positive number is one less than the magnitude of the largest negative number. Hence the initial $`n \rightarrow -n`$ causes an integer overflow for `INT_MIN`.
+
+The trick to leave the number signed and take the absolute value of each digit.
+
+### [Ex 3-5](./Exercises/Ex3_5/ex3-5.c)
+
+*Write the function `itob(n,s,b)` that converts the integer into its $`a \text{ base } b`$ character representation in the string `s`. In particular `itob(n,s,16)` formats `n` as a hexadecimal integer in `s`.*
+
+We make the decision to restrict the minimum base to $`2`$ (since base-$`1`$ has an awkward representation.) and the largest base to $`36`$ (since we can then use `0-9` and `A-Z` for digits.)
+
+We then have to modify the modulus and division to the correct base and update the character selection logic to account for characters.
+
+### [Ex 3-6](./Exercises/Ex3_6/ex3-6.c)
+
+*Write a version of `itoa` that accepts three arguments instead of two. The third argument is a minimum field width; the converted number will be padded with blanks on the left if necessary to make it wide enough.*
+
+Simple change, we already track the field width implicitly through `i`, so now if `i < w` just pad out the string.
 
 ## 3.1 Statements and Blocks
 
@@ -392,10 +421,13 @@ while (expression);
 ```
 
 - *Statement* executed, then *expression* evaluated
-  - if *true* repeat again, else terminate
-- **Example**: `itoa` converts a number to a character string (i.e. reverses `atoi`.)
-  - Naive implementation hard - digits generated backwards.
-    - Implementation below follows this then reverses
+  - If *true* repeat again, else terminate
+
+### Example [itoa](#integer-to-string-conversion)
+
+- Naive implementation hard.
+  - Digits generated backwards.
+  - Implementation below follows this then reverses the string.
 
 ```C
 /* itoa: convert n to characters in s */
@@ -421,13 +453,17 @@ void itoa(int n, char s[])
   - the `while` sits outside.
 - `do` here useful since need to populate at least one character even if integer is `0`.
 
+### Relevant Exercises
+
+See [Ex 3.4](#ex-3-4), [Ex 3.5](#ex-3-5) and [Ex 3.6](#ex-3-6).
+
 ### 3.7 Break and Continue
 
-- Sometimes convenient to exit a loop midway
-  - `break` allows for early exit from `while, for, do`
-    - immediate exit from innermost loop.
+- Sometimes convenient to exit a loop early.
+  - `break` allows for early exit from `while, for, do`.
+    - Immediate exit from innermost loop.
 
-**Example**: `trim`, remove trailing blanks, tabs, newlines. A break is used to exit from the loop when we find the rightmost blankspace.
+### Example [Trim](#remove-trailing-whitespace)
 
 ```C
 /* trim: remove trailing blanks, tabs and newlines */
@@ -448,14 +484,15 @@ int trim(char s[])
 ```
 
 - `strlen` returns string len, so start from last element (`strlen - 1`)
-  - scan backwards until a non-blank is found, then break
-  - else finish when n negative (i.e. all string scanned)
+  - Scan backwards until a non-blank is found, then `break`.
+  - Else finish when $`n`$ negative (i.e. all string scanned)
 
 - `continue` goes to the next iteration of the loop immediately.
-  - for loops will still have their *increment* step take control.
+  - For loops will still have their *increment* step take control.
   - Test still takes place.(`for, while, do` regardless)
   - `continue` does not apply to `switch`
-    - `continue` applied to `switch` in a loop will apply to the loop
+    - `continue` applied to `switch` in a loop will apply to the loop.
+- **C2Y** will introduce named loops, which will allow the syntax `break label` and `continue label` where label is a label like a switch case above a loop.
 
 **Example**: the below code fragment processes non-negative array elements in the array `a`. Negative values are skipped.
 
@@ -468,16 +505,17 @@ for (i = 0; i < n; i++)
 ```
 
 - `continue` best used when following loop logic is complicated.
-  - otherwise reverse the test and indent.
+  - Otherwise reverse the test and indent.
 
 ### 3.8 Goto and labels
 
 - `goto` is easy to abuse!!!
-  - avoid using!
+  - Avoid using!
 
 - Use cases:
-  - abandonly deeply nested process
-    - can break out of multiple loops
+  - Abandoning deeply nested process.
+    - Can break out of multiple loops
+      - `break` and `continue` can't do this until **C2Y**.
 
 - e.g.
 
@@ -492,10 +530,10 @@ error:
     /* clean up */
 ```
 
-- handy if error handling is non-trivial, and error can occur in several places.
-- label has the form of a variable, followed by colon.
-  - may attach to any statement in same function as relevant `goto`
-    - label scope is the entire function
+- Handy if error handling is non-trivial, and error can occur in several places.
+- Label has the form of a variable, followed by colon.
+  - May attach to any statement in same function as relevant `goto`
+    - Label scope is the entire function
 - **Example**: determining if two arrays `a` and `b` share a common element.
 
 ```C
@@ -530,7 +568,7 @@ else
 }
 ```
 
-- arguably has extra tests / variables and is less 'elegant' though a break, might help.
-- `goto` generally hard to maintain
-  - hard to understand
-  - avoid using unless nessecary
+- Arguably has extra tests / variables and is less 'elegant' though a break, might help.
+- `goto` generally hard to maintain.
+  - Hard to understand.
+  - Avoid using unless nessecary
