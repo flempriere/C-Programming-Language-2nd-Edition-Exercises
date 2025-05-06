@@ -1,7 +1,12 @@
 /**
- * @file atof.c
+ * @file ex4-2.c
  * @author Felix Lempriere
- * @brief
+ * @brief Solution to Exercise 4.2 from The C Programming Language, 2nd Edition.
+ *
+ * Extend `atof` to handle scientific notation of the form
+ *      123.45e-6
+ * where a floating-point number may be followed by `e` or `E` and an optionally
+ * signed exponent.
  * @version 0.1
  * @date 2025-04-30
  *
@@ -65,6 +70,11 @@ int main(void) {
     if (!test_my_atof("+.007", 0.007)) { return EXIT_FAILURE; }
     if (!test_my_atof(".007", 0.007)) { return EXIT_FAILURE; }
     if (!test_my_atof("-.008", -0.008)) { return EXIT_FAILURE; }
+    if (!test_my_atof("0e-3", 0)) { return EXIT_FAILURE; }
+    if (!test_my_atof("1e+3", 1000)) { return EXIT_FAILURE; }
+    if (!test_my_atof("1e-3", 0.001)) { return EXIT_FAILURE; }
+    if (!test_my_atof("1e3", 1000)) { return EXIT_FAILURE; }
+    if (!test_my_atof("+1e-3", 0.001)) { return EXIT_FAILURE; }
     printf("All tests performed successfully\n");
     return EXIT_SUCCESS;
 }
@@ -82,7 +92,20 @@ double my_atof(char s[]) {
         val = 10.0 * val + (s[i] - '0');
         power *= 10.0;
     }
-    return sign * val / power;
+    val = sign * val / power;
+
+    if (s[i] == 'e' || s[i] == 'E') {
+        sign = (s[++i] == '-') ? 0 : 1;
+        if (s[i] == '+' || s[i] == '-') { i++; }
+        int exp = 0;
+        for (exp = 0; isdigit(s[i]); i++) { exp = 10 * exp + (s[i] - '0'); }
+        if (sign) {
+            for (; exp > 0; exp--) { val *= 10; }
+        } else {
+            for (; exp > 0; exp--) { val /= 10; }
+        }
+    }
+    return val;
 }
 
 enum truth test_my_atof(char s[], double expected) {
