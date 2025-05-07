@@ -113,12 +113,12 @@ To test the word count program, we should provide input, where can easily determ
 
 The most likely cases to uncover bugs are edge cases. In the case of word count, some edge cases to consider are
 
-1. An empty input
-2. Input consisting of one large word (without a newline)
-3. Input consisting of only blanks
-4. Input containing only newlines
-5. Input containing single letter words
-6. Input containing mixed blanks
+1. An empty input,
+2. Input consisting of one large word (without a newline),
+3. Input consisting of only blanks,
+4. Input containing only newlines,
+5. Input containing single letter words,
+6. Input containing mixed blanks.
 
 These test cases are in the linked directory, where `.in` is the input, `test_no.out` is the expected output and `results.out` is the generated output.
 
@@ -159,7 +159,7 @@ in its input. It is easy to print the histogram with the bars horizontal; a vert
 
 *Revise the main routine of the longest line program so it will correctly print the length of arbitrarily long lines, and as much as possible of the text.* (See [longestLine](#longest-line-v1).)
 
-This is straightforward. We move the test $`i < \text{lim} - 1`$ inside the main loop. Now the program doesn't terminate when we hit the max buffer length, instead we simply use that test to ignore the character. We also add a counter to track the length of the line.
+This is straightforward. We move the test $`i < \text{lim} - 1`$ inside the main loop. Now the program doesn't terminate when we hit the max buffer length, instead we simply use that test to avoid storing the character. `i` becomes the counter for the length of the line.
 
 ### [Ex 1-17](./Exercises/Ex1_17/ex1-17.c)
 
@@ -180,6 +180,8 @@ Now we only need to store the length of the longest sequential blank subsequence
 ### [Ex 1-19](./Exercises/Ex1_19/ex1-19.c)
 
 *Write a function `reverse(s)` that reverses the character string `s`. Use it to write a program that reverses its input a line at a time.*
+
+Straightforward, use `strlen(s)` to get the length of the string, then work our way inwards swapping the frontmost and endmost character, then the second-frontmost and second-endmost etc... once the swap indices agree or have swapped order (i.e. lower >= upper) we can stop.
 
 ### [Ex 1-20](./Exercises/Ex1_20/ex1-20.c)
 
@@ -408,7 +410,7 @@ See [Ex1.5](#ex-1-5).
 
 ### Example: [Fahrenheit to Celsius V4](#fahrenheit-to-celsius-v4)
 
-- It's bad practice to bury **magic constants**
+- It's bad practice to bury **magic constants**.
   - e.g. `300` and `20` don't convey semantic meaning.
 - A *symbolic name* can be provided with a `#define` which has the syntax
 
@@ -432,7 +434,7 @@ makes name a compile time constant.
 
 ## 1.5 Character Input and Output
 
-- Text input/output is dealt with as a character stream
+- Text input/output is dealt with as a character stream.
 - A *text stream* is a sequence of characters divided into lines of zero or more characters then a newline (`\n`).
 - A library must conform to this model.
 - `getchar()` and `putchar()` are the simplest standard library I/O functions.
@@ -452,7 +454,7 @@ makes name a compile time constant.
 
 #### Example [Copy Input V2](#copy-input-v2)
 
-- assignments can be made as part of a broader expression
+- assignments can be made as part of a broader expression.
   - e.g. the expression `(c = getchar()) != EOF)`
     assigns the return of `getchar()` to `c`compares that to `EOF` and returns `True` if not equal and `False` if they are equal.
 - One needs to be careful of precedence, e.g. `!=` has a higher precedence than `=`.
@@ -460,13 +462,13 @@ makes name a compile time constant.
 
 #### Related Exercises
 
-See [Ex1.6](#ex-1-6) and [Ex1.7](#ex-1-7)
+See [Ex1.6](#ex-1-6) and [Ex1.7](#ex-1-7).
 
 ### Example [Count Characters](#count-characters-v1)
 
 ### Prefix increment vs Postfix and Equality test
 
-- `++nc` increments `nc` by one
+- `++nc` increments `nc` by one.
 - similar exist for `--`
 - Can either use pre- or postfix, which have slightly different behaviour.
 
@@ -511,18 +513,18 @@ See [Ex1.8](#ex-1-8), [Ex1.9](#ex-1-9) and [Ex1.10](#ex-1-10).
 ### Initialising multiple variables
 
 - The line `nl = nw = nc = 0` sets all three variables to zero. Assignments associate right to left.
-  - `nc` first assigned `0`
-  - `nw` then assigned same value as `nc`
-  - `nl` then assigned same value as `nw`
+  - `nc` first assigned `0`.
+  - `nw` then assigned same value as `nc`.
+  - `nl` then assigned same value as `nw`.
 - Generally, we avoid doing this, it's not very clear.
 
 ### Logic Operators
 
-- `||` means OR
-- `&&` means AND
-- `&&` has higher precedence than `||`
-- Expressions containing `||` and `&&` are evaluated left to right
-  - will stop once truth or falsehood known
+- `||` means OR.
+- `&&` means AND.
+- `&&` has higher precedence than `||`.
+- Expressions containing `||` and `&&` are evaluated left to right.
+  - will stop once truth or falsehood known.
 
 ### The `else` keyword
 
@@ -555,7 +557,7 @@ The declaration `int ndigit[10];` declares an array of $`10`$ integers.
 - Subscripts start at `0` and go up to `size-1`.
   - Subscripts may be integer variables or constants.
 - Declared by `datatype variable[size]`.
-- C arrays are statically sized
+- C arrays are statically sized.
 
 The character representation of the digits has them laid out sequentially so we can convert the character digits `0` to `9` to the number by subtracting off the value of `0`.
     - We can also perform other similar range checks like the conditional in the example.
@@ -582,7 +584,7 @@ See [Ex1.13](#ex-1-13) and [Ex1.14](#ex-1-14).
 
 ## 1.7 Functions
 
-- Encapsulates a unit of work
+- Encapsulates a unit of work.
   - Allows us to focus on the *what* is done instead of the *how*.
 
 ### Example [`power(m, n)`](#exponentiation-v1)
@@ -599,7 +601,7 @@ return-type function-name(parameters or void) {
 
 - Functions can appear in any order and may be split across files.
 - Functions are called by writing their name followed by parentheses enclosing any arguments. `e.g. power(2, i) or power(-10, i)` (The second argument is modified from the books `power(-3, i)` to make the output more obviously correct.)
-- Function parameters and variables are local to the function
+- Function parameters and variables are local to the function.
 - functions can return a value that agrees with their `return-type` with the `return` keyword.
   - A function that doesn't return anything is a `void` function.
   - Similarly the parameter list for a function that takes no parameters is declared `void`.
@@ -632,7 +634,7 @@ See [Ex1.15](#ex-1-15).
 - Lets us write more compact programs with fewer variables since we can use the parameters!
 
 - There are variables called *pointers* we shall see later that let us modify the original copies of parameters we pass in.
-- **Warning**: Array parameters are not copied by value
+- **Warning**: Array parameters are not copied by value.
   - Array names encode the memory address of the array, not values.
 
 ### Example [power_v2](#exponentiation-v2)
@@ -643,7 +645,7 @@ See [Ex1.15](#ex-1-15).
   - The value of the null character is zero.
   - The null-terminator exists even for string-literals.
 - strings can be printed with the `%s` format specifier which relies on the null-termination.
-- Design problems for strings
+- Design problems for strings,
   - What to do if we encounter a string bigger than its limits?
   - How to ensure buffers are big enough when we perform copies.
 
@@ -655,27 +657,27 @@ See [Ex1.16](#ex-1-16), [Ex1.17](#ex-1-17), [Ex1.18](#ex-1-18) and [Ex1.19](#ex-
 
 ### Example [Longest Line v2](#longest-line-v2)
 
-- variables are *private* or *local* to where they are declared
+- variables are *private* or *local* to where they are declared.
   - e.g. in `main`
 - By default variables exist only so long as the function that
 instances them is running.
   - these variables are sometimes referred to as
     *automatic*.
-  - They must be set each time, else they contain garbage
+  - They must be set each time, else they contain garbage.
 - *external* variables are globally accessible.
   - alternative mechanism to argument lists for inter-function communication.
-  - Remain in existence permanently
+  - Remain in existence permanently.
     - Retain values after function calls.
 - External variables have the following properties,
-  - they must be *defined* once
+  - they must be *defined* once.
     - To allocate storage.
-  - then declared in each accessing function
-    - you can use `extern`
-  - extern is not needed if the declaration preceeds the function in the source code
+  - then declared in each accessing function.
+    - you can use `extern`.
+  - extern is not needed if the declaration preceeds the function in the source code.
     - By convention place all `extern` variables at the top of
-        a source file (and omit `extern`)
+        a source file (and omit `extern`).
     - `extern` is needed to connect variables across
-        source files
+        source files.
       - typically in a `.h` file to `#include`.
 - **Note** Overreliance on external variables makes data connections non-obvious.
   - Program is harder to modify.
