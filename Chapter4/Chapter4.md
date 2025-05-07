@@ -23,7 +23,13 @@ A simple command line calculator using reverse polish notation.
 
 ### [Printing a Number as a String](./Examples/Printd/printd.c)
 
+Demonstrates the use of recursion to print a the decimal representation of a number.
 
+**Note**: We have modified the given example slightly to correct the edgecase for `INT_MIN` in a two's complement signed representation. (See [Ex 3.4](../Chapter3/Chapter3.md#ex-3-4).)
+
+### [Quicksort](./Examples/Qsort/qsort.c)
+
+Demonstrates the use of recursion to perform sort an array by partitioning the array into smaller components.
 
 ## Exercises
 
@@ -756,6 +762,7 @@ void f (register unsigned m, register long n) {
   register int i;
 }
 ```
+
 It is not possible to take the *address* of a register variable. ( A concept we shall see later.)
 
 - **Note** This is the only real modern usecase of `register` as compilers are typically smarter than you!
