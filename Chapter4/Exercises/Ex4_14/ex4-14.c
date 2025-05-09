@@ -30,6 +30,12 @@
         y = swap;     \
     } while (0)
 
+/**
+ * @brief Test driver for the swap macro
+ * 
+ * @return EXIT_SUCCESS if all tests pass, else
+ * @return EXIT_FAILURE.
+ */
 int main(void) {
     printf("===Testing Swap ====\n");
 
