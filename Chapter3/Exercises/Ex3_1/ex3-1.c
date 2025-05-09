@@ -45,6 +45,7 @@ void init_test_array(int len, int a[]);
  * @return double average time spent on each test.
  */
 double calculate_avg_time(clock_t start, clock_t stop, int N_TESTS);
+
 /**
  * @brief Error code for if binary search can't find a match.
  *
@@ -88,7 +89,16 @@ int KandRbin_search(int v, int len, int a[]);
  */
 int binary_search(int v, int len, int a[]);
 
+/**
+ * @brief Test array to sort
+ * 
+ */
 int a[TEST_SIZE];
+
+/**
+ * @brief Stores the time differences between the two techniques
+ * 
+ */
 int results[TEST_SIZE + 1];
 
 /**

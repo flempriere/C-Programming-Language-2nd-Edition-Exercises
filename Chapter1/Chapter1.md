@@ -95,15 +95,13 @@ the final line is not terminated by a newline, than the newline count will be on
 
 ### [Ex 1-9](./Exercises/Ex1_9/ex1-9.c)
 
-*Write a program to copy its input to its output, replacing each
-string of one or more blanks by a single blank.*
+*Write a program to copy its input to its output, replacing each string of one or more blanks by a single blank.*
 
-We use a state machine. When we first encounter a blank we print it and move to a state where we consume all blanks without printing. When we find the next non-blank we go back to our normal parse mode.
+We use a state machine approach. When we first encounter a blank we print it and move to a state where we consume all blanks without printing. When we find the next non-blank we go back to our normal parse mode.
 
 ### [Ex 1-10](./Exercises/Ex1_10/ex1-10.c)
 
-*Write a program to copy its input to its output, replacing each
-tab by `\t`, each backspace by `\b` and each backslash by `\\`. This makes tabs and backspaces visible in an unambiguous way.*
+*Write a program to copy its input to its output, replacing each tab by `\t`, each backspace by `\b` and each backslash by `\\`. This makes tabs and backspaces visible in an unambiguous way.*
 
 ### [Ex 1-11](./Exercises/Ex1_11)
 
@@ -138,8 +136,7 @@ Otherwise this program is simple, print words as normal, but when we encounter a
 
 #### [Ex 1-13](./Exercises/Ex1_13/ex1_13.c)
 
-*Write a program to print a histogram of the lengths of words
-in its input. It is easy to print the histogram with the bars horizontal; a vertical orientation is more challenging.*
+*Write a program to print a histogram of the lengths of words in its input. It is easy to print the histogram with the bars horizontal; a vertical orientation is more challenging.*
 
 **Note:** We take on the challenge of printing the histogram vertically.
 
@@ -185,8 +182,7 @@ Straightforward, use `strlen(s)` to get the length of the string, then work our 
 
 ### [Ex 1-20](./Exercises/Ex1_20/ex1-20.c)
 
-*Write a program **detab** that replaces all tabs in the input with the proper number of blanks to space to the next tab stop. Assume
-a fixed set of tab stops, say every $`n`$ columns. Should $`n`$ be a variable or a symbolic parameter?*
+*Write a program **detab** that replaces all tabs in the input with the proper number of blanks to space to the next tab stop. Assume a fixed set of tab stops, say every $`n`$ columns. Should $`n`$ be a variable or a symbolic parameter?*
 
 Ideally $`n`$ would be a variable supplied by the user. Since we haven't yet seen how to do this, we leave it as a symbolic constant since it should not change during the runtime of the program.
 
@@ -205,13 +201,11 @@ We use a similar technique to the previous exercise. We keep track of the number
 
 1. If this counter equals the number of blanks equivalent to a tab we output a tab unless this number is one, in which case we output a blank.
 2. When we encounter a non-blank we output the number of blanks, and update the blanks to a tabstop counter.
-3. If we encounter a tab, we ignore the current number of blanks,t hen output a tab unless the number of blanks equivalent to a tab is one in which case we output a blank. The spaces to tab counter, and number of spaces is tracked.
+3. If we encounter a tab, we ignore the current number of blanks, then output a tab unless the number of blanks equivalent to a tab is one in which case we output a blank. The spaces to tab counter, and number of spaces is tracked.
 
 ### [Ex 1-22](./Exercises/Ex1_22/ex1-22.c)
 
-*Write a program to **fold** long input lines into two or more shorter lines after the last non-blank character that occurs before the $`n`$-th column of input. Make sure your program does
-something intelligent with very long, lines, and if there are
-no blanks or tabs before the specified column.*
+*Write a program to **fold** long input lines into two or more shorter lines after the last non-blank character that occurs before the $`n`$-th column of input. Make sure your program does something intelligent with very long, lines, and if there are no blanks or tabs before the specified column.*
 
 **Note:** Our implementation uses the following logic,
 
@@ -223,12 +217,11 @@ column index.
 
 ### [Ex 1-23](./Exercises/Ex1_23/ex1-23.c)
 
-*Write a program to remove all comments from a C program. Don't forget to handle quoted strings and character constants properly.
-**C comments do not nest**.*
+*Write a program to remove all comments from a C program. Don't forget to handle quoted strings and character constants properly. **C comments do not nest**.*
 
-**Note**: We extend this to support `C99` style singleline comments.
+**Note**: We extend this to support **C99** style singleline comments.
 
-We use a state machine approach again. the machine has five states, the normal state executed by the main represents parsing. We keep track of the current character and the previous character.
+We use a state machine approach again. the machine has five states; the normal state executed by the main represents parsing. We keep track of the current character and the previous character.
 
 1. If we get the pattern `//` from the normal state we transition to the `single_comment` state, where we ignore all input until the end of the line, before returning to the normal state.
 2. If we get the pattern `/*` we transition to the `multiline comment` state, where we ignore all input until we find a `*/`, then return to the normal state.
@@ -244,11 +237,11 @@ By writing a function for each state, we naturally deal with cases such as comme
 
 **Note:** Our implementation does not account for the presence of comments, we assume that these will be stripped out by the use of a program like [Ex 1-23](#ex-1-23) first. (We could add this feature in but it would only serve to distract from the focus on the syntactic analysis.)
 
-Otherwise we use a slightly more advanced implementation than just counting the number of each type of brackets by using a stack and a state machine approach. In the absence of strings the algorithm works as follows
+Otherwise we use a slightly more advanced implementation than just counting the number of each type of brackets by using a stack and a state machine approach. In the absence of strings the algorithm works as follows:
 
 1. Consume characters until we find a delimiter `{, [, (, ), ], }`.
     1. If it is a left delimiter push it onto the stack.
-    2. If is a right delimiter pop the stack, if the popped element is not the corresponding left delimiter, return an error.
+    2. If is a right delimiter pop the stack. If the popped element is not the corresponding left delimiter, return an error.
 2. If we reach the end of the file without an error we check that the stack is empty. If it is not then we have an unpaired delimiter and we report an error.
 
 How do we handle strings and characters? Well, we add a state machine layer.
@@ -301,7 +294,7 @@ provided to the function.
 
 - Comments are ignored by the compiler. The *multi-line comment style* `/* comment */` makes everything between `/*` and `*/` a comment.
 
-- **Note**: The additional syntax `/**` and `@brief` with `*` on every line forms whats called a `doxygen` comment. doxygen is a tool used to develop code documentation from code comments.
+- **Note**: The additional syntax `/**` and `@brief` with `*` on every line forms whats called a *doxygen* comment. [doxygen](https://www.doxygen.nl/) is a tool used to develop code documentation from code comments.
   - These are added by me, and will not be detailed in this code base.
 - An alternative comment style is the so-called `C++` style or
 *single-line* comment `//` in which everything after the `//` until the end of the line is treated as a comment.
@@ -348,7 +341,7 @@ provided to the function.
 
 ### Operators
 
-- operators are actions that can be performed on variables e.g. like `+`.
+- Operators are actions that can be performed on variables e.g. like `+`.
 - **Warning**: Integer division e.g. `4/3` truncates.
   - In this case `1` would be the result.
   - This is why we multiply first in the calculation `celsius = 5 * (fahr - 32) / 9`.
@@ -359,12 +352,12 @@ provided to the function.
 - Takes in a variable number of arguments, the first of which is a *format string*, which is a character string where `%` is used to denote that a value should be substituted.
   - Substitutions are taken from the remaining arguments.
 - Each `%` is followed by symbols that describe how and what value should be substituted.
-  - `%d` denotes an integer
+  - `%d` denotes an integer.
     - `3%d` prints integers in a right-aligned
-        field at least three digits wide
-  - `%f` denotes a float
+        field at least three digits wide.
+  - `%f` denotes a float.
     - `6.1%f` denotes a float at least 6 wide, with
-        one digit after the decimal place
+        one digit after the decimal place.
 - `scanf` is a function that acts as the opposite of `printf`.
   - It reads input into variables using a *format string*.
 
@@ -394,7 +387,7 @@ See [Ex1.3](#ex-1-3) and [Ex1.4](#ex-1-4).
 
 ## 1.3 The `for` Statement
 
-- Syntax: `for(initialisation ; stop condition ; increment)`
+- Syntax: `for(initialisation ; stop condition ; increment)`.
 - A `for` loop generalises a `while` loop. It contains three sections, seperated by semicolons.
   - An *initialisation* e.g. `int fahr = 0` which is performed once at the start of the loop.
     - This *may* include a variable declaration.
@@ -454,7 +447,7 @@ makes name a compile time constant.
 
 #### Example [Copy Input V2](#copy-input-v2)
 
-- assignments can be made as part of a broader expression.
+- Assignments can be made as part of a broader expression.
   - e.g. the expression `(c = getchar()) != EOF)`
     assigns the return of `getchar()` to `c`compares that to `EOF` and returns `True` if not equal and `False` if they are equal.
 - One needs to be careful of precedence, e.g. `!=` has a higher precedence than `=`.
@@ -469,7 +462,7 @@ See [Ex1.6](#ex-1-6) and [Ex1.7](#ex-1-7).
 ### Prefix increment vs Postfix and Equality test
 
 - `++nc` increments `nc` by one.
-- similar exist for `--`
+- similar exist for `--`.
 - Can either use pre- or postfix, which have slightly different behaviour.
 
 ### `long`
@@ -489,7 +482,7 @@ See [Ex1.6](#ex-1-6) and [Ex1.7](#ex-1-7).
 
 In our example we have an empty `for` loop. The book suggests leaving a blank line as a *null line* to indicate no loop body.
 
-- An alternative is to use a simple `;` to denote an empty statement. e.g. `for (do;some;stuff); //<- empty statement`
+- An alternative is to use a simple `;` to denote an empty statement. e.g. `for (do;some;stuff); //<- empty statement`.
 
 ### Example [line counting](#count-lines)
 
@@ -657,23 +650,23 @@ See [Ex1.16](#ex-1-16), [Ex1.17](#ex-1-17), [Ex1.18](#ex-1-18) and [Ex1.19](#ex-
 
 ### Example [Longest Line v2](#longest-line-v2)
 
-- variables are *private* or *local* to where they are declared.
-  - e.g. in `main`
+- Variables are *private* or *local* to where they are declared.
+  - e.g. in `main`.
 - By default variables exist only so long as the function that
 instances them is running.
   - these variables are sometimes referred to as
     *automatic*.
   - They must be set each time, else they contain garbage.
 - *external* variables are globally accessible.
-  - alternative mechanism to argument lists for inter-function communication.
+  - Alternative mechanism to argument lists for inter-function communication.
   - Remain in existence permanently.
     - Retain values after function calls.
 - External variables have the following properties,
   - they must be *defined* once.
     - To allocate storage.
-  - then declared in each accessing function.
-    - you can use `extern`.
-  - extern is not needed if the declaration preceeds the function in the source code.
+  - Then declared in each accessing function.
+    - You can use `extern`.
+  - Extern is not needed if the declaration preceeds the function in the source code.
     - By convention place all `extern` variables at the top of
         a source file (and omit `extern`).
     - `extern` is needed to connect variables across

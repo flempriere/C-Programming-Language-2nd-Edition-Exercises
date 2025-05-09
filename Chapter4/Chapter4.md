@@ -33,7 +33,7 @@ Demonstrates the use of recursion to perform sort an array by partitioning the a
 
 ## Exercises
 
-### [Ex 4-1](./Exercises/Ex4_1/ex4_1.c)
+### [Ex 4-1](./Exercises/Ex4_1/ex4-1.c)
 
 *Write the function `strrindex(s,t)`, which returns the position of the **rightmost** occurrence of $`t`$ in $`s`$, or $`-1`$ if there is none.*
 
@@ -114,13 +114,25 @@ This is a relatively easy enough thing to change, however we know move from a sc
 
 ---
 
-## Summary of Exercises
+### [Ex 4-12](./Exercises/Ex4_12/ex4-12.c)
 
-- Ex 4-12: Implemention of `atoi(char s[], int v, int lim)` that converts an integer `v` into its string representation in `s`.
-  - Our implementation will truncate after the `lim`-most significant digits
-  - Also returns the length of the copied string `s`.
-- Ex 4-13: recursive implementation of `reverse(char s[])`, that reverses the string `s` inplace.
-- Ex 4-14: macro `swap(t, x, y)` that takes in a type `t` and variables `x` and `y` of type `t` and performs a swap.
+*Adapt the ideas of printdi to write a recursive version of `itoa`; that is, convert an itneger into a string by calling a recursive routine*.
+
+The interface of `itoa` doesn't work directly for a recusive function because we can't track where we are in the string. So we use `itoa` itself as a wrapper to a recursive function. This also means that we don't need to call reverse, the recursion call works backwards.
+
+An alternative implementation is to use a `static` variable in the function to connect the calls together. But this would then require some function to *reset* the static variable after the use of the variable.
+
+### [Ex 4-13](./Exercises/Ex4_13/ex4-13.c)
+
+*Write a recursive version of the function `reverse(s)`, which reverses the string `s` in place.*
+
+Again, like the previous function, the direct interface doesn't match what we need for a recursion. So we again use the wrapper approach.
+
+### [Ex 4-14](./Exercises/Ex4_14/ex4-14.c)
+
+*Define a macro `swap(t, x, y)` that interchanges two arguments of type `t` (Block structure will help.)*.
+
+We use a common `do { ... } while(0)` construct so that the common idiom `if(cond) {swap(...);}` will work as expected.
 
 ## 4.0 Introduction
 
@@ -223,10 +235,10 @@ dummy() {}
 ```
 
 - This returns nothing, takes no arguments and does nothing.
-  - Omitted return type is assumed `int.
+  - Omitted return type is assumed `int`.
   - **Warning**: *not sure if still true for modern $c$ standards*
   - Just do the full proper declaration.
-  - **Note**: Until **C23** a declaration of the type `dummy()` is a function that takes an unknown number of arguments, while `dummy(void)`  means a function that takes no arguments.
+  - **Note**: Until **C23** a declaration of the form `dummy()` is a function that takes an unknown number of arguments, while `dummy(void)`  means a function that takes no arguments.
 
 ### Programs
 
@@ -320,8 +332,8 @@ int main()
   - `atof` must be declared and defined consistently.
     - These mismatches can occur most often in multifile compilation.
   - Without a *prototype*, a function is defined *implicitly* by its first declaration.
-    - If not declared, it is assumed to return an `int` and no argument assumptions are made
-    - Additionally declarations like `double atof()` with empty args also make no assumptions on the args
+    - If not declared, it is assumed to return an `int` and no argument assumptions are made.
+    - Additionally declarations like `double atof()` with empty args also make no assumptions on the args.
       - **DO NOT USE THIS BEHAVIOUR, IT IS FOR BACKWARDS COMPATABILITY**
       - Declare args for those that use them, else use `void`.
       - **Note**: From **C23** this is removed, empty brackets now imply no arguments.
@@ -339,9 +351,9 @@ int atoi(char s[])
 ```
 
 - We have to cast `atof`'s result to get an  `int`.
-  - The return converts automatically
-    - This operation may discard info so might have compiler warnings
-    - Cast makes this *explicit* and warning should be supressed
+  - The return converts automatically.
+    - This operation may discard info so might have compiler warnings.
+    - Cast makes this *explicit* and warning should be supressed.
 
 ### Relevant Exercises
 
@@ -356,7 +368,7 @@ See [Ex 4.2](#ex-4-2).
   - Can't define a function in a function.
 - For *external* functions and variables, all references to them by the same name are references to the same thing.
   - This includes when compiled seperately.
-  - Referred to as *external linkage*
+  - Referred to as *external linkage*.
 - External variables let functions communicate outside of args and return values.
   - Avoids long argument lists, but not great.
   - Good when functions share the same data, but neither calls the other.
@@ -520,15 +532,15 @@ int getop(char s[])
 ```
 
 - What are `getch()` and `ungetch()`?
-  - often need to read input until we read too much to know we've read enough.
-  - e.g. building number -> have to see **not** a digit to know we've finished
-  - need to *undo* the last read
-- make pair of cooperating functions `getch()` and `ungetch()`.
-  - implementation simple: `getch()` and `ungetch()` share a buffer
-    - here its a `char` array
+  - Often need to read input until we read too much to know we've read enough.
+  - e.g. building number -> have to see **not** a digit to know we've finished.
+  - Need to *undo* the last read.
+- Make pair of cooperating functions `getch()` and `ungetch()`.
+  - Implementation simple: `getch()` and `ungetch()` share a buffer
+    - Here its a `char` array
     - `getch()` reads from the buffer, then from IO
     - `ungetch()` queues the buffer
-    - this works like the stack, so here use external variable implementation
+    - This works like the stack, so here use external variable implementation
 
 ```C
 #define BUFSIZE 100
@@ -587,8 +599,8 @@ For *External variables and functions*, then
 - From the point it is declared to the end of the file being compiled.
   - e.g. if `main`, `sp`, `val`, `push` and `pop` are defined in one file, in the order shown above, (see below)
   - Variables `sp` and `val` are visible in `push` and `pop` but not in `main`.
-    - (note `push` and `pop` are also not available in `main`)
-- To reference an external variable before it is defined (or if defined in a different file) use the `extern` keyword
+    - (**Note**: `push` and `pop` are also not available in `main`.)
+- To reference an external variable before it is defined (or if defined in a different file) use the `extern` keyword.
 
 ```C
 int main(void) {...}
@@ -598,7 +610,7 @@ void push(double f) {...}
 double pop(void) {...}
 ```
 
-**Note** a *declaration* is different to a *definition*
+**Note** a *declaration* is different to a *definition*.
 
 - *Declaration* announces property of variables (namely *type*).
 - *Definition* also sets aside storage.
@@ -620,14 +632,14 @@ extern double val[];
 
 - *Declares* for the rest of the source file, that `sp` is an `int` (and `val` is a `double` array), the variables are not created, and storage is not reserved.
 - There must be **only one** *definition* of an external variable among all of the component files of a source program.
-  - Other files use `extern` to access the *definition*
-  - Array sizes must be specified in the *definition*
-    - Optional in an `extern` *declaration*
-- Initialisation  of an external variable only goes w/ definition
+  - Other files use `extern` to access the *definition*.
+  - Array sizes must be specified in the *definition*.
+    - Optional in an `extern` *declaration*.
+- Initialisation  of an external variable only goes w/ definition.
 
 **Example**:
 
-- can define `push` and `pop` in one file, and connect to the variables `sp` and `val` in another.
+- Can define `push` and `pop` in one file, and connect to the variables `sp` and `val` in another.
 
 ```C
 in file1:
@@ -646,8 +658,7 @@ in file2:
 
 ### Example [Multifile Calculator Implementation](#polish-notation-calculator)
 
-The calculator program could be split into multiple files, one such
-architecture is in the diagram below.
+The calculator program could be split into multiple files, one such architecture is in the diagram below.
 
 ```mermaid
 
@@ -713,9 +724,9 @@ classDiagram
 
 Variables `sp` and `val` in `stack.c` and `buf` and `bufp` in `getch.c` are for private use of their functions. They are not supposed to be used outside their own source file.
 
-- `static` declaration (applied to external variable or function)
+- `static` declaration (applied to external variable or function).
   - Limits scope to rest of source file being compiled.
-  - External `static` allows to hide names of private external variables
+  - External `static` allows to hide names of private external variables.
 
 **Example**
 
@@ -774,7 +785,7 @@ It is not possible to take the *address* of a register variable. ( A concept we 
   - **cannot** define functions inside functions.
   - **can** define variables within a block.
 
-- Declarations of variables may follow the left brace introducing any compound statement
+- Declarations of variables may follow the left brace introducing any compound statement.
 - Variables introduced this way hide identically named variables in outer blocks.
   - Use `-Wshadow` during compilation to flag this.
 - Lifetime extends until the corresponding right brace.
@@ -854,7 +865,7 @@ int days[] = {31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31}
 - If array size defined and $\text{len}(\text{list}) < \text{len}(\text{array})$, remaining indices are set to zero.
   - if $\text{len}(\text{list}) < \text{len}(\text{array})$ an error is generated.
   - Repetition cannot be specified.
-  - cannot declare an element at index $i$ without declaring the value of the preceding indices
+  - cannot declare an element at index $i$ without declaring the value of the preceding indices.
 - `char` arrays may be initialised with string notation `"string"`.
 
 **Note**: C99 significantly changes the ways in which an array can be declared. It is too extensive to detail all the methods here, but refer to the [cppreference page](https://en.cppreference.com/w/c/language/array_initialization).
@@ -869,13 +880,13 @@ char pattern[] = {'o', 'u', 'l', 'd', '\0'};
 
 ## 4.10 Recursion
 
-- C functions may be used recursively
-  - i.e. call themselves (directly or not)
+- C functions may be used recursively.
+  - i.e. call themselves (directly or not.)
 
 ### Example: [printd](#printing-a-number-as-a-string)
 
-- Digits generated wrong order, (low before high)
-  - can be solved recursively
+- Digits generated wrong order, (low before high).
+  - Can be solved recursively.
 
 ```C
 #include <stdio.h>
@@ -893,8 +904,8 @@ void printd(int n)
 ```
 
 - On a recursive call:
-  - fresh set of automatic vars generated
-  - These are independent to the higher calls
+  - fresh set of automatic vars generated.
+  - These are independent to the higher calls.
 - e.g. in `printd(123)` the call structure is
   - `printd(123)`
   - `printd(12)`
@@ -903,16 +914,16 @@ void printd(int n)
 
 **Example: Quicksort**
 
-- Invented by Tony Hoare (1962)
-- Given array, choose an element $x$
-- Partition into two subsets  
+- Invented by Tony Hoare (1962).
+- Given array, choose an element $x$,
+  - Partition into two subsets,
 
 $$A : a \in A \iff a < x, \\
 B : b \in B \iff b \geq x$$
-- Repeat recursively on $A$ and $B$
-- Stop condition is set size $< 2$ since automatically sorted
+- Repeat recursively on $A$ and $B$.
+- Stop condition is set size $< 2$ since automatically sorted.
 
-```
+```C
 /*qsort:  sort v[left]...v[right] in ascending order*/
 void qsort(int v[], int left, int right)
 {
@@ -938,140 +949,163 @@ void swap(int v[], int i, int j)
     v[j] = temp;
 }
 ```
-- standard library contains *qsort* which can sort any comparable object.
+- Standard library contains *qsort* which can sort any comparable object.
 - Recursion typically is cleaner to read, but,
-    - requires allocation of stack memory
-    - is not faster
+    - Requires allocation of stack memory.
+    - Is not faster.
 
-### The C Preprocessor
-- A conceptual first step in compilation
-- most common uses
-    - `#include` to include file contents
-    - `#define` for textual substitution of a token
-- Alternative use cases include
-    - conditional compilation
-    - functionlike macros / macros with arguments
+### Relevant Exercises
 
-#### File Inclusion
-- source line of the form:
+See [Ex 4.12](#ex-4-12) and [Ex 4.13](#ex-4-13).
+
+## 4.11 The C Preprocessor
+- A conceptual first step in compilation.
+- Most common uses,
+    - `#include` to include file contents.
+    - `#define` for textual substitution of a token.
+- Alternative use cases include,
+    - Conditional compilation.
+    - Functionlike macros / macros with arguments.
+
+### File Inclusion
+- Source line of the form:
     - `#define "filename"`
 - or
     - `#define <filename>`
-- are replaced by contents of the file *filename*.
-    - quoted searches from source file's location, else and if:
-    - <> search method is *implementation-defined*
+- Are replaced by contents of the file *filename*.
+    - Quoted searches from source file's location, else and if:
+    - <> search method is *implementation-defined*.
 - Common to use to include:
-    - common `#defines`
-    - common `extern` variables
-    - function prototypes
+    - Common `#defines`.
+    - Common `extern` variables.
+    - Function prototypes.
 
-**Note:** Strictly speaking, headers need not be files, since access is implementation defined for < > includes.
+**Note**: Strictly speaking, headers need not be files, since access is implementation defined for < > includes.
 
-- `#include` is the prefered way to tie declarations together for a large program
-    - ensures all files have same definitions and variable declarations
+- `#include` is the prefered way to tie declarations together for a large program.
+    - Ensures all files have same definitions and variable declarations.
 
-#### Macro Substitution
+### Macro Substitution
+
 - Macro definition has the form
-    - `#define name replacement-text`
-    - token `name` is replaced by `replacement-text`.
-    - *replacement-text* may be arbitrary
-    - Can continue a definition  across multiple lines using `\` at a line end
-    - macro name scope is from the `#define` to the end of the compiled source file.
-    - definition may use previous definitions
-- substitution only for tokens, do not occur within strings
-    - e.g. if we `#define YES`
-        - `printf("YES");` and `YESMAN` are unchanged
-        - `YES MAN` would be substituted though
+    - `#define name replacement-text`.
+    - Token `name` is replaced by `replacement-text`.
+    - *replacement-text* may be arbitrary.
+    - Can continue a definition  across multiple lines using `\` at a line end.
+    - Macro name scope is from the `#define` to the end of the compiled source file.
+    - Definition may use previous definitions.
+- substitution only for tokens, do not occur within strings.
+    - e.g. if we `#define YES`,
+        - `printf("YES");` and `YESMAN` are unchanged.
+        - `YES MAN` would be substituted though.
 
-- Any name may be defined
+- Any name may be defined.
 
 **Example: Forever**
-```
+
+```C
 # define forever for (;;) /* infinite loop*/
 ```
- which creates an infinite loop.
 
- - Macros can be defined with arguments.
+which creates an infinite loop.
 
- **Example: max**
-```
+- Macros can be defined with arguments.
+
+**Example: max**
+
+```C
  #define max(A, B) ((A) > (B) ? (A) : (B))
 ```
-- Macros expand into inline code
-    - each occurence of a *formal parameter* (A or B here) is replaced by the corresponding argument.
+
+- Macros expand into inline code.
+  - Each occurence of a *formal parameter* (A or B here) is replaced by the corresponding argument.
 
 **Example: max use case**
-```
+
+```C
 x = max(p+q, r+s)
 /* this expands out to: */
 x = ((p+q) > (r+s) ? (p+q) : (r+s))
 ```
+
 - If arguments are treated consistently this is type generic.
-- **Note** macros have some pitfalls
-    - in the above each expr is evaluated twice (e.g. p+q)
-        - **VERY BAD IF THERE ARE SIDE EFFECTS**
-        - e.g. `max(i++, j++) /* WRONG */ `
-            - the larger value is incremented twice
-    - need parentheses to ensure order of operations preserved
-        - e.g. `#define square(x) x * x`
-        - Then `square(z +1)` expands to `z + 1 * z + 1`
-        - From order of operations this becomes:
-            - `z + z + 1` = `2z + 1`
-- functionlike macros are thus useful but should be used sparingly.
-    - e.g. `getchar()` and `putchar()` typically macros
-        - avoids runtime cost of a function call per `char`.
-        - `#<ctype.h>` also uses macros for its functions
-- Can undefine names using `#undef`
-    - helps ensure a routine is a function
-```
+- **Note** macros have some pitfalls!
+  - In the above each expr is evaluated twice (e.g. $`p+q`$).
+  - **VERY BAD IF THERE ARE SIDE EFFECTS**
+  - e.g. `max(i++, j++) /* WRONG */ `
+    - The larger value is incremented twice.
+    - Need parentheses to ensure order of operations preserved.
+    - e.g. `#define square(x) x * x`.
+      - Then `square(z +1)` expands to `z + 1 * z + 1`.
+    - From order of operations this becomes:
+      - `z + z + 1` = `2z + 1`.
+- Functionlike macros are thus useful but should be used sparingly.
+    - e.g. `getchar()` and `putchar()` typically macros.
+        - Avoids runtime cost of a function call per `char`.
+        - `<ctype.h>` also uses macros for its functions.
+- Can undefine names using `#undef`.
+  - Helps ensure a routine is a function.
+
+```C
 # undef getchar
 
 int getchar(void) {...}
 ```
-- Formal parameters not replaced in quoted strings
-    - if parameter name preceded by `#` in replacement text expand out to quoted string with parameter substituted
+
+- Formal parameters not replaced in quoted strings.
+  - If parameter name preceded by `#` in replacement text expand out to quoted string with parameter substituted.
 
 **Example: Debugging Macro**
-```
+
+```C
 # define dprint(expr) printf(#expr " = %g\n", expr)
 ```
-- the above example uses string concatenation, and behaves as
-```
+
+- The above example uses string concatenation, and behaves as
+
+```C
 dprint(x/y) /* expands to */
 printf("x/y" " = %g\n", x/y) /* strings concatenate to */
 printf("x/y = %g\n", x/y)
 ```
+
 - Within the macro argument `'` and `"` are converted to `\'` and `\"` respectively.
-    - input is thus a valid string literal
-- preprocessor provides `##` for argument concatenation during macro expansion.
-    - parameter in replacement text adjacent to `##`:
-        - parameter replaced by actual argument
-        - `##` and whitespace removed
-        - result rescanned
+  - Input is thus a valid string literal.
+
+- Preprocessor provides `##` for argument concatenation during macro expansion.
+  - Parameter in replacement text adjacent to `##`:
+    - Parameter replaced by actual argument.
+    - `##` and whitespace removed.
+    - Result rescanned.
 
 **Example: Paste**
-```
+
+```C
 # define paste(front, back) front ## back
 
 /* example usecase */
 paste(name, 1) -> name1
 ```
-- Nested `##` rules are complicated
 
-#### Conditional Inclusion
-- preprocess can be controlled with conditional statements
-    - allows selective code inclusion
-- `#if` evaluates a constant integer expression
-    - no `sizeof`, casts or `enum` constants
-    - if expression non-zero
-        - execute subsequent lines until `#endif, #elif or #else`
-        - expression `defined(name)` in an `#if` evaluates as
-            - 1 if *name* is defined
-            - 0 otherwise
+- Nested `##` rules are complicated.
+
+### Conditional Inclusion
+
+- Preprocess can be controlled with conditional statements.
+  - Allows selective code inclusion.
+- `#if` evaluates a constant integer expression.
+  - No `sizeof`, casts or `enum` constants.
+  - If expression non-zero,
+    - Execute subsequent lines until `#endif, #elif or #else`.
+    - Expression `defined(name)` in an `#if` evaluates as
+      - $`1`$ if *name* is defined.
+      - $`0`$ otherwise.
 
 **Example: header file inclusion**
-- the following wrapper around the contents of `hdr.h` ensures `hdr.h` is included only once
-```
+
+- The following wrapper around the contents of `hdr.h` ensures `hdr.h` is included only once
+
+```C
 # if !defined(HDR)
 # define HDR
 
@@ -1079,15 +1113,18 @@ paste(name, 1) -> name1
 
 # endif
 ```
-- first inclusion defines the name `HDR`
-- future inclusions check for the existence of `HDR` skip the file contents.
-- if used consistently
-    - headers may include other headers
-    - user need not worry about interdependencies
+
+- First inclusion defines the name `HDR`.
+- Future inclusions check for the existence of `HDR` skip the file contents.
+- If used consistently,
+    - Headers may include other headers.
+    - User need not worry about interdependencies.
 
 **Example: selecting the correct header**
-- this example tests the name `SYSTEM` and selects the appropriate `HDR` file to include
-```
+
+- This example tests the name `SYSTEM` and selects the appropriate `HDR` file to include,
+
+```C
 # if SYSTEM == SYSV
     #define HDR "sysv.h"
 # elif SYSTEM == BSD
@@ -1100,8 +1137,9 @@ paste(name, 1) -> name1
 # include HDR
 ```
 
-- we can use `#ifndef` and `#ifdef` as specialised forms to test for if a name is defined. The first example can be rewritten as
-```
+- We can use `#ifndef` and `#ifdef` as specialised forms to test for if a name is defined. The first example can be rewritten as
+
+```C
 # ifndef HDR
 # define HDR
 
@@ -1109,3 +1147,7 @@ paste(name, 1) -> name1
 
 # endif
 ```
+
+### Relevant Exercises
+
+See [Ex 4.14](#ex-4-14).

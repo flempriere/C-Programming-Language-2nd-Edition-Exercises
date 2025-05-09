@@ -34,6 +34,8 @@ Routine to remove trailing whitespace from a string.
 
 ### [Ex 3-1](./Exercises/Ex3_1/ex3-1.c)
 
+*Our Binary search makes two tests inside the loop, when one would suffice (at the price of more tests outside). Write a version with only one test inside the loop and measure the difference in run-time*.
+
 In this case we update the while loop condition to
 
 ```C
@@ -54,6 +56,8 @@ So the old method is slower, but not significantly so. (and both methods are ver
 ### [Ex 3-2](./Exercises/Ex3_2/ex3-2.c)
 
 *Write a function `escape(s, t)` that converts characters like newline and tab into visible escape sequences like \n and \t as it copies the string t to s. Use a `switch`. Write a function `unescape(s,t)` for the other direction as well, converting escape sequences into the real characters.*
+
+We write our implementation to work for all of the control characters.
 
 ### [Ex 3-3](./Exercises/Ex3_3/ex3-3.c)
 
@@ -87,16 +91,16 @@ Simple change, we already track the field width implicitly through `i`, so now i
 
 ## 3.1 Statements and Blocks
 
-- *expression* followed by `;` is a *statement*
-  - `;` - statement terminator
-- Braces `{}` group *declarations* and *statements*
-  - called a *block* or *compound statement*
-- Blocks syntactically equivalent to one statement
+- *expression* followed by `;` is a *statement*.
+  - `;` - statement terminator.
+- Braces `{}` group *declarations* and *statements*.
+  - called a *block* or *compound statement*.
+- Blocks syntactically equivalent to one statement.
   - No need for a semicolon after a block.
 
 ### 3.2 If-Else
 
-- Expresses decisions
+- Expresses decisions.
 - Format:
 
 ```C
@@ -107,11 +111,10 @@ else
 ```
 
 - **C2Y** will let the *expression* be a *declaration*.
-- `else` is optional
-- Logic: test if expression is non-zero, and calls *statement1* if so (else) calls *statement 2*.
+- `else` is optional.
+- **Logic**: test if expression is non-zero, and calls *statement1* if so (else) calls *statement 2*.
 
-- Optional `else` can lead to ambiguity in nested case,
-use parentheses and indentation to make clear
+- Optional `else` can lead to ambiguity in nested case, use parentheses and indentation to make clear.
   - e.g. Write:
 
 ```C
@@ -166,15 +169,15 @@ else
     statement
 ```
 
-- Expressions are evaluated in order
-- **First** *expr* to evaluate **true** triggers its statement
-  - Chain then terminated
-- Last `else` triggered if none trigger
+- Expressions are evaluated in order.
+- **First** *expr* to evaluate **true** triggers its statement.
+  - Chain then terminated.
+- Last `else` triggered if none trigger.
   - Like a normal `if` it maybe excluded.
 
 ### Example: [Binary Search](#binary-search)
 
-- Determines if $x$ is in a sorted array $v$ (increasing order)
+- Determines if $x$ is in a sorted array $v$ (increasing order).
   - Returns the position of the element $0$ to $n-1$ else $-1$ if it doesn't exist.
   - We check the middle element, check if it matches $x$ or if it is $> x$ or $< x$ and then repeat the process on the associated remaining half.
 
@@ -205,7 +208,7 @@ See [Ex 3.1](#ex-3-1).
 
 ## 3.4 Switch
 
-`switch` - multiway decision for testing against a number of *constant* integer values
+`switch` - multiway decision for testing against a number of *constant* integer values.
 
 Format:
 
@@ -220,9 +223,9 @@ switch(expression)
 
 - Each `case` labelled by (at least) one integer valued constant or constant expression.
 - If `expression` matches `const-expr` execution starts at that case.
-  - All case expressions must be different
+  - All case expressions must be different.
 - `default` is optional, executed if no case matches
-- Cases and default may occur in any order
+- Cases and default may occur in any order.
 
 ### Example: [count digits, white space etc](#count-digits) using `switch`
 
@@ -262,8 +265,7 @@ int main()
 
 - `break` causes an immediate exit from the `switch` statement.
 - Cases are just labels.
-  - Execution falls through to the next label unless
-    explicitly escaped.
+  - Execution falls through to the next label unless explicitly escaped.
   - Use `break` or `return`
   - `break` can also be used in loops.
 - *Falling through* needs to be considered carefully.
@@ -288,7 +290,7 @@ while (expression)
 
 - Expression evaluated, statement executed if *expr* is non-zero.
   - *expr* then revaluated (and statement executed) until it evaluates to zero.
-  - Control resumes after statement
+  - Control resumes after statement.
 
 - For syntax:
 
@@ -334,7 +336,7 @@ int atoi(char s[])
 ```
 
 - Standard library contains `strtol` for converting `string` to `long integers`  (and related functions).
-- Central loop control good for complicated nested loops, e.g. shellsort
+- Central loop control good for complicated nested loops, e.g. shellsort.
 
 ### Example [Shellsort](#sorting-numbers)
 
@@ -360,16 +362,16 @@ void shellsort(int v[], int n)
 - Three nested loops.
   - Outermost contols gap between compared elements.
     - Shrinks from $n/2$ by a factor of $2$ per pass until $0$.
-  - Middle loop steps along the elements
+  - Middle loop steps along the elements.
   - Innermost compares each pair seperated by gap and reverses those out of order.
-    - Gap reduces to one, so all are eventually sorted
+    - Gap reduces to one, so all are eventually sorted.
 
 ### Comma Operator
 
 - The comma operator `,` is mostly used for `for` loops.
   - Pair of expressions seperated by `,` are evaluated left to right.
     - Type and value of result is that of the right operand.
-    - Useful in `for` loops for multi-indexing
+    - Useful in `for` loops for multi-indexing.
 
 #### Example [Reverse](#string-reversal)
 
@@ -396,7 +398,7 @@ void reverse(char s[])
   - *This comma* does not guarantee left -> right eval.
 - Use sparingly.
   - Save for tightly coupled constructs.
-    - e.g. for loop, multistep single line macros
+    - e.g. for loop, multistep single line macros.
   - Could potentially use in `reverse` if we view reversing as a single operation. But this is less idiomatic and obvious.
 
 ```C
@@ -409,9 +411,9 @@ See [Ex 3.3](#ex-3-3).
 
 ### 3.6 Loops - Do-While
 
-- While and for test termination condition at the top
-- `do-while` tests at the bottom *after*
-  - ensures at least one pass
+- While and for test termination condition at the top.
+- `do-while` tests at the bottom *after*.
+  - ensures at least one pass.
 - Syntax:
 
 ```C
@@ -420,8 +422,8 @@ do
 while (expression);
 ```
 
-- *Statement* executed, then *expression* evaluated
-  - If *true* repeat again, else terminate
+- *Statement* executed, then *expression* evaluated.
+  - If *true* repeat again, else terminate.
 
 ### Example [itoa](#integer-to-string-conversion)
 
@@ -448,7 +450,7 @@ void itoa(int n, char s[])
 }
 ```
 
-- Observe that the brackets go around the `do` component
+- Observe that the brackets go around the `do` component.
   - -> this is the block statement.
   - the `while` sits outside.
 - `do` here useful since need to populate at least one character even if integer is `0`.
@@ -483,14 +485,14 @@ int trim(char s[])
 }
 ```
 
-- `strlen` returns string len, so start from last element (`strlen - 1`)
+- `strlen` returns string len, so start from last element (`strlen - 1`).
   - Scan backwards until a non-blank is found, then `break`.
-  - Else finish when $`n`$ negative (i.e. all string scanned)
+  - Else finish when $`n`$ negative (i.e. all string scanned).
 
 - `continue` goes to the next iteration of the loop immediately.
   - For loops will still have their *increment* step take control.
   - Test still takes place.(`for, while, do` regardless)
-  - `continue` does not apply to `switch`
+  - `continue` does not apply to `switch`.
     - `continue` applied to `switch` in a loop will apply to the loop.
 - **C2Y** will introduce named loops, which will allow the syntax `break label` and `continue label` where label is a label like a switch case above a loop.
 
@@ -514,7 +516,7 @@ for (i = 0; i < n; i++)
 
 - Use cases:
   - Abandoning deeply nested process.
-    - Can break out of multiple loops
+    - Can break out of multiple loops.
       - `break` and `continue` can't do this until **C2Y**.
 
 - e.g.
@@ -532,8 +534,8 @@ error:
 
 - Handy if error handling is non-trivial, and error can occur in several places.
 - Label has the form of a variable, followed by colon.
-  - May attach to any statement in same function as relevant `goto`
-    - Label scope is the entire function
+  - May attach to any statement in same function as relevant `goto`.
+    - Label scope is the entire function.
 - **Example**: determining if two arrays `a` and `b` share a common element.
 
 ```C
@@ -560,7 +562,7 @@ for (i = 0; i < n && !found; i++) {
     }
 }
 if (found) {
-    /* got one: a[i - 1] == b[j - 1]
+    /* got one: a[i - 1] == b[j - 1] */
 }
 else 
 {
@@ -571,4 +573,4 @@ else
 - Arguably has extra tests / variables and is less 'elegant' though a break, might help.
 - `goto` generally hard to maintain.
   - Hard to understand.
-  - Avoid using unless nessecary
+  - Avoid using unless nessecary.

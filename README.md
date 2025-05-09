@@ -9,6 +9,13 @@ This repository has been broken down by Chapter. Each Chapter contains a markdow
 1. Examples - Code fragments provided by the books
 2. Exercises - Solutions to Exercises
 
+## Content
+
+1. [Chapter 1](./Chapter1/Chapter1.md) - A Tutorial Introduction.
+2. [Chapter 2](./Chapter2/Chapter2.md) - Types, Operators and Expressions.
+3. [Chapter 3](./Chapter3/Chapter3.md) - Control Flow.
+4. [Chapter 4](./Chapter4/Chapter4.md) - Functions and Program Structure.
+
 ## Code Style
 
 Generally each Chapter is treated by restricting oneself to the parts of the language as presented in the book up to that point.
@@ -31,10 +38,3 @@ Exercises are to be completed with the tools introduced by the language, at that
 Other non-language specific programming techniques such as Queues and Stacks may be used in solutions though, since these techniques are independent of the language.
 
 Generally we try to write our solutions to be to the point. That means we typically avoid non-obvious error handling, and solutions may not be the most optimal algorithms. This is to make the focus on the solution, not the extra code.
-
-## Content
-
-1. [Chapter 1](./Chapter1/Chapter1.md) - A Tutorial Introduction.
-2. [Chapter 2](./Chapter2/Chapter2.md) - Types, Operators and Expressions.
-3. [Chapter 3](./Chapter3/Chapter3.md) - Control Flow.
-4. [Chapter 4](./Chapter4/Chapter4.md) - Functions and Program Structure.
