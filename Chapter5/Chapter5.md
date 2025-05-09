@@ -476,6 +476,10 @@ val = *--p /* pop */`
 
 - `string.h` provides the example functions and other useful functions.
 
+### Relevant Exercises
+
+See [Ex 5.3](#ex-5-3), [Ex 5.4](#ex-5-4), [Ex 5.5](#ex-5-5) and [Ex 5.6](#ex-5-6).
+
 ### Pointer Arrays; Pointers to Pointers
 
 - Pointers can be stored in arrays
