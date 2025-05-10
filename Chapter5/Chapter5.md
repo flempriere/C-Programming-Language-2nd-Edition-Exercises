@@ -66,8 +66,7 @@ The implementation is straightforward from our implementation of [atof](../Chapt
 
 *Rewrite `readlines` to store lines in an array supplied by `main` rather than calling `alloc` to maintain the storage. How much faster is the program?*.
 
-**Note**: The `alloc` we implemented is using an array to store the functions under the hood. We generate the following times running the program on the same test file containing almost 500,000 lines of randomly generated
-paragraphed text.
+**Note**: The `alloc` we implemented is using an array to store the functions under the hood. We generate the following times via gprof and running the program on the same test file containing almost 500,000 lines of randomly generated paragraphed text.
 
 | Method           | Time (s) |
 |------------------|----------|
@@ -75,6 +74,22 @@ paragraphed text.
 | buffer parameter | 1.04     |
 
 Which shows that the buffer method is about 20 milliseconds faster. Obviously this is just one test and so not super comprehensive but there we go.
+
+We conducted a similar analysis on a smaller file of about 200,000 lines. Using grof, we find, *considering only the time in qsort*.
+
+| Method           | Time (ms) |
+|------------------|----------|
+| alloc function   |  70      |
+| buffer parameter | 50       |
+
+Which again shows the parameter approach being slightly faster. However, if we use callgrind to analyse the results we see,
+
+| Method        | Instructions  |
+|---------------|---------------|
+| Alloc Method  | 7,541,571,916 |
+| Buffer Method | 7,542,748,607 |
+
+So there is a negligable difference.
 
 ## 5.0 Introduction
 
@@ -640,7 +655,7 @@ void swap(char *v[], int i, int j)
 
 ## 5.7 Multi-dimensional Arrays
 
-- C has rectangular arrays
+- C has rectangular arrays.
   - Much less used than pointer arrays
 - **Example:** Date conversion of day of the month to day of the year etc.
   - e.g. March 1 is the 60th day of a non-leap year.
