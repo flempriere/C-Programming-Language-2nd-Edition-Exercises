@@ -34,6 +34,14 @@ Demonstrates three different implementations of copying a string.
 
 Demonstrates the array vs pointer implementation of a function for the lexigraphical ordering of strings.
 
+### [Convert Day-Month to Day of the Year](./Examples/CalenderConversion/calender_conversion.c)
+
+Demonstrates the use of a multidimensional array to handle calender conversion between year, month, day and day-of-year, year representations.
+
+### [Month String Representation](./Examples/MonthName/monthname.c)
+
+Demonstrates the use of a static array of character pointers to allow for the indexed lookup of a string representation of a given month.
+
 ## Exercises
 
 ### [Ex 5-1](./Exercises/Ex5_1/getint.c)
@@ -90,6 +98,24 @@ Which again shows the parameter approach being slightly faster. However, if we u
 | Buffer Method | 7,542,748,607 |
 
 So there is a negligable difference.
+
+### [Ex 5-8](./Exercises/Ex5_8/ex5-8.c)
+
+*There is no error checking in `day_of_year` or `month_day`. Remedy this defect.*
+
+This is straightforward bounds checking. Since in our *enumeration* for the months we have
+reserved $`0`$ to indicate no month we repurpose this a general error value. For `day_of_year` we thus
+return $`0`$ if the month is invalid, or the days are not valid for the given month. For the reverse we set
+the month and day to $`0`$ if the year is not valid (which we consider as a negative year, ignoring *C.E* and *B.C.E* semantics.) or the given day of the year is invalid (non-positive or greater than the number of days in the year).
+
+### [Ex 5-9](./Exercises/Ex5_9/ex5-9.c)
+
+*Rewrite the routines `day_of_year` and `month_day` with pointers instead of indexing.*
+
+This should be pretty familiar from the previous exercises in this chapter. The main difference being that to convert `day_tab` to a pointer we have to remember it is a pointer to `char []` i.e. character arrays (in this case one for the non-leap year days in a month and the other for the leap year days in a month.) So we need to declare these arrays seperately, then declare `day_tab` with an initialiser list referencing these arrays.
+
+The rest of the conversion is straightforward from what we've already seen. *However*, in our stylistic opinion it
+demonstrates that just because we can do a large degree use pointer and array synntax interchangably we should take care. The pointer version is notably less readable in our opinion.
 
 ## 5.0 Introduction
 
@@ -653,17 +679,23 @@ void swap(char *v[], int i, int j)
 
 - Since any element of `v` is a char ptr, so must `temp`, thus we can copy one to another.
 
+### Relevant Exercises
+
+See [Ex 5.7](#ex-5-7).
+
 ## 5.7 Multi-dimensional Arrays
 
 - C has rectangular arrays.
-  - Much less used than pointer arrays
-- **Example:** Date conversion of day of the month to day of the year etc.
-  - e.g. March 1 is the 60th day of a non-leap year.
-  - define two functions `day_of_year` converts (month, day) -> day of year and `month_day` performs the inverse.
-    - Since the last function calculates two arguments, we use pointer arguments
-    - `month_day(1988, 60, &m, &d)` <- example call
-  - store the number of days in each month in a table.
-    - seperate table for case of leap years.
+  - Much less used than pointer arrays.
+
+### Example [Date Conversion](#convert-day-month-to-day-of-the-year)
+
+- e.g. March 1 is the 60th day of a non-leap year.
+- Define two functions `day_of_year` converts (month, day) -> day of year and `month_day` performs the inverse.
+  - Since the last function calculates two arguments, we use pointer arguments.
+  - `month_day(1988, 60, &m, &d)` <- example call.
+- Store the number of days in each month in a table.
+  - Seperate table for case of leap years.
 
 ```C
 static char daytab[2][13] = {
@@ -693,27 +725,36 @@ void month_day(int year, int yearday, int *pmonth, int *pday)
 
 - Can use arithmetic value of a logical expression as a boolean index since it is either `0` (false) or `1` (true).
 - `daytab` array has to be external to both functions.
-  - `char` used to store small integers
+  - `char` used to store small integers.
 - C multidimensional arrays are essentially recursive array structures, hence
   - `array[i][j] /*array[row][col]*/` not
-  - `array[i,j]`
-  - elements stored by `rows`, rightmost index has fastest storage access.
-  - each subarray initialised using array initialisation notation.
+  - `array[i,j]`.
+  - Elements stored by `rows.
+    - Rightmost index varies fastest as accessed in storage order.
+  - Each subarray initialised using array initialisation notation.
   - `0` column allows for natural indexing of months from 1 to 12 (not 0 to 11).
 
 - When 2D arrays are passed to a function, parameter declaration must include the number of columns.
-  - So we could declare a function taking `daytab` as `f(int daytab[2][13])`.
-  - Or, `f(int daytab[][13])`
-  - Or, `f(int (*daytab)[13])`.
-  - Need parantheses since `[]` have higher precedence than `*`. (i.e. `*daytab[13]` is an array of 13 pointers as opposed to a pointer to `int a[13]`).
+  - The *leftmost* or *row* index undergoes pointer decay.
+  - So we could declare a function taking `daytab` as `f(int daytab[2][13])`,
+  - or, `f(int daytab[][13])`,
+  - or, `f(int (*daytab)[13])`.
+  - Need parantheses since `[]` have higher precedence than `*`. (i.e. `int* daytab[13]` is an array of 13 pointers as opposed to a pointer to `int a[13]`).
 
-### Initialisation of Pointer Arrays
+- In general only the first dimension of an array is free.
+  - Must specify all subarrays.
+
+### Relevant Exercises
+
+See [Ex 5.8](#ex-5-8).
+
+## 5.8 Initialisation of Pointer Arrays
 
 - Consider a fn `month_name(n)` which returns a pointer to a string repr of the `n`-th month.
   - Ideal for a `static` array.
   - `month_name` uses a private array of `char` strings.
 
-- **Example**
+### Example [Month Name](#month-string-representation)
 
 ```C
 /* month_name: return name of n-th month */
@@ -731,25 +772,30 @@ char *month_name(int n)
 ```
 
 - Declaration follows that of `lineptr` from before.
-  - Initialiser is a `char` string list
-    - `char` stored *somewhere*
-    - pointer to string stored in `name[i]`.
+  - Initialiser is a `char` string list.
+    - `char` stored *somewhere*.
+    - Pointer to string stored in `name[i]`.
 
-### Pointers vs. Multi-dimensional Arrays
+## 5.9 Pointers vs. Multi-dimensional Arrays
 
-- Compare the definitions
-  - `int a[10][20];`
-  - `int *b[10];`
+- Compare the definitions,
+  - `int a[10][20];`,
+  - `int *b[10];`.
   - Both `a[3][4]` and `b[3][4]` are references to an `int`.
-  - *But* `a` is a 2-dim array (`200` `int` sized blocks have been set aside with `a[row][col]` given by `a + 20*row + col`.)
+  - *But* `a` is a 2-dim array (`200` `int` sized blocks have been set aside with `a[row][col]` given by `a + 20*row + col`. **Note**: These are contiguous)
   - *On the otherhand* `b` allocates `10` pointers, but does not initialise them.
     - Initilisation done explicitly.
     - If each element of `b` points to `20` `int` then there is `200` 'blocks' of `ints` *and* `10` 'blocks' for the pointers.
-- Advantage of pointer arrays
-  - subarrays can be independent sizes
+    - Each block pointed to by a pointer is *contigious* but the entire memory of *b* need not be.
+- Advantage of pointer arrays,
+  - Subarrays can be independent sizes.
   - Most common use case is for arrays of strings.
 
-### Command-line Arguments
+### Relevant Exercises
+
+See [Ex 5.9](#ex-5-9).
+
+## 5.10 Command-line Arguments
 
 - `main` called with two arguments
   - first (conventionally) `argc` is the number of arguments.
