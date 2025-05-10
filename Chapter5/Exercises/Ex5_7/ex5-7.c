@@ -138,7 +138,6 @@ void writelines(int nlines, char* lineptr[]) {
 }
 
 void my_qsort(char* lineptr[], int left, int right) {
-    printf("Sorting\n");
     if (left >= right) { return; }
     swap(lineptr, left, (left + right) / 2);
     int last = left;
