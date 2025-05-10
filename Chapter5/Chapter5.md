@@ -10,6 +10,10 @@ Swaps two integer values.
 
 Reads a series of integers from standard input and stores them in an array.
 
+### [Line Sorting](./Examples/SortLines/sortlines.c)
+
+Sorts a set of lines into lexigraphical order by using an array of pointers.
+
 ### String Length
 
 Determine the length of a string regardless of if it is a literal, array or pointer through the use of array to pointer decay.
@@ -50,13 +54,27 @@ The implementation is straightforward from our implementation of [atof](../Chapt
 
 *Write the function `strend(s, t)`, which returns $`1`$ if the string $`t`$ occurs at the end of the string `s`, and zero otherwise.*
 
-### [Ex 5-5](./Exercises/Ex5_5/ex5-5.c)
+### [Ex 5-5](./Exercises/Ex5_5/)
 
 *Write versions of the library functions `strncpy`, `strncat` and `strncmp`, which operate on at most the firs $`n`$ characters of their argument strings. For example, `strncpy(s, t, n)` copies at most $`n`$ characters of `t` to `s`.*
 
-### [Ex 5-6](./Exercises/Ex5_6/ex5-6.c)
+### [Ex 5-6](./Exercises/Ex5_6/)
 
 *Rewrite appropriate programs from earlier chapters and exercises with pointers instead of array indexing. Good possibilities include [getline](../Chapter1/Chapter1.md#longest-line), [atoi](../Chapter2/Chapter2.md#string-to-integer), [itoa](../Chapter3/Chapter3.md#integer-to-string-conversion) and their variants, [reverse](../Chapter3/Chapter3.md#string-reversal), and [strindex](../Chapter4/Chapter4.md#pattern-matching) and [getop](../Chapter4/Chapter4.md#polish-notation-calculator).*
+
+### [Ex 5-7](./Exercises/Ex5_7/ex5-7.c)
+
+*Rewrite `readlines` to store lines in an array supplied by `main` rather than calling `alloc` to maintain the storage. How much faster is the program?*.
+
+**Note**: The `alloc` we implemented is using an array to store the functions under the hood. We generate the following times running the program on the same test file containing almost 500,000 lines of randomly generated
+paragraphed text.
+
+| Method           | Time (s) |
+|------------------|----------|
+| alloc function   | 1.07     |
+| buffer parameter | 1.04     |
+
+Which shows that the buffer method is about 20 milliseconds faster. Obviously this is just one test and so not super comprehensive but there we go.
 
 ## 5.0 Introduction
 
@@ -480,20 +498,20 @@ val = *--p /* pop */`
 
 See [Ex 5.3](#ex-5-3), [Ex 5.4](#ex-5-4), [Ex 5.5](#ex-5-5) and [Ex 5.6](#ex-5-6).
 
-### Pointer Arrays; Pointers to Pointers
+## 5.6 Pointer Arrays; Pointers to Pointers
 
-- Pointers can be stored in arrays
+- Pointers can be stored in arrays.
 
-**Example: Sort Lines**
+### Example [Sort Lines](#line-sorting)
 
-- sort text lines into alphabetic order
-- Rather than resort the lines *sort* the *pointers* to the lines
+- Sort text lines into alphabetic order.
+- Rather than re-sort the lines *sort* the *pointers* to the lines.
 - Sort process becomes:
-  - read all lines
-  - sort them
-  - print them in order
+  - Read all lines.
+  - Sort them.
+  - Print them in order.
 
-- First lets handle reading and writing the lines
+- First lets handle reading and writing the lines,
 
 ```C
 #include <stdio.h>
@@ -562,10 +580,10 @@ void writelines(char *lineptr[], int nlines)
 }
 ```
 
-- The above deals with the reading and writing of lines
-- main new feature `char *lineptr[MAXLINES]`.
-  - declares an array of `MAXLINES` elements
-    - each is a pointer to `char`
+- The above deals with the reading and writing of lines.
+- Main new feature `char *lineptr[MAXLINES]`.
+  - declares an array of `MAXLINES` elements.
+    - Each is a pointer to `char`.
     - `lineptr[i]` is a character pointer, while `*lineptr[i]` is the first character of the `i`-th line.
   - `lineptr` is itself a pointer, so we could rewrite `writelines` as:
 
@@ -576,10 +594,10 @@ void writelines(char *lineptr[], int nlines)
 }
 ```
 
-- Now need to handle sorting
-  - have to change function signature of previous `qsort`
-  - also have to change *comparison function*.
-    - In this case using `strcmp`
+- Now need to handle sorting,
+  - Have to change function signature of previous `qsort`
+  - Also have to change *comparison function*.
+    - In this case using `strcmp`.
 
 ```C
 /* qsort: sort v[left] ... v[right] into increasing order */
@@ -605,7 +623,7 @@ void qsort(char *v[], int left, int right)
 }
 ```
 
-- the `swap` routine becomes
+The `swap` routine becomes
 
 ```C
 /* swap: interchange v[i],  v[j] */
@@ -620,7 +638,7 @@ void swap(char *v[], int i, int j)
 
 - Since any element of `v` is a char ptr, so must `temp`, thus we can copy one to another.
 
-### Multi-dimensional Arrays
+## 5.7 Multi-dimensional Arrays
 
 - C has rectangular arrays
   - Much less used than pointer arrays
