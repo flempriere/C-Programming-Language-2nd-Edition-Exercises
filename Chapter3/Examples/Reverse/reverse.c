@@ -33,16 +33,6 @@ enum truth {
 };
 
 /**
- * @brief Compare two strings for equality.
- *
- * @param s
- * @param t
- * @return TRUE if equal, else
- * @return FALSE.
- */
-enum truth my_streq(char s[], char t[]);
-
-/**
  * @brief Test reverse(in) and compare to the expected.
  *
  * Given a string in, runs reverse on it and compares
@@ -85,7 +75,7 @@ enum truth my_streq(char s[], char t[]) {
 
 enum truth test_reverse(char in[], char expected[]) {
     reverse(in);
-    if (!my_streq(in, expected)) {
+    if (strcmp(in, expected)) {
         printf("Error: string %s, expected: %s\n", in, expected);
         return FALSE;
     }

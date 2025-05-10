@@ -76,16 +76,6 @@ int abs(int n);
 void reverse(char s[]);
 
 /**
- * @brief Test two strings for equality
- *
- * @param s
- * @param t
- * @return TRUE if strings equal, else,
- * @return FALSE
- */
-enum truth my_streq(char s[], char t[]);
-
-/**
  * @brief Tests the function itoa.
  *
  * Given an input integer n, compares the result of itoa(n) to the expected
@@ -153,19 +143,12 @@ void reverse(char s[]) {
     }
 }
 
-enum truth my_streq(char s[], char t[]) {
-    for (int i = 0; s[i] != '\0'; i++) {
-        if (s[i] != t[i]) { return FALSE; }
-    }
-    return TRUE;
-}
-
 enum truth test_itoa(int n, char expected[]) {
     char intermediate[MAX_SIZE];
     for (int i = 0; i < MAX_SIZE; i++) { intermediate[i] = 0; }
 
     itoa(n, intermediate);
-    if (!my_streq(intermediate, expected)) {
+    if (strcmp(intermediate, expected)) {
         printf("Error converting %d produced %s\n", n, intermediate);
         printf("Expected: %s\n", expected);
         return FALSE;

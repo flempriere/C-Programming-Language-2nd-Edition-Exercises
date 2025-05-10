@@ -1,16 +1,17 @@
 /**
  * @file itoa.c
  * @author Felix Lempriere
- * @brief Convert an integer to a string representation.
+ * @brief Pointer implementation of itoa in partial fulfillment of Exercise 5.6
+ * from The C Programming Language, 2nd Edition.
  *
- * Demonstrates the use of a do-while loop in converting an integer to a string.
  * @version 0.1
- * @date 2025-04-30
+ * @date 2025-05-10
  *
  * @copyright Copyright (c) 2025
  *
  */
 
+#include <limits.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -43,6 +44,17 @@ enum truth {
 void itoa(int n, char s[]);
 
 /**
+ * @brief Returns the absolute value of an integer n.
+ *
+ * @param n
+ * @return -n if n < 0 else,
+ * @return n
+ *
+ * @warning Will overflow on INT_MIN.
+ */
+int abs(int n);
+
+/**
  * @brief reverses a string.
  *
  * Reverses the string stored in s. The reverse
@@ -50,7 +62,7 @@ void itoa(int n, char s[]);
  *
  * @param s buffer storing the string.
  */
-void reverse(char s[]);
+void reverse(char* s);
 
 /**
  * @brief Tests the function itoa.
@@ -64,7 +76,14 @@ void reverse(char s[]);
  * @return FALSE
  *
  */
-enum truth test_itoa(int n, char expected[]);
+enum truth test_itoa(int n, char* expected);
+
+/**
+ * @brief Computes the width of an unsigned int on this computer.
+ *
+ * @return int Bit width of unsigned.
+ */
+unsigned unsigned_width(void);
 
 /**
  * @brief Test driver for itoa.
@@ -81,31 +100,40 @@ int main(void) {
     if (!test_itoa(-9, "-9")) { return EXIT_FAILURE; }
     if (!test_itoa(12345, "12345")) { return EXIT_FAILURE; }
     if (!test_itoa(-12345, "-12345")) { return EXIT_FAILURE; }
+
+    unsigned width = unsigned_width();
+    if (width == 16) {
+        if (!test_itoa(INT_MIN, "-32768")) { return EXIT_FAILURE; }
+    } else if (width == 32) {
+        if (!test_itoa(INT_MIN, "-2147483648")) { return EXIT_FAILURE; }
+    } else {
+        printf("INT_MIN test not supported for int width: %u\n", width);
+    }
     printf("All tests passed successfully\n");
     return EXIT_SUCCESS;
 }
 
-void itoa(int n, char s[]) {
-    int sign = n;
-    if (sign < 0) {    // record sign, then work with positive n
-        n = -n;
-    }
-    int i = 0;
-    do { s[i++] = n % 10 + '0'; } while ((n /= 10));
-    if (sign < 0) { s[i++] = '-'; }
-    s[i] = '\0';
-    reverse(s);
+void itoa(int n, char* s) {
+    char* start = s;
+    int sign = (n < 0) ? 1 : 0;
+    do { *s++ = abs(n % 10) + '0'; } while ((n /= 10));
+    if (sign) { *s++ = '-'; }
+    *s = '\0';
+    reverse(start);
 }
 
-void reverse(char s[]) {
-    for (int i = 0, j = strlen(s) - 1; i < j; i++, j--) {
-        int c = s[i];
-        s[i] = s[j];
-        s[j] = c;
+int abs(int x) { return (x < 0) ? -x : x; }
+
+void reverse(char* s) {
+    char* t = s + strlen(s) - 1;
+    for (; s < t; s++, t--) {
+        char c = *s;
+        *s = *t;
+        *t = c;
     }
 }
 
-enum truth test_itoa(int n, char expected[]) {
+enum truth test_itoa(int n, char* expected) {
     char intermediate[MAX_SIZE];
     for (int i = 0; i < MAX_SIZE; i++) { intermediate[i] = 0; }
 
@@ -116,4 +144,10 @@ enum truth test_itoa(int n, char expected[]) {
         return FALSE;
     }
     return TRUE;
+}
+
+unsigned unsigned_width(void) {
+    unsigned i = 0;
+    for (unsigned j = 1; j > 0; j = j << 1U) { ++i; }
+    return i;
 }

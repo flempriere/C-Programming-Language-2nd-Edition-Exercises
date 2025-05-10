@@ -15,6 +15,7 @@
 
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 
 /**
  * @brief maximum line buffer size
@@ -63,16 +64,6 @@ int itoa_r(int n, char s[], int i);
  * @warning Will overflow on INT_MIN.
  */
 int abs(int n);
-
-/**
- * @brief Test two strings for equality
- *
- * @param s
- * @param t
- * @return TRUE if strings equal, else,
- * @return FALSE
- */
-enum truth my_streq(char s[], char t[]);
 
 /**
  * @brief Tests the function itoa.
@@ -133,7 +124,7 @@ enum truth test_itoa(int n, char expected[]) {
     for (int i = 0; i < MAX_SIZE; i++) { intermediate[i] = 0; }
 
     itoa(n, intermediate);
-    if (!my_streq(intermediate, expected)) {
+    if (strcmp(intermediate, expected)) {
         printf("Error converting %d produced %s\n", n, intermediate);
         printf("Expected: %s\n", expected);
         return FALSE;

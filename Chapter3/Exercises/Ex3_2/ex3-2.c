@@ -21,6 +21,7 @@
 
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 
 /**
  * @brief enum storing false and true values
@@ -61,16 +62,6 @@ void escape(char dest[], char src[]);
  * @param src source string
  */
 void unescape(char dest[], char src[]);
-
-/**
- * @brief Compare two strings for equality.
- *
- * @param s
- * @param t
- * @return TRUE if equal, else
- * @return FALSE.
- */
-enum truth my_streq(char s[], char t[]);
 
 /**
  * @brief Tests unescape and escape, by performing escape on the string
@@ -210,24 +201,17 @@ void unescape(char dest[], char src[]) {
     dest[j] = '\0';
 }
 
-enum truth my_streq(char s[], char t[]) {
-    for (int i = 0; s[i] != '\0'; i++) {
-        if (s[i] != t[i]) { return FALSE; }
-    }
-    return TRUE;
-}
-
 enum truth test_string(char s[], char expected[]) {
     char intermediate[MAX_LENGTH];
     char output[MAX_LENGTH];
     escape(intermediate, s);
-    if (!my_streq(intermediate, expected)) {
+    if (strcmp(intermediate, expected)) {
         printf("Error escaping %s produced %s\n", s, intermediate);
         printf("Expected: %s\n", expected);
         return FALSE;
     }
     unescape(output, intermediate);
-    if (!my_streq(s, output)) {
+    if (strcmp(s, output)) {
         printf("Error unescaping %s produced %s\n", intermediate, output);
         printf("Expected %s\n", s);
         return FALSE;

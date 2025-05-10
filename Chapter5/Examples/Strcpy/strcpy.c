@@ -12,6 +12,7 @@
 
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 
 /**
  * @brief Maximum size for the string
@@ -53,16 +54,6 @@ void strcpy_p(char* s, char* t);
  * @param t string to copy from.
  */
 void strcpy_o(char* s, char* t);
-
-/**
- * @brief Test two strings for equality
- *
- * @param s
- * @param t
- * @return TRUE if strings equal, else,
- * @return FALSE
- */
-enum truth my_streq(char s[], char t[]);
 
 /**
  * @brief Test both implementations of strcpy,
@@ -110,34 +101,27 @@ void strcpy_o(char* s, char* t) {
     while ((*s++ = *t++));
 }
 
-enum truth my_streq(char s[], char t[]) {
-    for (int i = 0; s[i] != '\0'; i++) {
-        if (s[i] != t[i]) { return FALSE; }
-    }
-    return TRUE;
-}
-
 enum truth test_strcpy(char in[]) {
     char t1[STRSIZE];
     char t2[STRSIZE];
     char t3[STRSIZE];
 
     strcpy_a(t1, in);
-    if (!my_streq(t1, in)) {
+    if (strcmp(t1, in)) {
         printf("Error: mismatch after array-based string copy\n");
         printf("Result: %s, Output: %s\n", t1, in);
         return FALSE;
     }
 
     strcpy_p(t2, in);
-    if (!my_streq(t2, in)) {
+    if (strcmp(t2, in)) {
         printf("Error: mismatch after pointer-based string copy\n");
         printf("Result: %s, Output: %s\n", t2, in);
         return FALSE;
     }
 
     strcpy_o(t3, in);
-    if (!my_streq(t3, in)) {
+    if (strcmp(t3, in)) {
         printf("Error: mismatch after assignment operator string copy\n");
         printf("Result: %s, Output: %s\n", t3, in);
         return FALSE;

@@ -33,6 +33,7 @@
 #include <ctype.h>
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 
 /**
  * @brief maximum line buffer size
@@ -107,16 +108,6 @@ int has_expansion(char s[], int i);
  * @return Next free index in string s.
  */
 int expand_substring(char s[], int i, char start, char stop);
-
-/**
- * @brief Compare two strings for equality.
- *
- * @param s
- * @param t
- * @return TRUE if equal, else
- * @return FALSE.
- */
-enum truth my_streq(char s[], char t[]);
 
 /**
  * @brief Tests the expand function by expanding the string in, and comparing
@@ -228,6 +219,7 @@ int has_expansion(char s[], int i) {
         j = 0;
         break;
     }
+    j = (s[i] == s[i + j]) ? 0 : j;
     return j;
 }
 
@@ -252,19 +244,12 @@ int expand_substring(char s[], int i, char start, char stop) {
     return i;
 }
 
-enum truth my_streq(char s[], char t[]) {
-    for (int i = 0; s[i] != '\0'; i++) {
-        if (s[i] != t[i]) { return FALSE; }
-    }
-    return TRUE;
-}
-
 enum truth test_expand(char in[], char expected[]) {
     char intermediate[MAX_SIZE];
     for (int i = 0; i < MAX_SIZE; i++) { intermediate[i] = 0; }
 
     expand(in, intermediate);
-    if (!my_streq(intermediate, expected)) {
+    if (strcmp(intermediate, expected)) {
         printf("Error escaping %s produced %s\n", in, intermediate);
         printf("Expected: %s\n", expected);
         return FALSE;

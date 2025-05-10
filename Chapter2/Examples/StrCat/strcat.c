@@ -11,6 +11,7 @@
 
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 
 /**
  * @brief enum storing false and true values
@@ -37,16 +38,6 @@ enum truth {
  * @param t string to append to s.
  */
 void my_strcat(char s[], char t[]);
-
-/**
- * @brief Compare two strings for equality
- *
- * @param s
- * @param t
- * @return TRUE if equal else,
- * @return FALSE
- */
-enum truth my_streq(char s[], char t[]);
 
 /**
  * @brief Checks if the result string res matches
@@ -90,15 +81,8 @@ void my_strcat(char s[], char t[]) {
     while ((s[i++] = t[j++]) != '\0'); /* copy t */
 }
 
-enum truth my_streq(char s[], char t[]) {
-    for (int i = 0; s[i] != '\0'; i++) {
-        if (s[i] != t[i]) { return FALSE; }
-    }
-    return TRUE;
-}
-
 enum truth test_string(char res[], char expected[]) {
-    if (!my_streq(res, expected)) {
+    if (strcmp(res, expected)) {
         printf("Error: string %s, expected: %s\n", res, expected);
         return FALSE;
     }

@@ -30,7 +30,7 @@
  *
  * @return length of the parsed line, 0 is returned if no line is read.
  */
-int get_line(int maxline, char line[maxline]);
+int get_line(int maxline, char line[]);
 
 /**
  * @brief Copies the string stored in from, to the buffer to.

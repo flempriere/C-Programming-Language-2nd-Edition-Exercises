@@ -1,14 +1,11 @@
 /**
- * @file ex3-6.c
+ * @file itoaw.c
  * @author Felix Lempriere
- * @brief Solution to Exercise 3.6 from The C Programming Language, 2nd Edition.
- *
- * Write a function `itoa` that accepts three arguments instead of two. The
- * third argument is a minimum field width; the converted number must be padded
- * with blanks on the left if nessecary to make it wide enough.
+ * @brief Pointer implementation of itoaw in partial fulfillment of Exercise 5.6
+ * from The C Programming Language, 2nd Edition.
  *
  * @version 0.1
- * @date 2025-04-30
+ * @date 2025-05-10
  *
  * @copyright Copyright (c) 2025
  *
@@ -44,7 +41,7 @@ enum truth {
  *
  * @warning s must be large enough to store the conversion.
  */
-void itoa(int n, char s[], int w);
+void itoa(int n, char* s, int w);
 
 /**
  * @brief Returns the absolute value of an integer n.
@@ -65,7 +62,7 @@ int abs(int n);
  *
  * @param s buffer storing the string.
  */
-void reverse(char s[]);
+void reverse(char* s);
 
 /**
  * @brief Tests the function itoa.
@@ -80,7 +77,7 @@ void reverse(char s[]);
  * @return FALSE
  *
  */
-enum truth test_itoa(int n, int w, char expected[]);
+enum truth test_itoa(int n, int w, char* expected);
 
 /**
  * @brief Computes the width of an unsigned int on this computer.
@@ -119,33 +116,41 @@ int main(void) {
     return EXIT_SUCCESS;
 }
 
-void itoa(int n, char s[], int w) {
-    int sign = n;
-    int i = 0;
-    do { s[i++] = abs(n % 10) + '0'; } while ((n /= 10));
-    if (sign < 0) { s[i++] = '-'; }
-    while (i < w) { s[i++] = ' '; }
-    s[i] = '\0';
-    reverse(s);
+void itoa(int n, char* s, int w) {
+    char* start = s;
+    int sign = (n < 0) ? 1 : 0;
+    do {
+        *s++ = abs(n % 10) + '0';
+        w--;
+    } while ((n /= 10));
+    if (sign) {
+        *s++ = '-';
+        w--;
+    }
+    for (; w > 0; w--) { *s++ = ' '; }
+    *s = '\0';
+    reverse(start);
 }
 
 int abs(int x) { return (x < 0) ? -x : x; }
 
-void reverse(char s[]) {
-    for (int i = 0, j = strlen(s) - 1; i < j; i++, j--) {
-        int c = s[i];
-        s[i] = s[j];
-        s[j] = c;
+void reverse(char* s) {
+    char* t = s + strlen(s) - 1;
+    for (; s < t; s++, t--) {
+        char c = *s;
+        *s = *t;
+        *t = c;
     }
 }
 
-enum truth test_itoa(int n, int w, char expected[]) {
+enum truth test_itoa(int n, int w, char* expected) {
     char intermediate[MAX_SIZE];
     for (int i = 0; i < MAX_SIZE; i++) { intermediate[i] = 0; }
 
     itoa(n, intermediate, w);
     if (strcmp(intermediate, expected)) {
-        printf("Error converting %d produced %s\n", n, intermediate);
+        printf("Error converting %d with width %d, produced %s\n", n, w,
+               intermediate);
         printf("Expected: %s\n", expected);
         return FALSE;
     }

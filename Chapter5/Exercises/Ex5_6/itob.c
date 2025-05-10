@@ -1,14 +1,11 @@
 /**
- * @file ex3-5.c
+ * @file itob.c
  * @author Felix Lempriere
- * @brief Solution to Exercise 3.5 from The C Programming Language, 2nd Edition.
- *
- * Write the function `itob(n,s,b)` that converts the integer n into a base b
- * character representation in the string s. In particular `itob(n,s,16)`
- * formats n as a hexadecimal number.
+ * @brief pointer implementation of itob in partial fulfillment of Exercise 5.6
+ * from The C Programming Language, 2nd Edition.
  *
  * @version 0.1
- * @date 2025-04-30
+ * @date 2025-05-10
  *
  * @copyright Copyright (c) 2025
  *
@@ -53,7 +50,7 @@ enum truth {
  * empty string is returned.
  *
  */
-void itoa(int n, char s[], int b);
+void itoa(int n, char* s, int b);
 
 /**
  * @brief Returns the absolute value of an integer n.
@@ -74,7 +71,7 @@ int abs(int n);
  *
  * @param s buffer storing the string.
  */
-void reverse(char s[]);
+void reverse(char* s);
 
 /**
  * @brief Tests the function itob.
@@ -89,7 +86,7 @@ void reverse(char s[]);
  * @return FALSE
  *
  */
-enum truth test_itob(int n, char expected[], int b);
+enum truth test_itob(int n, char* expected, int b);
 
 /**
  * @brief Test driver for itoa.
@@ -132,33 +129,34 @@ int main(void) {
     return EXIT_SUCCESS;
 }
 
-void itob(int n, char s[], int b) {
+void itob(int n, char* s, int b) {
     if (b < 2 || b > MAX_BASE) {
-        s[0] = '\0';
+        *s = '\0';
         return;
     }
-    int sign = n;
-    int i = 0;
+    int sign = (n < 0) ? 1 : 0;
+    char* start = s;
     do {
         int v = abs(n % b);
-        s[i++] = v + ((v < 10) ? '0' : ('A' - 10));
+        *s++ = v + ((v < 10) ? '0' : ('A' - 10));
     } while ((n /= b));
-    if (sign < 0) { s[i++] = '-'; }
-    s[i] = '\0';
-    reverse(s);
+    if (sign) { *s++ = '-'; }
+    *s = '\0';
+    reverse(start);
 }
 
 int abs(int x) { return (x < 0) ? -x : x; }
 
-void reverse(char s[]) {
-    for (int i = 0, j = strlen(s) - 1; i < j; i++, j--) {
-        int c = s[i];
-        s[i] = s[j];
-        s[j] = c;
+void reverse(char* s) {
+    char* t = s + strlen(s) - 1;
+    for (; s < t; s++, t--) {
+        char c = *s;
+        *s = *t;
+        *t = c;
     }
 }
 
-enum truth test_itob(int n, char expected[], int b) {
+enum truth test_itob(int n, char* expected, int b) {
     char intermediate[MAX_SIZE];
     for (int i = 0; i < MAX_SIZE; i++) { intermediate[i] = 0; }
 

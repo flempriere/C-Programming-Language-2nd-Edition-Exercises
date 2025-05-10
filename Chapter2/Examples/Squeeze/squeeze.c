@@ -12,6 +12,7 @@
 
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 
 /**
  * @brief enum storing false and true values
@@ -31,16 +32,6 @@ enum truth {
  * @param c character to remove from s.
  */
 void squeeze(char s[], int c);
-
-/**
- * @brief Test to strings for equality.
- *
- * @param s
- * @param t
- * @return TRUE if equal, else
- * @return FALSE.
- */
-enum truth my_streq(char s[], char t[]);
 
 /**
  * @brief Checks if the result string res matches
@@ -84,15 +75,8 @@ void squeeze(char s[], int c) {
     s[j] = '\0';
 }
 
-enum truth my_streq(char s[], char t[]) {
-    for (int i = 0; s[i] != '\0'; i++) {
-        if (s[i] != t[i]) { return FALSE; }
-    }
-    return TRUE;
-}
-
 enum truth test_string(char res[], char expected[]) {
-    if (!my_streq(res, expected)) {
+    if (strcmp(res, expected)) {
         printf("Error: string %s, expected: %s\n", res, expected);
         return FALSE;
     }

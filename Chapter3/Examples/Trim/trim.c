@@ -43,16 +43,6 @@ enum truth {
 int trim(char s[]);
 
 /**
- * @brief Test two strings for equality
- *
- * @param s
- * @param t
- * @return TRUE if strings equal, else,
- * @return FALSE
- */
-enum truth my_streq(char s[], char t[]);
-
-/**
  * @brief Tests the function trim.
  *
  * Given an input string s, compares the result of trim(s) to the expected
@@ -76,7 +66,7 @@ int main(void) {
     if (!test_trim("", "")) { return EXIT_FAILURE; }
     if (!test_trim("\n", "")) { return EXIT_FAILURE; }
     if (!test_trim("\t", "")) { return EXIT_FAILURE; }
-    if (!test_trim(" ", " ")) { return EXIT_FAILURE; }
+    if (!test_trim(" ", "")) { return EXIT_FAILURE; }
     if (!test_trim(" a", " a")) { return EXIT_FAILURE; }
     if (!test_trim("\ta", "\ta")) { return EXIT_FAILURE; }
     if (!test_trim("\na", "\na")) { return EXIT_FAILURE; }
@@ -102,13 +92,6 @@ int trim(char s[]) {
     return n;
 }
 
-enum truth my_streq(char s[], char t[]) {
-    for (int i = 0; s[i] != '\0'; i++) {
-        if (s[i] != t[i]) { return FALSE; }
-    }
-    return TRUE;
-}
-
 enum truth test_trim(char in[], char expected[]) {
     char intermediate[MAX_SIZE];
     int i;
@@ -117,9 +100,9 @@ enum truth test_trim(char in[], char expected[]) {
     }
     intermediate[i] = '\0';
     trim(intermediate);
-    if (!my_streq(intermediate, expected)) {
-        printf("Error converting %s produced %s\n", in, intermediate);
-        printf("Expected: %s\n", expected);
+    if (strcmp(intermediate, expected)) {
+        printf("Error converting %s, produced %s,\n", in, intermediate);
+        printf("Expected: %s.\n", expected);
         return FALSE;
     }
     return TRUE;
