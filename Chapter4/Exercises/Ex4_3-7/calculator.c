@@ -393,12 +393,9 @@ void printRangeError(char s[], double x, double lower, double upper) {
     printf("Valid range is [%g, %g]\n", lower, upper);
 }
 
-void mathfn(char s[])
-/*
-We use strncmp, since strcmp(s, t) = 0 if equal we have
-to use note operator ! to invert truthfulness
-*/
-{
+void mathfn(char s[]) {
+    /* We use strcmp, since strcmp(s, t) = 0 if equal we have to use note
+     * operator ! to invert truthfulness */
     if (!strcmp(s, "help")) {
         printf("Help:\nBasic Command Line Calculator uses Reverse "
                "Polish Notation.\n"

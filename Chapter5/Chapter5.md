@@ -38,9 +38,28 @@ Demonstrates the array vs pointer implementation of a function for the lexigraph
 
 Demonstrates the use of a multidimensional array to handle calender conversion between year, month, day and day-of-year, year representations.
 
-### [Month String Representation](./Examples/MonthName/monthname.c)
+### [Month String Representation](./Examples/MonthName/month_name.c)
 
 Demonstrates the use of a static array of character pointers to allow for the indexed lookup of a string representation of a given month.
+
+### Echoing Command Line Arguments
+
+Demonstrates how to access command line arguments through a simple program that outputs the command line arguments on stdout.
+
+#### [Echo - Array Notation](./Examples/Echo/ArrayVersion/echo.c)
+
+#### [Echo - Pointer Notation](./Examples/Echo/PointerVersion/echo.c)
+
+### Improved Pattern Matching
+
+Improves the [pattern matching](../Chapter4/Chapter4.md#pattern-matching) from Chapter 4 by taking the pattern
+as a command line argument.
+
+#### [Pattern Matching v1](./Examples/PatternMatching/v1/find.c)
+
+#### [Pattern Matching v2](./Examples/PatternMatching/v2/find.c)
+
+Improves on the first version by introducing UNIX style optional arguments to invert which is printed (matching or non-matching) and number the lines.
 
 ## Exercises
 
@@ -388,6 +407,7 @@ void afree(char *p) /* free storage pointed to by p */
 - The test `if (allocbuf + ALLOCSIZE - allocp >= n) {...}` checks if there is enough room to provide `n` characters.
 - `C` guarantees that `0` is never a valid address, thus we are safe to return it as a fail condition.
   - pointers are not integers, `0` is special. Typically `NULL` is used to denote a `0` pointer.
+  - **Note**: As of **C23** for type-safety the new `nullptr` keyword should be preferred over the use of `NULL`.
 
 - Note the previous test and `if (p >= allocbuf && p < allocbuf + ALLOCSIZE)` shows several pointer arithmetic features:
   - Can compare pointers (*with the caveat that $`p`$ and $`q`$ point to the same array*).
@@ -797,13 +817,18 @@ See [Ex 5.9](#ex-5-9).
 
 ## 5.10 Command-line Arguments
 
-- `main` called with two arguments
-  - first (conventionally) `argc` is the number of arguments.
-  - second (conventionally) `argv` is a pointer to an array containing the command line args as strings.
-    - by convention `argv[0]` is the name of the invoking program.
-    - *therefore `argc >= 1`.
+**C** Provides a mechanism to receive command-line arguments or parameters from the environment on program
+startup.
 
-- **Example:** `echo` is a program that repeats out it's command line arguments.
+- `main` called with two arguments.
+  - First (conventionally named) `argc` is the number of arguments.
+  - Second (conventionally named) `argv` is a pointer to an array containing the command line args as strings.
+    - By convention `argv[0]` is the name of the invoking program.
+    - *Therefore* `argc >= 1`.
+
+### Example: [Echo](#echoing-command-line-arguments)
+
+- `echo` is a program that repeats out it's command line arguments.
 
 ```C
 #include <stdio.h>
@@ -821,7 +846,7 @@ int main(int argc, char *argv[])
 }
 ```
 
-- Can also use a pointer version
+- Can also use a pointer version,
 
 ```C
 int main(int argc, char *argv[])
@@ -835,15 +860,17 @@ int main(int argc, char *argv[])
 }
 ```
 
-- `++argv` moves us to the next argument
-- `--argc` decrements the remaining args
+- `++argv` moves us to the next argument.
+- `--argc` decrements the remaining args.
 - **Note:** we could use the `printf` format:
-  - `printf((argc > 1) ? "%s " : "%s", *++argv)`
-    - observe the use of the comma operator.
+  - `printf((argc > 1) ? "%s " : "%s", *++argv)`.
+    - Observe the use of the comma operator.
 
-**Example 2:** Enhanced pattern matching
+### Example [Pattern Finding v1](#pattern-matching-v1)
 
-- modifed off the earlier example.
+- Here we extend the earlier pattern-matching example by taking the pattern to match as a
+command line argument.
+  - Similar to the UNIX program [grep](https://man7.org/linux/man-pages/man1/grep.1.html).
 
 ```C
 #include <stdio.h>
@@ -879,16 +906,15 @@ int main(int argc, char *argv)
 ```
 
 - `strstr(s, t)` returns a pointer to the first occurence of the string `t` in `s`, else `NULL`.
-  - lives in `string.h`
+  - Lives in `string.h`.
 
-- *Extensions*
-  - *optional* argument: print all that **don't**
-    match the pattern. (use `x`)
-  - *optional* argument: show line numbering
-  - convention prefix arg with `-` to denote optional (use `n`)
-  - optional args should be unordered and combinable.
+### Example [Pattern Matching v2](#pattern-matching-v2)
 
-**Example: find -nx pattern**
+- *Extensions*:
+  - *Optional* argument: e.g. we might want to print all lines that **don't** match the pattern (use `x`.)
+  - *Optional* argument: show line numbering (use `n`.)
+  - Convention prefix arg with `-` to denote optional.
+  - Optional args should be unordered and combinable.
 
 ```C
 #include <stdio.h>
@@ -950,6 +976,14 @@ int main(char *line, int max);
 
 - `argc` decremented and `argv` incremented before each optional arg.
 - If no errors, post-loop `argc` contains the remaining number args and `argv` the remaining args themselves.
-  - return error if this is not `1`.
+  - Return error if this is not `1`.
 - **Note:** `[]` binds tighter than `*` and `++` so we need to use `(*++argv)[]` or `(**++argv)`.
   - `*++argv[]` is equiv to `*(++argv[])`.
+- **Remark**: The line `*++argv[0]` increments `argv[0]` directly. This is potentially a bit dubious.
+- Generally it is more readable to break lengthy pointer expressions into steps.
+
+### Relevant Exercises
+
+See [Ex 5.10](#ex-5-10), [Ex 5.11](#ex-5-11), [Ex 5.12](#ex-5-12), [Ex 5.13](#ex-5-13).
+
+## 5.11 Pointers to Functions

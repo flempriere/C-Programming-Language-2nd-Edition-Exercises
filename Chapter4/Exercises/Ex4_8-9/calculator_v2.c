@@ -1,5 +1,5 @@
 /**
- * @file calculator.c
+ * @file calculator_v2.c
  * @author Felix Lempriere
  * @brief Solution to Exercise 4.8 through to Exercise 4.9 from
  * The C Programming Language, 2nd Edition.
