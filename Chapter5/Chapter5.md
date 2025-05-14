@@ -136,6 +136,103 @@ This should be pretty familiar from the previous exercises in this chapter. The 
 The rest of the conversion is straightforward from what we've already seen. *However*, in our stylistic opinion it
 demonstrates that just because we can do a large degree use pointer and array synntax interchangably we should take care. The pointer version is notably less readable in our opinion.
 
+### [Ex 5-10](./Exercises/Ex5_10/main.c)
+
+*Write the program `expr` which evaluates a reverse polish notation expression from the command line, where each
+operator or operand is a sperate argument, for example,*
+
+```shell
+expr 2 3 4 + *
+```
+
+*evaluates $`2 \times (3 + 4)`$.*
+
+Note that really what we have to do here is change where our [existing calculator program](../Chapter4/Chapter4.md#polish-notation-calculator) gets the input to `getch` from. This is the approach we take. We leave the majority of the program untouched but modify `getch` to allow
+its I/O source to be rebound and update `main` to
+perform this rebind.
+
+Additionally the command-line args leave out the last newline from when we entered the script. Rather than requiring the user to supply one we change the final step of our program to  pop the final value on the stack.
+
+### [Ex 5-11](./Exercises/Ex5_11/)
+
+*Modify the programs [entab](../Chapter1/Chapter1.md#ex-1-20) and [detab](../Chapter1/Chapter1.md#ex-1-21) (written as exercises in [Chapter 1](../Chapter1/Chapter1.md)) to accept a list of tab stops as arguments. Use the default tab settings if there are no arguments.*
+
+Starting from our basic implementation we factor out the code responsible for getting the next tab stop into its own file. This means that `next_tab(col)` now becomes an interface for getting the next tab, based on the current *column*.
+
+By default we use the default tab behaviour, however we can now add static variables to the file, that enable us to support a hidden array of tabstops and provide a function `set_tabs(int m, int tabs[])` which allows the client to set this array. We require the array to be duplicate free and ascending.
+
+Now we can modify `next_tab` behind the scenes to first attempt to get the next tab_stop as the least upper bound in the array for the current column *col*, and fallback to the default method otherwise.
+
+The advantage of this implementation aside from letting *entab* and *detab* easily share code is that we can change the behaviour of `next_tab` without changing the interface for the client. This means we can also incrementally improve `next_tab`. In our case one improvment is:
+
+1. We assume tabs are generally accessed linearly so we track where we are along the line rather than search from the beginning everytime we get the `next_tab`. (*With some logic to detect a line reset*)
+2. A further improvement could be to use binary search for the least upper bound. However since we expect the array to be small we have not yet implemented this, **but** we easily could without impacting clients.
+
+A simple UML below demonstrates.
+
+```mermaid
+
+---
+title: Entab and Detab Shared Architecture
+---
+classDiagram
+    class detab.h
+    detab.h : #define MAXTABS
+    detab.h : #define TABSTOP
+    detab.h : set_tabs(int m, int tabs[])
+    detab.h : next_tab(int col)
+
+    class entab.h
+    entab.h : #define MAXTABS
+    entab.h : #define TABSTOP
+    entab.h : set_tabs(int m, int tabs[])
+    entab.h : next_tab(int col)
+
+    class set_tab.c
+    set_tab.c ..|> entab.h
+    set_tab.c ..|> detab.h
+    set_tab.c : -int n_tabs
+    set_tab.c : -int a[]
+    set_tab.c : -int ap
+    set_tab.c : -int prev
+    set_tab.c : -int DEFAULT_NEXT_TAB(int col)
+    set_tab.c : +void set_tabs(int m, int tabs[])
+    set_tab.c : +int set_tabs(int col) 
+
+    class entab.c
+    entab.c ..> entab.h
+    entab.c : #include ~entab.h~
+    entab.c : #define START_COL 1
+    entab.c : int main(int argc, char* argv)
+
+    class detab.c
+    detab.c ..> detab.h
+    detab.c : #include ~detab.h~
+    detab.c : #define START_COL 1
+    detab.c : int main(int argc, char* argv)
+
+```
+
+### [Ex 5-12](./Exercises/Ex5_12/)
+
+*Extend `entab` and `detab` to accept the shorthand*
+
+```shell
+entab -m +n
+```
+
+*to mean tab stops every $`n`$ columns, starting at column $`m`$. Choose convenient (for the user) default behaviour.*
+
+### [Ex 5-13](./Exercises/Ex5_13/tail.c)
+
+*Write the program `tail` which prints the last $`n`$ lines of its input. By default $`n`$ is $`10`$, let us say, but it can be changed by an optional argument, so that*
+
+```shell
+tail -n
+```
+
+*prints the last $`n`$ lines. The program should behave rationally no matter how unreasonable the input or the value of $`n`$. Write the program so it makes the best use of available storage; lines should be stored as in the sorting program of Section 5.6, not in a two-dimensional array of fixed size*.
+
 ## 5.0 Introduction
 
 - A pointer is a variable that contains the address of another variable.
