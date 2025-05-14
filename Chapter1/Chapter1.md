@@ -68,27 +68,61 @@ Reads lines from input and prints the longest as output.
 
 *Modify [Fahrenheit To Celsius](#fahrenheit-to-celsius) to print a heading above the table.*
 
+Straightforward, just use `printf` to print the header before the loop.
+
 ### [Ex 1-4](./Exercises/Ex1_4/ex1-4.c)
 
 *Write a program to print the corresponding Celsius to Fahrenheit table.*
+
+This requires us to use the inverse formula
+
+$$
+\begin{align}
+\text{Fahrenheit} &= \frac{9.0}{5.0}\text{Celsius} + 32.0.
+\end{align}
+$$
+
+As with the previous exercise we also print a header for the table.
 
 ### [Ex 1-5](./Exercises/Ex1_5/ex1-5.c)
 
 *Modify the temperature conversion program to print the table in reverse order, that is from $`300`$ degrees to $`0`$.*
 
+Again, this is straightforward, we reverse the `for` loop from the third version of the [Fahrenheit to Celsius](#fahrenheit-to-celsius-v3) example:
+
+```C
+for (int fahr = 0; fahr <= 300; fahr = fahr + 20)
+```
+
+with
+
+```C
+for (int fahr = 300; fahr >= 0; fahr = fahr - 20)
+```
+
 ### [Ex 1-6](./Exercises/Ex1_6/ex1-6.c)
 
 *Verify that the expression `getchar() != EOF` is $`0`$ or $`1`$.*
+
+Formally testing this we would have to run through every possible input value. We satisfy ourselves with reading in characters from input and printing the value of `c = getchar() != EOF` which comes out as $`1`$. The last printed value is the value of `EOF`, or $`0`$.
 
 ### [Ex 1-7](./Exercises/Ex1_7/ex1-7.c)
 
 *Write a program to print the value of `EOF`.*
 
+This is just a straightforward call to `printf`,
+
+```C
+printf("%d\n", EOF);
+```
+
 On our system we find the value to be $`-1`$.
 
 ### [Ex 1-8](./Exercises/Ex1_8/ex1-8.c)
 
-*Write a program to count blanks, tabs and newlines.*
+*Write a program to count blanks, tabs and newlines*
+
+Simple enough, we use three counters, one for blanks, tabs and newlines respectively. We read input, checking if the read character matches one of our three cases and if so incrementing the counter. Once we hit an `EOF` we report our results.
 
 **Note:** This program states **newlines** (the character) as opposed to **lines** (the concept), so if
 the final line is not terminated by a newline, than the newline count will be one less than the number of lines.
@@ -97,11 +131,34 @@ the final line is not terminated by a newline, than the newline count will be on
 
 *Write a program to copy its input to its output, replacing each string of one or more blanks by a single blank.*
 
-We use a state machine approach. When we first encounter a blank we print it and move to a state where we consume all blanks without printing. When we find the next non-blank we go back to our normal parse mode.
+We use a simple greedy approach.
+
+1. Track the previous seen character using `EOF` as our initial value when there is no previous character.
+2. When we see a non-blank character we output it as normal.
+3. When we see a blank:
+    1. If the previous character is a nonblank then this is the start of a new blank substring so we print it.
+    2. Otherwise if the previous character is a blank than we are inside a blank substring and we don't output the character.
+
+This program can be significantly shortened by the use of the logical or operator `||` introduced after this exercise.
+
+```C
+int main(void) {
+    int prev = EOF;
+    for (int c; (c = getchar()) != EOF;) {
+        if (c != ' ' || prev != ' ') {
+            putchar(c);
+        }
+        prev = c;
+    }
+    return EXIT_SUCCESS;
+}
+```
 
 ### [Ex 1-10](./Exercises/Ex1_10/ex1-10.c)
 
 *Write a program to copy its input to its output, replacing each tab by `\t`, each backspace by `\b` and each backslash by `\\`. This makes tabs and backspaces visible in an unambiguous way.*
+
+In our implementation if we see the above escape character we print a backslash using `putchar('\\')` and then overwrite the character with the symbol we want to print - `t` for tab, `b` for backspace, `\\` for backslash. This means we can then regardless of the input use `putchar(c)`, rather than using nested `if` to deal with the case that `c` is not an escape character. (Since we have not yet seen `else`.)
 
 ### [Ex 1-11](./Exercises/Ex1_11)
 
@@ -118,7 +175,7 @@ The most likely cases to uncover bugs are edge cases. In the case of word count,
 5. Input containing single letter words,
 6. Input containing mixed blanks.
 
-These test cases are in the linked directory, where `.in` is the input, `test_no.out` is the expected output and `results.out` is the generated output.
+These test cases are in the linked directory with the input.
 
 Thanks to test case 2, we find that the program has a bug - If the final non-empty line is not terminated by a newline, the line count is off by one.
 
@@ -130,27 +187,36 @@ To fix this `count_words.c` is modified to track the previously read character, 
 
 *Write a program that prints its input one word per line.*
 
-We adopt the behaviour of [Ex1.9](#ex-1-9) replacing all blank substrings with a single blank (or in this case newline.)
+We adopt the behaviour of [Ex1.9](#ex-1-9) replacing all blank substrings with a single blank (or in this case newline.) In this case we use a state variable that denotes if we are `IN` a blank substring or `OUT` of one (and extend our definition of blanks to include `\t` and `\n`.) rather than just checking the previous character.
 
 Otherwise this program is simple, print words as normal, but when we encounter a blank, move to a new line.
 
-#### [Ex 1-13](./Exercises/Ex1_13/ex1_13.c)
+### [Ex 1-13](./Exercises/Ex1_13/ex1_13.c)
 
 *Write a program to print a histogram of the lengths of words in its input. It is easy to print the histogram with the bars horizontal; a vertical orientation is more challenging.*
 
 **Note:** We take on the challenge of printing the histogram vertically.
 
-#### [Ex 1-14](./Exercises/Ex1_14/ex1-14.c)
+To generally build the histogram we use an array containing `MAX_WORD_LENGTH + 1` bins.
+
+1. The indices $`0 \ldots \text{MAX WORD LENGTH} -1 `$ bin the words of length equal to the $`\text{index} + 1`$.
+2. The index $`\text{MAX WORD LENGTH}`$ bins all words larger than $`\text{MAX WORD LENGTH}`$.
+
+To print the histogram vertically, as we populate the bins we have to track the bin with the greatest number of words. We then print each *level* of the histogram starting at one above this max (for some nice padding.) We print a `*` for each bin with a number of words greater than or equal to the current level.
+
+### [Ex 1-14](./Exercises/Ex1_14/ex1-14.c)
 
 *Write a program to print a histogram of the frequencies of different characters in its input.*
 
-**Note:** To avoid tediously manually filtering out printable characters, for now we restrict ourselves to assuming an ascii representation, where the printable characters are then indexed by the numbers $`33`$ through to $`126`$, and all other characters are placed in a bin marked *Other*.
+To avoid tediously manually filtering out printable characters, for now we restrict ourselves to assuming an ascii representation, where the printable characters are then indexed by the continuous range from $`33`$ through to $`126`$, and all other characters are placed in a bin marked *Other*.
 
 **Remark:** We again print the histogram vertically.
 
 ### [Ex 1-15](./Exercises/Ex1_15/ex1_15.c)
 
 *Rewrite the temperature conversion table example to utilise a function to perform the conversion.*
+
+Straightforward, we extract the conversion formula into it's own function, taking in a `double` representing the temperature in fahrenheit, and returning a `double` giving the temperature in `Celsius`.
 
 ### [Ex 1-16](./Exercises/Ex1_16/ex1-16.c)
 

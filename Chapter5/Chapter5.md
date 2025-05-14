@@ -223,7 +223,7 @@ entab -m +n
 
 *to mean tab stops every $`n`$ columns, starting at column $`m`$. Choose convenient (for the user) default behaviour.*
 
-### [Ex 5-13](./Exercises/Ex5_13/tail.c)
+### [Ex 5-13](./Exercises/Ex5_13/)
 
 *Write the program `tail` which prints the last $`n`$ lines of its input. By default $`n`$ is $`10`$, let us say, but it can be changed by an optional argument, so that*
 

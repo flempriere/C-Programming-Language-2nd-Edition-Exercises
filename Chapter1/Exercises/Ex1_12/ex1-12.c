@@ -17,12 +17,14 @@
 /**
  * @brief Indicates the read is currently in a blank substring
  *
+ * @see OUT
  */
 #define IN 1
 
 /**
  * @brief Indicates the read is not in a blank substring
  *
+ * @see OUT
  */
 #define OUT 0
 

@@ -41,7 +41,7 @@
  * @brief Converts Fahrenheit to Celsius
  *
  * @param fahrenheit
- * @return double
+ * @return Celsius conversion from fahrenheit
  */
 double fahrenheit_to_celsius(double fahrenheit);
 

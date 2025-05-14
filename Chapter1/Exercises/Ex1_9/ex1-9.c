@@ -22,17 +22,15 @@
  * @return EXIT_SUCCESS
  */
 int main(void) {
-    int ignore_blanks = 0;    // Modern C lets us use bool.
+    int prev = EOF;
     for (int c; (c = getchar()) != EOF;) {
-        if (c == ' ')
-            if (ignore_blanks != 1) {
-                ignore_blanks = 1;
-                putchar(c);
-            }
+        if (c == ' ') {
+            if (prev != ' ') { putchar(c); }
+        }
         if (c != ' ') {
-            ignore_blanks = 0;
             putchar(c);
         }
+        prev = c;
     }
     return EXIT_SUCCESS;
 }

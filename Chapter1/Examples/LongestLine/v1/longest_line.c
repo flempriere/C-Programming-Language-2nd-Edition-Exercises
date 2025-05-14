@@ -39,8 +39,8 @@ int get_line(int maxline, char line[]);
  * from.
  * @param src source buffer, containing a null-terminated string.
  *
- * @warning Behaviour is undefined if from is not null-terminated, or to is not
- * large enough to store the string in from.
+ * @warning Behaviour is undefined if src is not null-terminated, or dest is not
+ * large enough to store the string in src.
  */
 void copy(char dest[], char src[]);
 

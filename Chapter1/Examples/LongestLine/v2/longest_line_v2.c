@@ -24,11 +24,13 @@
  *
  */
 int max;
+
 /**
  * @brief buffer to store the current line.
  *
  */
 char line[MAXLINE];
+
 /**
  * @brief buffer containing the current longest line.
  *

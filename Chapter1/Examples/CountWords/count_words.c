@@ -17,12 +17,14 @@
 /**
  * @brief Indicates the read is inside a word.
  *
+ * @see OUT
  */
 #define IN 1
 
 /**
  * @brief Indicates the read is outside of a word.
  *
+ * @see IN
  */
 #define OUT 0
 
@@ -39,7 +41,7 @@ int main(void) {
     int prev = EOF;
     for (char c; (c = getchar()) != EOF;) {
         ++nc;
-        if (c == '\n') ++nl;
+        if (c == '\n') { ++nl; }
         if (c == ' ' || c == '\n' || c == '\t') {
             state = OUT;
         } else if (state == OUT) {
@@ -48,7 +50,7 @@ int main(void) {
         }
         prev = c;
     }
-    if (prev != EOF && prev != '\n') ++nl;
+    if (prev != EOF && prev != '\n') { ++nl; }
     printf("Lines: %d Words: %d Characters: %d\n", nl, nw, nc);
     return EXIT_SUCCESS;
 }

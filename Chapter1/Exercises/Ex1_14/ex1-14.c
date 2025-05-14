@@ -7,7 +7,7 @@
  * Write a program to print a histogram of the frequency of different characters
  * in its input.
  *
- * We restrict ourselves to the printable ascii subset, from 33 to 126.
+ * @warning We restrict ourselves to the printable ascii subset, from 33 to 126.
  * @version 0.1
  * @date 2025-04-20
  *
@@ -21,18 +21,21 @@
 /**
  * @brief Ascii index of the minimum printable value
  *
+ * @see MAX_PRINT
  */
 #define MIN_PRINT 33
 
 /**
  * @brief Ascii index of the maximum printable value
  *
+ * @see MIN_PRINT
  */
 #define MAX_PRINT 126
 
 /**
  * @brief The size of the printable characters array.
  *
+ * @see MAX_PRINT, @see MIN_PRINT
  */
 #define PRINTABLE_ARRAY_SIZE (MAX_PRINT - MIN_PRINT + 1)
 
@@ -46,7 +49,7 @@ int main(void) {
     int charCount[PRINTABLE_ARRAY_SIZE + 1];    // avoiding variable length
                                                 // array
     int max = 0;
-    for (int i = 0; i <= PRINTABLE_ARRAY_SIZE; i++) charCount[i] = 0;
+    for (int i = 0; i <= PRINTABLE_ARRAY_SIZE; i++) { charCount[i] = 0; }
 
     for (int c; (c = getchar()) != EOF;) {
         if (c < MIN_PRINT || c > MAX_PRINT) {
@@ -55,7 +58,7 @@ int main(void) {
             c = c - MIN_PRINT;
         }
         charCount[c]++;
-        if (charCount[c] > max) max = charCount[c];
+        if (charCount[c] > max) { max = charCount[c]; }
     }
     for (int i = max + 1; i > 0; i--) {
         printf("%4d|", i);

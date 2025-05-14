@@ -76,7 +76,7 @@ int get_line(int maxline, char line[maxline]) {
     int i;
     int c = EOF;
     for (i = 0; (c = getchar()) != EOF && c != '\n'; ++i) {
-        if (i < maxline - 1) line[i] = c;
+        if (i < maxline - 1) { line[i] = c; }
     }
     if (i < maxline - 1 && c == '\n') {
         line[i] = c;
@@ -91,5 +91,5 @@ int get_line(int maxline, char line[maxline]) {
 }
 
 void copy(char src[], char dest[]) {
-    for (int i = 0; (src[i] = dest[i]) != '\0';) ++i;
+    for (int i = 0; (src[i] = dest[i]) != '\0';) { ++i; }
 }

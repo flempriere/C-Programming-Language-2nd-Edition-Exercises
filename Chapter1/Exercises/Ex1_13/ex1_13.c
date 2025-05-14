@@ -27,12 +27,14 @@
 /**
  * @brief Indicates the read is in a word
  *
+ * @see OUT
  */
 #define IN 1
 
 /**
  * @brief Indicates the read is out of a word
  *
+ * @see IN
  */
 #define OUT 0
 
@@ -49,19 +51,21 @@
  * @return EXIT_SUCCESS
  */
 int main(void) {
-    int wordLengths[MAX_WORD_LENGTH + 2];    // last index stores all larger.
-    for (int i = 0; i <= MAX_WORD_LENGTH + 1; i++)
+    int wordLengths[MAX_WORD_LENGTH + 1];    // last index stores all larger.
+    for (int i = 0; i <= MAX_WORD_LENGTH; i++) {
         wordLengths[i] = 0;    // aggregate words larger than MAX_WORD_LENGTH
-
+    }
     int state = OUT;
     int length = 0;
     int max = 0;    // maximum value in a bin we've seen.
     for (char c; (c = getchar()) != EOF;) {
         if (c == ' ' || c == '\t' || c == '\n') {
             if (state == IN) {
-                if (length >= MAX_WORD_LENGTH) { length = MAX_WORD_LENGTH + 1; }
-                wordLengths[length]++;
-                if (wordLengths[length] > max) { max = wordLengths[length]; }
+                if (length >= MAX_WORD_LENGTH) { length = MAX_WORD_LENGTH; }
+                wordLengths[length - 1]++;
+                if (wordLengths[length - 1] > max) {
+                    max = wordLengths[length - 1];
+                }
                 length = 0;
                 state = OUT;
             }
@@ -74,14 +78,14 @@ int main(void) {
     }
     // deal with any trailing word
     if (length != 0) {
-        if (length > MAX_WORD_LENGTH) length = MAX_WORD_LENGTH + 1;
-        wordLengths[length]++;
-        if (wordLengths[length] > max) max = wordLengths[length];
+        if (length > MAX_WORD_LENGTH) { length = MAX_WORD_LENGTH; }
+        wordLengths[length - 1]++;
+        if (wordLengths[length - 1] > max) { max = wordLengths[length - 1]; }
     }
     // print the histogram vertically.
     for (int i = max + 1; i > 0; --i) {
         printf("%4d|", i);
-        for (int j = 0; j <= MAX_WORD_LENGTH + 1; j++) {
+        for (int j = 0; j <= MAX_WORD_LENGTH; j++) {
             putchar(' ');
             if (wordLengths[j] >= i) {
                 putchar('*');
@@ -93,7 +97,7 @@ int main(void) {
         putchar('\n');
     }
     printf("     ");
-    for (int i = 0; i <= MAX_WORD_LENGTH; i++) { printf("%2d ", i); }
+    for (int i = 0; i < MAX_WORD_LENGTH; i++) { printf("%2d ", i + 1); }
     printf(">%2d\n", MAX_WORD_LENGTH);
     return EXIT_SUCCESS;
 }
