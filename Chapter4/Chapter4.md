@@ -37,13 +37,47 @@ Demonstrates the use of recursion to perform sort an array by partitioning the a
 
 *Write the function `strrindex(s,t)`, which returns the position of the **rightmost** occurrence of $`t`$ in $`s`$, or $`-1`$ if there is none.*
 
+This is straightforward. We introduce a variable `found` that tracks the starting position of the last occurence of $`t`$ in $`s`$, initialising it to a value `NOT_FOUND` (we use $`-1`$.)
+
+Then we scan the string from left to right, updating `found` if we find a match rather than early exiting. `found` thus holds the *rightmost* match (if any).
+
+**Note**: An alternative would be to keep the early-exit, but to scan the string backwards. This requires us to first compute the length of the string. Additionally operating over a string in reverse is typically less *cache-performant*.
+
+However if $`s`$ is reasonably long and repeated in $`t`$ with some regularity, than this approach may be faster as it reduces the number of scans over $`s`$.
+
+**E.g.**
+if $`s`$ = "abcdabcdabcdabcdabcdabcd" and $`t`$ = "abcd" we would perform noticeably more scans over $`s`$ operating forward than in reverse. A naive count is:
+
+1. Forward: $`5`$ full scans over $`s`$ (~$`25`$ comparisons) plus $`18`$ single comparisons against $`s`$ and $`5`$ updates of `found`. (~$`48`$ comparisons / updates)
+2. Backwards: ~$`25`$ comparisons to determine the length of $`s`$ and $`1`$ full scan over $`s`$ (~$`5`$ comparisons), plus $`3`$ single comparisons. (~$`33`$ comparisons.)
+
+There are of course other optimisations we could explore.
+
 ### [Ex 4-2](./Exercises/Ex4_2/ex4-2.c)
 
 *Extend `atof` to handle scientific notation of the form $`12345e-6`$ where a floating point number may be followed by an `e` or and `E` and an optionally signed exponent.*
 
+This adds an extra step to our parsing. Once we've calculated the `x.yyyy` component we check if there is an `e` (or `E`). We then perform a sign-check. We then parse the exponent (*by convention for scientific notation this number must be an integer.*) Then,
+
+- If the exponent is *positive*, we then perform the loop
+
+```C
+for (; exp > 0; exp--) {
+  val *= 10;
+}
+```
+
+- If the exponent is *negative*, we then perform the loop
+
+```C
+for (; exp > 0; exp--) {
+  val /= 10;
+}
+```
+
 ### Calculator Exercises
 
-The next series of exercises all deal with extending or modifying the implementation of [Calculator](#basic-calculator).
+The next series of exercises all deal with extending or modifying the implementation of [Calculator](#polish-notation-calculator).
 
 ---
 
@@ -57,7 +91,7 @@ This is straightforward, `atof` already handles the negative sign so we just nee
 
 *Add commands to print the top element of the stack without popping, to duplicate it, and to swap the top two elements. Add a command to clear the stack*.
 
-These are all straightforward, we use the symbols `?, ~, @, #` for the `top`, `duplicate`, `swap` and `clear` functions. We can either implement these through the `pop` and `push` operations if we want, but since these are *stack* operations, its reasonable to use the underlying stack representation.
+These are all straightforward, we use the symbols `?, ~, @, #` for the `top`, `duplicate`, `swap` and `clear` functions. We can either implement these through the `pop` and `push` operations if we want, but since these are *stack* operations, its reasonable to use the underlying stack representation. (Which allows us to implement them a bit more efficiently.)
 
 #### [Ex 4-5](./Exercises/Ex4_3-7/calculator.c)
 
@@ -65,6 +99,8 @@ These are all straightforward, we use the symbols `?, ~, @, #` for the `top`, `d
 
 This is straightforward, functions are a continuous string started by a lowercase letter and containing lowercase letters and numbers.
 We just have to parse this.
+
+We reference the `math.h` header and add the functions supplied there. We also add an error function which reports an error message if a function is called with a value outside its domain.
 
 #### [Ex 4-6](./Exercises/Ex4_3-7/calculator.c)
 
@@ -84,9 +120,9 @@ This implementation has a few consequences, we need to introduce a variable `var
 
 This is simple to implement, we process the string in reverse, pushing each character onto the buffer with `ungetch`.
 
-We don't need to know about the *how* the buffer in managed then, and `ungetch` does all the error handling for us. We could access the buffer directly, but then we would have to introduce our own error-handling and ensure that the implementations of `ungetch` and `ungets` don't conflict.
+We don't need to know about the *how* the buffer is managed then, and `ungetch` does all the error handling for us. We could access the buffer directly, but then we would have to introduce our own error-handling and ensure that the implementations of `ungetch` and `ungets` don't conflict.
 
-**Note:** We don't use `ungets` in our calculator implementation.
+**Note:** We don't use `ungets` in our calculator implementation. But we will use it later in [Chapter 5](../Chapter5/Chapter5.md#ex-5-10).
 
 #### [Ex 4-8](./Exercises/Ex4_8-9/calculator_v2.c)
 
@@ -104,7 +140,7 @@ In the original implementation the buffer is a `char`. This may not handle `EOF`
 
 *An alternative organisation uses `get_line` to read an entire input line; this makes `getch` and `ungetch` unnecessary. Revise the calculator to use this approach.*
 
-This is a relatively easy enough thing to change, however we know move from a scenario where we can handle arbitrary length input lines to a fixed size buffer.
+This is a relatively easy enough thing to change, however we now move from a scenario where we can handle arbitrary length input lines to a fixed size buffer.
 
 #### [Ex 4-11](./Exercises/Ex4_11/getop.c)
 
@@ -116,23 +152,25 @@ This is a relatively easy enough thing to change, however we know move from a sc
 
 ### [Ex 4-12](./Exercises/Ex4_12/ex4-12.c)
 
-*Adapt the ideas of printdi to write a recursive version of `itoa`; that is, convert an itneger into a string by calling a recursive routine*.
+*Adapt the ideas of printd to write a recursive version of `itoa`; that is, convert an integer into a string by calling a recursive routine*.
 
-The interface of `itoa` doesn't work directly for a recusive function because we can't track where we are in the string. So we use `itoa` itself as a wrapper to a recursive function. This also means that we don't need to call reverse, the recursion call works backwards.
+The interface of `itoa` doesn't naively work directly for a recursive function because we can't track where we are in the string. However we can use an internal static variable `i` to connect the recursive calls. Once we reach the end of the string, we set `i` to $`0`$, then it increases by $`1`$ as we go up the call-chain.
 
-An alternative implementation is to use a `static` variable in the function to connect the calls together. But this would then require some function to *reset* the static variable after the use of the variable.
+The order we do things in is important, we recurse to the end of the string, and then perform our writes on the way back up. This automatically handles reversing the string.
 
 ### [Ex 4-13](./Exercises/Ex4_13/ex4-13.c)
 
 *Write a recursive version of the function `reverse(s)`, which reverses the string `s` in place.*
 
-Again, like the previous function, the direct interface doesn't match what we need for a recursion. So we again use the wrapper approach.
+Again, like the previous function, the direct interface doesn't match what we need for a recursion. In this case we use `reverse(s)` as a wrapper function around the recursive routine `reverse_r(s, i, j)`.
+
+`reverse_r(s, i, j)` swaps the characters at `s[i]` and `s[j]` then calls itself again with `i` incremented by $`1`$ and `j` decremented by $`1`$. The base case is once $`i == j`$. `reverse(s)` starts by calling `reverse_r(s, 0, strlen(s) - 1)`.
 
 ### [Ex 4-14](./Exercises/Ex4_14/ex4-14.c)
 
 *Define a macro `swap(t, x, y)` that interchanges two arguments of type `t` (Block structure will help.)*.
 
-We use a common `do { ... } while(0)` construct so that the common idiom `if(cond) {swap(...);}` will work as expected.
+We use a common `do { ... } while(0)` construct so that the common idiom `if(cond) {swap(...);}` will work as expected. The `while(0)` ensures that the macro contents are only executed once.
 
 ## 4.0 Introduction
 

@@ -188,8 +188,10 @@ void ungets(char s[]);
  * @brief Gets the next operator or operand
  *
  * @param s buffer to store the next operator or operand.
- * @return int value denoting the operator, or the that the buffer
- * contains an operand.
+ *
+ * @return int value denoting the operator or Variable, this can either be the
+ * operator itself, or a symbol denoting that the next op is a math_fn,
+ * or a number.
  */
 int getop(char s[]);
 
@@ -212,9 +214,15 @@ void mathfn(char s[]);
 void RangeError(char s[], double x, double lower, double upper);
 
 /**
- * @brief Basic Calculator
+ * @brief A basic calculator that handles reverse polish notation.
  *
- * @return int
+ * Supports:
+ * - Operators: +, -, /, %, *
+ * - Functions: sin, cos, exp, log, etc..
+ * - Variables: A, B, ... Z, $ <- last printed
+ * - Stack manipulation operations.
+ *
+ * @return EXIT_SUCCESS
  */
 int main(void) {
     char s[MAXOP];

@@ -13,9 +13,20 @@
 #include <stdlib.h>
 #include "calc.h"
 
-
+/**
+ * @brief Maximum size of operand or operator string.
+ *
+ */
 #define MAXOP 100
 
+/**
+ * @brief A basic calculator that handles reverse polish notation.
+ *
+ * Supports:
+ * - Operators: +, -, /, *
+ *
+ * @return EXIT_SUCCESS
+ */
 int main(void) {
     char s[MAXOP];
 

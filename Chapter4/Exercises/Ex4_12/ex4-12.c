@@ -45,16 +45,6 @@ enum truth {
 void itoa(int n, char s[]);
 
 /**
- * @brief Recursive subroutine for itoa
- *
- * @param n integer to convert
- * @param s string to store conversion in
- * @param i current index in the string.
- * @return int next free index in the string.
- */
-int itoa_r(int n, char s[], int i);
-
-/**
  * @brief Returns the absolute value of an integer n.
  *
  * @param n
@@ -73,6 +63,7 @@ int abs(int n);
  *
  * @param n integer to convert
  * @param expected expected result of itoa(n, s).
+ *
  * @return TRUE if the results agree, else
  * @return FALSE
  *
@@ -99,15 +90,15 @@ int main(void) {
 }
 
 void itoa(int n, char s[]) {
-    int i = 0;
-    if (n < 0) { s[i++] = '-'; }
-    s[itoa_r(n, s, i)] = '\0';
-}
-
-int itoa_r(int n, char s[], int i) {
-    if (n / 10) { i = itoa_r(n / 10, s, i); }
+    static int i; /* tracks the index to store the value in */
+    if (n / 10) {
+        itoa(n / 10, s);
+    } else { /* base case */
+        i = 0;
+        if (n < 0) { s[i++] = '-'; }
+    }
     s[i++] = abs(n % 10) + '0';
-    return i;
+    s[i] = '\0';
 }
 
 int abs(int x) { return (x < 0) ? -x : x; }
