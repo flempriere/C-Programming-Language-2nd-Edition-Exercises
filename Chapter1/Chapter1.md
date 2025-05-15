@@ -158,7 +158,7 @@ int main(void) {
 
 *Write a program to copy its input to its output, replacing each tab by `\t`, each backspace by `\b` and each backslash by `\\`. This makes tabs and backspaces visible in an unambiguous way.*
 
-In our implementation if we see the above escape character we print a backslash using `putchar('\\')` and then overwrite the character with the symbol we want to print - `t` for tab, `b` for backspace, `\\` for backslash. This means we can then regardless of the input use `putchar(c)`, rather than using nested `if` to deal with the case that `c` is not an escape character. (Since we have not yet seen `else`.)
+In our implementation if we see one of the above escape characters we print a backslash using `putchar('\\')` and then overwrite the character with the symbol we want to print - `t` for tab, `b` for backspace, `\\` for backslash. This means we can then regardless of the input use `putchar(c)`, rather than using nested `if` to deal with the case that `c` is not an escape character. (Since we have not yet seen `else`.)
 
 ### [Ex 1-11](./Exercises/Ex1_11)
 
@@ -222,19 +222,21 @@ Straightforward, we extract the conversion formula into it's own function, takin
 
 *Revise the main routine of the longest line program so it will correctly print the length of arbitrarily long lines, and as much as possible of the text.* (See [longestLine](#longest-line-v1).)
 
-This is straightforward. We move the test $`i < \text{lim} - 1`$ inside the main loop. Now the program doesn't terminate when we hit the max buffer length, instead we simply use that test to avoid storing the character. `i` becomes the counter for the length of the line.
+This is straightforward. We move the test $`i < \text{lim} - 1`$ in `get_line` inside the main loop. Now the program doesn't terminate when we hit the max buffer length, instead we simply use that test to avoid storing the character. `i` becomes the counter for the length of the line.
 
 ### [Ex 1-17](./Exercises/Ex1_17/ex1-17.c)
 
 *Write a program to print all input lines that are longer than 80 characters.*
 
-We make the decision to exclude the newline character from this count. i.e. A line of exactly $`80`$ characters then a newline would not be printed.
+This is straightforward, read in a line and if it's greater than $`80`$ we print it.
+
+We make the decision to exclude the newline character from this count. i.e. A line of exactly $`80`$ characters then a newline would not be printed. As a result we also modify `get_line` to remove the trailing newline.
 
 ### [Ex 1-18](./Exercises/Ex1_18/ex1-18.c)
 
 *Write a program to remove trailing blanks and tabs from each line of input and to delete entirely blank lines.*
 
-This program is a bit more complex due to the trailing requirement. Since we cannot tell a blank is trailing until we've read the end of the line, we naively have to read in the entire line, then strip the trailing blanks.
+This program is a bit more complex due to the trailing requirement. Since we cannot tell a blank is trailing until we've either read the end of the line or a non-blank character, we naively have to read in the entire line; then strip the trailing blanks.
 
 However this approach is sensitive to the maximum line length. We can write a slightly more robust version, by noting that when we only need to hold onto a blank until we work out if its trailing or not. Once we find a nonblank we can print it. This means when we encounter a blank we can put it on a **queue** and print the queue contents when we find a nonblank. If we find a newline, we simply drop the queue.
 

@@ -33,13 +33,13 @@
 
 /**
  * @brief Alias for a truth value
- *
+ * @see FALSE
  */
 #define TRUE 1
 
 /**
  * @brief Alias for a false value
- *
+ * @see TRUE
  */
 #define FALSE 0
 
@@ -126,7 +126,7 @@ int detab(int len, char s[]) {
     int n_spaces = len;
     while (n_spaces > TABSTOP) { n_spaces = n_spaces - TABSTOP; }
     n_spaces = TABSTOP - n_spaces;
-    if (n_spaces == 0) n_spaces = TABSTOP;
+    if (n_spaces == 0) { n_spaces = TABSTOP; }
 
     for (; n_spaces > 0; n_spaces--) {
         if (len == MAX_COL) { len = fold_line(len, s); }
@@ -140,7 +140,7 @@ int fold_line(int len, char s[]) {
     for (int i = 0; i < word_end && i < len; i++) { putchar(s[i]); }
     putchar('\n');
     // If no complete word or empty line
-    if (word_end == MAX_COL) return 0;
+    if (word_end == MAX_COL) { return 0; }
 
     // reset the end of word marker and move the buffer down
     int j = 0;
