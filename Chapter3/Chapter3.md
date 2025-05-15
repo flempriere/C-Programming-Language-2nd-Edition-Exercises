@@ -16,7 +16,7 @@ Reimplements the [String to Integer Conversion](../Chapter2/Chapter2.md#string-t
 
 ### [Sorting Numbers](./Examples/Shellsort/shellsort.c)
 
-Uses the *shellsort* algorithm to sort an array of numbers.
+Uses the [shellsort](https://en.wikipedia.org/wiki/Shellsort) algorithm to sort an array of numbers.
 
 ### [String Reversal](./Examples/Reverse/reverse.c)
 
@@ -57,7 +57,12 @@ So the old method is slower, but not significantly so. (and both methods are ver
 
 *Write a function `escape(s, t)` that converts characters like newline and tab into visible escape sequences like \n and \t as it copies the string t to s. Use a `switch`. Write a function `unescape(s,t)` for the other direction as well, converting escape sequences into the real characters.*
 
-We write our implementation to work for all of the control characters.
+We write our implementation to work for all of the control characters. The implementation is very similar to [Ex 1.10](../Chapter1/Chapter1.md#ex-1-10) though with some nicer machinery. If we see a control character we put `\\` and then the appropriate lexeme.
+
+`Unescape` works a bit differently. We output characters as normally unless we see a `\\` in which case we have to perform a lookahead to see if this is for a control character or just a backslash.
+
+1. If the next character matches a control character we merge the `\\` and this character into the control character and output it.
+2. Else, we output the `\\` and then the character as normal.
 
 ### [Ex 3-3](./Exercises/Ex3_3/ex3-3.c)
 
@@ -66,6 +71,14 @@ We write our implementation to work for all of the control characters.
 Our implementation for this is quite involved. It correctly handles expansions of the form `a-c` -> `abc` or `c-a` -> `cba`, and for digits and uppercase. Leading `-` or trailing `-` are ignored, as are `-` in expansions without clear meaning like `A-z`. hexadecimal notations like `8-C` are expanded as one would expect. We also allow `...` to be used in place of a `-`.
 
 As one can see the logic of `expand` itself is quite simple. Most of the complex logic comes from determining the type of expansion and performing it correctly.
+
+The rough logic is as follows,
+
+1. Loop through the input string.
+2. If we encounter a `-` or a `.` as the *next* input, we check if this is a valid expansion.
+    1. If it is, we collect the end token that we will expand too and perform the expansion.
+    2. Else we output the character.
+3. Repeat until the entire string is parsed.
 
 ### [Ex 3-4](./Exercises/Ex3_4/ex3-4.c)
 
@@ -79,7 +92,7 @@ The trick to leave the number signed and take the absolute value of each digit.
 
 *Write the function `itob(n,s,b)` that converts the integer into its $`a \text{ base } b`$ character representation in the string `s`. In particular `itob(n,s,16)` formats `n` as a hexadecimal integer in `s`.*
 
-We make the decision to restrict the minimum base to $`2`$ (since base-$`1`$ has an awkward representation.) and the largest base to $`36`$ (since we can then use `0-9` and `A-Z` for digits.)
+We make the decision to restrict the minimum base to $`2`$ (since base-$`1`$ has an awkward representation) and the largest base to $`36`$ (since we can then use `0-9` and `A-Z` for digits.)
 
 We then have to modify the modulus and division to the correct base and update the character selection logic to account for characters.
 
