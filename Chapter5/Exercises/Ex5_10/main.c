@@ -53,7 +53,6 @@
  * @return int
  */
 int main(int argc, char* argv[]) {
-
     if (argc < 2) {
         printf("error: call structure is eval expression\n");
         return EXIT_FAILURE;
@@ -64,7 +63,14 @@ int main(int argc, char* argv[]) {
     int var = 0;
     for (int i = 0; i < N_VARIABLES; i++) { variables[i++] = 0.0; }
 
-    set_input(argc - 1, argv + 1);
+    // ungets arguments into the buffer
+    ungetch(EOF);
+    ungetch('\n');
+    for (argc--; argc > 0; argc--) {
+        ungets(" ");    // denote end of input
+        ungets(argv[argc]);
+    }
+
     for (int type; (type = getop(s)) != EOF;) {
         int op2;
         switch (type) {
@@ -131,6 +137,5 @@ int main(int argc, char* argv[]) {
         }
         var = type;
     }
-    printf("%.3g\n", pop());
     return EXIT_SUCCESS;
 }

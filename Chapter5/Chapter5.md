@@ -162,11 +162,16 @@ expr 2 3 4 + *
 
 *evaluates $`2 \times (3 + 4)`$.*
 
-Note that really what we have to do here is change where our [existing calculator program](../Chapter4/Chapter4.md#polish-notation-calculator) gets the input to `getch` from. This is the approach we take. We leave the majority of the program untouched but modify `getch` to allow
-its I/O source to be rebound and update `main` to
-perform this rebind.
+Note that really what we have to do here is change where our [existing calculator program](../Chapter4/Chapter4.md#polish-notation-calculator) gets the input to `getch` from. However we already provided a method to do this, `ungets` in [Ex4.7](../Chapter4/Chapter4.md#ex-4-7).
 
-Additionally the command-line args leave out the last newline from when we entered the script. Rather than requiring the user to supply one we change the final step of our program to  pop the final value on the stack.
+In theory, we can leave the entire program untouched but simply add a section to the start of the main that checks that we have the correct call structure. Then we `ungets` our arguments into the buffer and run the program as normal. The implementation is not that simple however since,
+
+1. `getch` will get the most recently pushed back character first, so we to `ungets` the arguments in reverse.
+2. There's no implicit `\n` to pop the result. We could either modify `main` to perform a final `pop` or we just call `ungetch('\n')` before we push the command line arguments.
+3. There is no signalling `EOF`. As with the newline we just do an `ungetch(EOF)` making sure to do this before we `ungetch` the newline and the strings.
+
+In our implementation means that we only have to write about $`5`$ lines of code to change our calculator over to `eval`, and we could easily extend it in the future with say an interactive optional argument to choose between
+command-line mode and regular mode.
 
 ### [Ex 5-11](./Exercises/Ex5_11/)
 

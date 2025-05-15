@@ -124,7 +124,7 @@ void clear(void);
  * @brief Input buffer
  *
  */
-char buf[BUFSIZ];
+char buf[BUFSIZE];
 
 /**
  * @brief Next free index in the input buffer

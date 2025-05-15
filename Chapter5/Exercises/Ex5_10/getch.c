@@ -4,9 +4,6 @@
  * @brief Implementation of getch as part of the basic calculator, in partial
  * fulfillment of Exercise 5.10 from The C Programming Language, 2nd Edition.
  *
- * This version introduces the ability to bind the getch input to a provided
- * array of strings.
- *
  * @version 0.1
  * @date 2025-05-11
  *
@@ -17,51 +14,32 @@
 #include "calc.h"
 
 #include <stdio.h>
+#include <string.h>
 
 /**
- * @brief buffer providing one character of pushback.
+ * @brief Input buffer
  *
  */
-static int buf;
+char buf[BUFSIZE];
 
 /**
- * @brief array of strings used for rebinding the input source for getch.
+ * @brief Next free index in the input buffer
  *
  */
-static char** input = NULL;
-
-/**
- * @brief length of the input array.
- *
- */
-static int len;
-
-void set_input(int l, char* s[]) {
-    len = l;
-    input = s;
-}
+int bufp = 0;
 
 int getch(void) {
-    // read buffer if its full
-    if (buf) {
-        int c = buf;
-        buf = '\0';
-        return c;
-    }
-    // else if input unbound read from stdin
-    if (input == NULL) { return getchar(); }
-    if (**input == '\0') {
-        input++;
-        len--;
-        return (len) ? ' ' : EOF;    // check if reached end of input.
-    }
-    return *(*input)++;
+    // attempt to read from the buffer
+    int val = (bufp > 0) ? buf[--bufp] : getchar();
+    return val;
 }
 
 void ungetch(int c) {
-    if (buf) {
+    if (bufp >= BUFSIZE) {
         printf("ungetch: too many characters\n");
     } else {
-        buf = c;
+        buf[bufp++] = c;
     }
 }
+
+void ungets(char s[]) { for (int len = strlen(s); len > 0; ungetch(s[--len])); }

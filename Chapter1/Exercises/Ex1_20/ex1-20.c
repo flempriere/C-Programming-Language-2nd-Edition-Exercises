@@ -32,6 +32,13 @@
 #define TABSTOP 8
 
 /**
+ * @brief Perform a detab
+ *
+ * @param n_spaces number of spaces to detab
+ */
+void detab(int n_spaces);
+
+/**
  * @brief detabs a file, converting all tabs to the blanks, keeping the spacing
  * consistent.
  *
@@ -46,10 +53,7 @@ int main(void) {
 
     for (int c; (c = getchar()) != EOF;) {
         if (c == '\t') {
-            while (n_spaces != 0) {
-                putchar(' ');
-                n_spaces--;
-            }
+            detab(n_spaces);
             n_spaces = TABSTOP;
         } else if (c == '\n') {
             putchar(c);
@@ -61,4 +65,11 @@ int main(void) {
         }
     }
     return EXIT_SUCCESS;
+}
+
+void detab(int n_spaces) {
+    while (n_spaces != 0) {
+        putchar(' ');
+        n_spaces--;
+    }
 }

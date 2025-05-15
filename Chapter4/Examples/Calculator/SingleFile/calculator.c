@@ -66,7 +66,7 @@ double pop(void);
  * @brief Input buffer
  *
  */
-char buf[BUFSIZ];
+char buf[BUFSIZE];
 
 /**
  * @brief head of the buffer

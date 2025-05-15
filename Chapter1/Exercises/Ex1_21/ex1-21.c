@@ -48,7 +48,7 @@ int main(void) {
             spaces_for_tab = TABSTOP;
         } else if (c == ' ') {
             if (spaces_for_tab ==
-                1) {    // if only need one tab stop priorise blank
+                1) {    // if only need one tab stop prioritise blank
                 putchar(' ');
                 n_spaces = 0;
                 spaces_for_tab = TABSTOP;

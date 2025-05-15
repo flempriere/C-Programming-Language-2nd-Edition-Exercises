@@ -93,6 +93,12 @@ void RangeError(char s[], double x, double lower, double upper);
 //stack functions
 
 /**
+ * @brief Maximum size of the input buffer
+ *
+ */
+#define BUFSIZE 100
+
+/**
  * @brief Push a value onto the stack.
  *
  * @param v
@@ -136,16 +142,6 @@ void clear(void);
 // I/O Functions
 
 /**
- * @brief Sets getch to read from a provided array of strings of length l, rather
- * than the standard input. Can be used to configure getch to handle commandl
- * line arguments.
- * 
- * @param l length of the string array.
- * @param s array of strings.
- */
-void set_input(int l, char* s[]);
-
-/**
  * @brief Fetches a character from input.
  *
  * @return int
@@ -159,3 +155,12 @@ int getch(void);
  */
 void ungetch(int c);
 
+/**
+ * @brief Push an entire string back onto the input buffer.
+ *
+ * @remark We chose not to let ungets know about the buffer, but if we
+ * did we could perform stricter error handling.
+ *
+ * @param s string to push back
+ */
+void ungets(char s[]);
