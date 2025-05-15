@@ -5,29 +5,28 @@
  * representation of a number.
  * @version 0.1
  * @date 2025-05-07
- * 
+ *
  * @copyright Copyright (c) 2025
- * 
+ *
  */
 
+#include <limits.h>
 #include <stdio.h>
 #include <stdlib.h>
-#include <limits.h>
 
 /**
  * @brief Prints a decimal representation of a number.
- * 
- * @param n 
+ *
+ * @param n
  */
 void printd(int n);
 
 /**
  * @brief Sample driver for printd.
- * 
+ *
  * @return EXIT_SUCCESS
  */
 int main(void) {
-
     printf("Input: %d\n", 0);
     printd(0);
     printf("\nInput: %d\n", 1);
@@ -48,11 +47,7 @@ int main(void) {
 }
 
 void printd(int n) {
-    if (n < 0) {
-        putchar('-');
-    }
-    if (n / 10) {
-        printd((n > 0) ? (n / 10) : -1 * (n / 10));
-    }
+    if (n < 0) { putchar('-'); }
+    if (n / 10) { printd((n > 0) ? (n / 10) : -1 * (n / 10)); }
     putchar(abs(n % 10) + '0');
 }

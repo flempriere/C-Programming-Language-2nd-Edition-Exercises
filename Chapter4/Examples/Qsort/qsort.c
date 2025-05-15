@@ -77,6 +77,8 @@ enum truth test_qsort(int len, int a[]);
  * @return EXIT_SUCCESS if all tests pass, else
  * @return EXIT_FAILURE
  *
+ * @remark uses a fixed seed to ensure consistency across tests.
+ *
  * @see N_TESTS, @see TEST_SIZE
  */
 int main(void) {

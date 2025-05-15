@@ -51,7 +51,6 @@ char pattern[] = "ould";
  * @return int, the number of matches found.
  */
 int main(void) {
-
     char line[MAXLINE];
     int found = 0;
     while (get_line(line, MAXLINE) > 0) {
@@ -60,7 +59,7 @@ int main(void) {
             found++;
         }
     }
-    return found; 
+    return found;
 }
 
 int get_line(char line[], int lim) {

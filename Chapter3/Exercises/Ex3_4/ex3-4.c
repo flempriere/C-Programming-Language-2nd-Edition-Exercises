@@ -83,9 +83,9 @@ void reverse(char s[]);
  *
  * @param n integer to convert
  * @param expected expected result of itoa(n, s).
+ *
  * @return TRUE if the results agree, else
  * @return FALSE
- *
  */
 enum truth test_itoa(int n, char expected[]);
 

@@ -39,7 +39,7 @@
  *
  * @return length of the read input line, 0 is returned if no line is read.
  */
-int get_line(int maxline, char line[maxline]);
+int get_line(int maxline, char line[]);
 
 /**
  * @brief Reads in lines from input and prints all of them with a length
@@ -57,7 +57,7 @@ int main(void) {
     return EXIT_SUCCESS;
 }
 
-int get_line(int maxline, char line[maxline]) {
+int get_line(int maxline, char line[]) {
     int i;
     int c = EOF;
     for (i = 0; i < maxline - 1 && (c = getchar()) != EOF && c != '\n'; ++i) {

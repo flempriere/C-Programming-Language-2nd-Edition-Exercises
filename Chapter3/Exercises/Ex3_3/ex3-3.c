@@ -122,7 +122,7 @@ enum truth test_expand(char in[], char expected[]);
 
 /**
  * @brief Test driver for expand(src, dest)
- * 
+ *
  * @return EXIT_SUCCESS if all tests passed successfully, else
  * @return EXIT_FAILURE.
  *

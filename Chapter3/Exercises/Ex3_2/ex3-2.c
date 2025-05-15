@@ -8,10 +8,10 @@
  * to s. Use a `switch`. Write a function `unescape(s,t)` that does the reverse.
  *
  * @remark This version handles all the ASCII C0 control characters with an
- * escape sequence i.e. \\a (Bell), \\b (Backspace), \t (tab), \\n (newline), 
+ * escape sequence i.e. \\a (Bell), \\b (Backspace), \t (tab), \\n (newline),
  * \v (vertical tab), \f (form feed), \r (carriage return). Note we exlude the
  * \0 symbol itself.
- * 
+ *
  * @version 0.1
  * @date 2025-04-28
  *
@@ -82,42 +82,21 @@ enum truth test_string(char s[], char expected[]);
  * @return EXIT_FAILURE
  */
 int main(void) {
-
-    if (!test_string("", "")) {
-        return EXIT_FAILURE;
-    }
-    if (!test_string("a", "a")) {
-        return EXIT_FAILURE;
-    }
-    if (!test_string("abc", "abc")) {
-        return EXIT_FAILURE;
-    }
-    if (!test_string("\a", "\\a")) {
-        return EXIT_FAILURE;
-    }
-    if (!test_string("\b", "\\b")) {
-        return EXIT_FAILURE;
-    }
-    if (!test_string("\f", "\\f")) {
-        return EXIT_FAILURE;
-    }
-    if (!test_string("\n", "\\n")) {
-        return EXIT_FAILURE;
-    }
-    if (!test_string("\r", "\\r")) {
-        return EXIT_FAILURE;
-    }
-    if (!test_string("\t", "\\t")) {
-        return EXIT_FAILURE;
-    }
-    if (!test_string("\v", "\\v")) {
-        return EXIT_FAILURE;
-    }
+    if (!test_string("", "")) { return EXIT_FAILURE; }
+    if (!test_string("a", "a")) { return EXIT_FAILURE; }
+    if (!test_string("abc", "abc")) { return EXIT_FAILURE; }
+    if (!test_string("\a", "\\a")) { return EXIT_FAILURE; }
+    if (!test_string("\b", "\\b")) { return EXIT_FAILURE; }
+    if (!test_string("\f", "\\f")) { return EXIT_FAILURE; }
+    if (!test_string("\n", "\\n")) { return EXIT_FAILURE; }
+    if (!test_string("\r", "\\r")) { return EXIT_FAILURE; }
+    if (!test_string("\t", "\\t")) { return EXIT_FAILURE; }
+    if (!test_string("\v", "\\v")) { return EXIT_FAILURE; }
     if (!test_string("ab\acd\tef\n", "ab\\acd\\tef\\n")) {
         return EXIT_FAILURE;
     }
     printf("All tests passed successfully\n");
-    return EXIT_SUCCESS; 
+    return EXIT_SUCCESS;
 }
 
 void escape(char dest[], char src[]) {

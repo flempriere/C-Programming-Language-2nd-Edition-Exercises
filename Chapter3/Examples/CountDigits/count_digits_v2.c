@@ -18,6 +18,7 @@
  *
  */
 #define N_DIGITS 10
+
 /**
  * @brief Counts digits, white space and other characters.
  *

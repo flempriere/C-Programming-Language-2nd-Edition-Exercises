@@ -189,7 +189,7 @@ void ungets(char s[]);
  *
  * @param s buffer to store the next operator or operand.
  *
- * @return int value denoting the operator or Variable, this can either be the
+ * @return int value denoting the operator or variable, this can either be the
  * operator itself, or a symbol denoting that the next op is a math_fn,
  * or a number.
  */

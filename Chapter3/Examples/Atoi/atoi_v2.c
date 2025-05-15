@@ -29,7 +29,7 @@ enum truth {
  * for negative numbers or numbers with a starting + sign.
  *
  * @param s string to convert.
- * @return int
+ * @return integer result of converting s
  */
 int my_atoi(char s[]);
 

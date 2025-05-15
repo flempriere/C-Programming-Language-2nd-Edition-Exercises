@@ -64,13 +64,13 @@ Reads lines from input and prints the longest as output.
 
 ## Exercises
 
-### [Ex 1-3](./Exercises/Ex1_3/ex1-3.c)
+### [Ex 1-3](./Exercises/Ex1_03/ex1-3.c)
 
 *Modify [Fahrenheit To Celsius](#fahrenheit-to-celsius) to print a heading above the table.*
 
 Straightforward, just use `printf` to print the header before the loop.
 
-### [Ex 1-4](./Exercises/Ex1_4/ex1-4.c)
+### [Ex 1-4](./Exercises/Ex1_04/ex1-4.c)
 
 *Write a program to print the corresponding Celsius to Fahrenheit table.*
 
@@ -84,7 +84,7 @@ $$
 
 As with the previous exercise we also print a header for the table.
 
-### [Ex 1-5](./Exercises/Ex1_5/ex1-5.c)
+### [Ex 1-5](./Exercises/Ex1_05/ex1-5.c)
 
 *Modify the temperature conversion program to print the table in reverse order, that is from $`300`$ degrees to $`0`$.*
 
@@ -100,13 +100,13 @@ with
 for (int fahr = 300; fahr >= 0; fahr = fahr - 20)
 ```
 
-### [Ex 1-6](./Exercises/Ex1_6/ex1-6.c)
+### [Ex 1-6](./Exercises/Ex1_06/ex1-6.c)
 
 *Verify that the expression `getchar() != EOF` is $`0`$ or $`1`$.*
 
 Formally testing this we would have to run through every possible input value. We satisfy ourselves with reading in characters from input and printing the value of `c = getchar() != EOF` which comes out as $`1`$. The last printed value is the value of `EOF`, or $`0`$.
 
-### [Ex 1-7](./Exercises/Ex1_7/ex1-7.c)
+### [Ex 1-7](./Exercises/Ex1_07/ex1-7.c)
 
 *Write a program to print the value of `EOF`.*
 
@@ -118,7 +118,7 @@ printf("%d\n", EOF);
 
 On our system we find the value to be $`-1`$.
 
-### [Ex 1-8](./Exercises/Ex1_8/ex1-8.c)
+### [Ex 1-8](./Exercises/Ex1_08/ex1-8.c)
 
 *Write a program to count blanks, tabs and newlines*
 
@@ -127,7 +127,7 @@ Simple enough, we use three counters, one for blanks, tabs and newlines respecti
 **Note:** This program states **newlines** (the character) as opposed to **lines** (the concept), so if
 the final line is not terminated by a newline, than the newline count will be one less than the number of lines.
 
-### [Ex 1-9](./Exercises/Ex1_9/ex1-9.c)
+### [Ex 1-9](./Exercises/Ex1_09/ex1-9.c)
 
 *Write a program to copy its input to its output, replacing each string of one or more blanks by a single blank.*
 
@@ -181,7 +181,7 @@ Thanks to test case 2, we find that the program has a bug - If the final non-emp
 
 To fix this `count_words.c` is modified to track the previously read character, (using `EOF` to denote no previous character), if the last character exists and is not a newline we account for this final line.
 
-**Note:** The original [**Count Lines**](#count-lines) program has the same bug, but we've left it as written by the authors.
+**Note:** The original [Count Lines](#count-lines) program has the same bug, but we've left it as written by the authors.
 
 ### [Ex 1-12](./Exercises/Ex1_12/ex1-12.c)
 
@@ -191,7 +191,7 @@ We adopt the behaviour of [Ex1.9](#ex-1-9) replacing all blank substrings with a
 
 Otherwise this program is simple, print words as normal, but when we encounter a blank, move to a new line.
 
-### [Ex 1-13](./Exercises/Ex1_13/ex1_13.c)
+### [Ex 1-13](./Exercises/Ex1_13/ex1-13.c)
 
 *Write a program to print a histogram of the lengths of words in its input. It is easy to print the histogram with the bars horizontal; a vertical orientation is more challenging.*
 
@@ -212,7 +212,7 @@ To avoid tediously manually filtering out printable characters, for now we restr
 
 **Remark:** We again print the histogram vertically.
 
-### [Ex 1-15](./Exercises/Ex1_15/ex1_15.c)
+### [Ex 1-15](./Exercises/Ex1_15/ex1-15.c)
 
 *Rewrite the temperature conversion table example to utilise a function to perform the conversion.*
 

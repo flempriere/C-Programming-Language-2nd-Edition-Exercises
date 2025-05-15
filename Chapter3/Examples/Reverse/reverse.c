@@ -45,6 +45,12 @@ enum truth {
  */
 enum truth test_reverse(char in[], char expected[]);
 
+/**
+ * @brief Test driver for reverse
+ *
+ * @return EXIT_SUCCESS if all tests passed successfully, else
+ * @return EXIT_FAILURE
+ */
 int main(void) {
     char s[] = "";
     if (!test_reverse(s, "")) { return EXIT_FAILURE; }

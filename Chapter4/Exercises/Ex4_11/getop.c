@@ -2,6 +2,13 @@
  * @file getop.c
  * @author Felix Lempriere
  * @brief Implementation of getop defined in the calc.h header.
+ *
+ * Modified as a solution to Exercise 4.11 from The C Programming Language, 2nd
+ * Edition.
+ *
+ * Modify `getop` so that it doesn't need to use `ungetch`. Hint: use an
+ * internal `static` variable.
+ *
  * @version 0.1
  * @date 2025-05-06
  *

@@ -6,11 +6,11 @@
 
 Swaps two integer values.
 
-### [Reading an integer from Input](./Examples/Getint/getint.c)
+### [Reading an integer from Input](./Examples/GetInt/getint.c)
 
 Reads a series of integers from standard input and stores them in an array.
 
-### [Line Sorting](./Examples/SortLines/sortlines.c)
+### [Line Sorting](./Examples/SortLines/sort_lines.c)
 
 Sorts a set of lines into lexigraphical order by using an array of pointers.
 
@@ -63,35 +63,49 @@ Improves on the first version by introducing UNIX style optional arguments to in
 
 ## Exercises
 
-### [Ex 5-1](./Exercises/Ex5_1/getint.c)
+### [Ex 5-1](./Exercises/Ex5_01/getint.c)
 
 *As written, `getint` treats a $`+`$ or $`-`$ not followed by a digit as a valid representation of zero. Fix it to push such a character back on the input.*
 
-### [Ex 5-2](./Exercises/Ex5_2/main.c)
+This is straightforward. If we read a `+` or `-` and no subsequent digit, `ungetch` the character and `return 0` to indicate a failed read.
+
+**Note**: This means that a `+` or `-` will sit in the input buffer and the caller will have to remove it through other means. Our driver code does not handle this.
+
+### [Ex 5-2](./Exercises/Ex5_02/main.c)
 
 *Write `getfloat`, the floating-point analog of `getint`. What type does `getfloat` return as its function value?*
 
-The implementation is straightforward from our implementation of [atof](../Chapter4/Chapter4.md#ex-4-2). But recall here the floating-point is passed out via the pointer and the return code indicates the read state, this is still and `int`.
+The implementation is straightforward from our implementation of [atof](../Chapter4/Chapter4.md#ex-4-2). But recall here the floating-point is passed out via the pointer and the return code indicates the read state, this is still an `int`.
 
-### [Ex 5-3](./Exercises/Ex5_3/ex5-3.c)
+### [Ex 5-3](./Exercises/Ex5_03/ex5-3.c)
 
 *Write a pointer version of the function `strcat` that we showed in Chapter 2: `strcat(s, t)` copies the string `t` to the end of `s`.*
 
-### [Ex 5-4](./Exercises/Ex5_4/ex5-4.c)
+Simple, iterate the pointer `s` until we reach the end of `s`, then iterate `s` and `t` forward together as pointers copying `t` into `s` until the end of `t` is reached.
+
+### [Ex 5-4](./Exercises/Ex5_04/ex5-4.c)
 
 *Write the function `strend(s, t)`, which returns $`1`$ if the string $`t`$ occurs at the end of the string `s`, and zero otherwise.*
 
-### [Ex 5-5](./Exercises/Ex5_5/)
+Keeping pointers to the start of $`s`$ and $`t`$ use new pointers to walk both to the end of the respective strings. Then walk back comparing the last character of $`s`$ with the last character of $`t`$ and so on. If we get a mismatch report that $`t`$ does not end $`s`$ else if we get to the end of $`t`$ without issue, then it does.
+
+### [Ex 5-5](./Exercises/Ex5_05/)
 
 *Write versions of the library functions `strncpy`, `strncat` and `strncmp`, which operate on at most the firs $`n`$ characters of their argument strings. For example, `strncpy(s, t, n)` copies at most $`n`$ characters of `t` to `s`.*
 
-### [Ex 5-6](./Exercises/Ex5_6/)
+These all follow the general principles of the last two exercises, typically replacing `s[i]` type syntax with `*s` and interating on the pointer. In some cases we may need to store a pointer to the start of the string.
 
-*Rewrite appropriate programs from earlier chapters and exercises with pointers instead of array indexing. Good possibilities include [getline](../Chapter1/Chapter1.md#longest-line), [atoi](../Chapter2/Chapter2.md#string-to-integer), [itoa](../Chapter3/Chapter3.md#integer-to-string-conversion) and their variants, [reverse](../Chapter3/Chapter3.md#string-reversal), and [strindex](../Chapter4/Chapter4.md#pattern-matching) and [getop](../Chapter4/Chapter4.md#polish-notation-calculator).*
+### [Ex 5-6](./Exercises/Ex5_06/)
 
-### [Ex 5-7](./Exercises/Ex5_7/ex5-7.c)
+*Rewrite appropriate programs from earlier chapters and exercises with pointers instead of array indexing. Good possibilities include [get_line](../Chapter1/Chapter1.md#longest-line), [atoi](../Chapter2/Chapter2.md#string-to-integer), [itoa](../Chapter3/Chapter3.md#integer-to-string-conversion) and their variants, [reverse](../Chapter3/Chapter3.md#string-reversal), and [strindex](../Chapter4/Chapter4.md#pattern-matching) and [getop](../Chapter4/Chapter4.md#polish-notation-calculator).*
+
+Again the principles of the previous exercises largely apply. We've done all of the above, including the floating point version of `atoi` and `strrindex`. However we won't bother with `getop` since it's quite coupled to the [Calculator program](../Chapter4/Chapter4.md#polish-notation-calculator).
+
+### [Ex 5-7](./Exercises/Ex5_07/ex5-7.c)
 
 *Rewrite `readlines` to store lines in an array supplied by `main` rather than calling `alloc` to maintain the storage. How much faster is the program?*.
+
+We change the signature of `read_line` to take two additional arguments, the first a `buffer` to store the strings in, and the second a *size* parameter for the buffer. We then copy strings directly into the buffer rather than deferring to `alloc`.
 
 **Note**: The `alloc` we implemented is using an array to store the functions under the hood. We generate the following times via gprof and running the program on the same test file containing almost 500,000 lines of randomly generated paragraphed text.
 
@@ -118,23 +132,24 @@ Which again shows the parameter approach being slightly faster. However, if we u
 
 So there is a negligable difference.
 
-### [Ex 5-8](./Exercises/Ex5_8/ex5-8.c)
+### [Ex 5-8](./Exercises/Ex5_08/ex5-8.c)
 
 *There is no error checking in `day_of_year` or `month_day`. Remedy this defect.*
 
 This is straightforward bounds checking. Since in our *enumeration* for the months we have
 reserved $`0`$ to indicate no month we repurpose this a general error value. For `day_of_year` we thus
-return $`0`$ if the month is invalid, or the days are not valid for the given month. For the reverse we set
-the month and day to $`0`$ if the year is not valid (which we consider as a negative year, ignoring *C.E* and *B.C.E* semantics.) or the given day of the year is invalid (non-positive or greater than the number of days in the year).
+return $`0`$ if the month or year is invalid, or the days are not valid for the given month. For the reverse we set the month and day to $`0`$ if the year is not valid or the given day of the year is invalid (non-positive or greater than the number of days in the year).
 
-### [Ex 5-9](./Exercises/Ex5_9/ex5-9.c)
+We take only non-negative years to be valid. Though once could make the argument that negative years are valid from a *C.E*, *B.C.E* perspective.
+
+### [Ex 5-9](./Exercises/Ex5_09/ex5-9.c)
 
 *Rewrite the routines `day_of_year` and `month_day` with pointers instead of indexing.*
 
 This should be pretty familiar from the previous exercises in this chapter. The main difference being that to convert `day_tab` to a pointer we have to remember it is a pointer to `char []` i.e. character arrays (in this case one for the non-leap year days in a month and the other for the leap year days in a month.) So we need to declare these arrays seperately, then declare `day_tab` with an initialiser list referencing these arrays.
 
 The rest of the conversion is straightforward from what we've already seen. *However*, in our stylistic opinion it
-demonstrates that just because we can do a large degree use pointer and array synntax interchangably we should take care. The pointer version is notably less readable in our opinion.
+demonstrates that just because we can to a large degree use pointer and array syntax interchangably we should take care. The pointer version is notably less readable in our opinion.
 
 ### [Ex 5-10](./Exercises/Ex5_10/main.c)
 

@@ -36,7 +36,7 @@ enum truth {
 /**
  * @brief Trims trailing blanks, tabs and newlines
  *
- * @param s
+ * @param s string to trim
  * @return index in s where trim finished. If the entire string is consumed then
  * @return -1.
  */
@@ -84,20 +84,16 @@ int main(void) {
 int trim(char s[]) {
     int n;
     for (n = strlen(s) - 1; n >= 0; n--) {
-        if (s[n] != ' ' && s[n] != '\t' && s[n] != '\n') {
-            break;
-        }
+        if (s[n] != ' ' && s[n] != '\t' && s[n] != '\n') { break; }
     }
-    s[n+1] = '\0';
+    s[n + 1] = '\0';
     return n;
 }
 
 enum truth test_trim(char in[], char expected[]) {
     char intermediate[MAX_SIZE];
     int i;
-    for (i = 0; i < MAX_SIZE && in[i] != '\0'; i++) {
-        intermediate[i] = in[i];
-    }
+    for (i = 0; i < MAX_SIZE && in[i] != '\0'; i++) { intermediate[i] = in[i]; }
     intermediate[i] = '\0';
     trim(intermediate);
     if (strcmp(intermediate, expected)) {

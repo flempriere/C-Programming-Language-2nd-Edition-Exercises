@@ -4,9 +4,9 @@
  * @brief Header file providing definitions for the various calculator modules.
  * @version 0.1
  * @date 2025-05-06
- * 
+ *
  * @copyright Copyright (c) 2025
- * 
+ *
  */
 
 /**
@@ -25,7 +25,8 @@ void push(double);
 /**
  * @brief Pop a value from the stack
  *
- * @return double
+ * @return value on top of the stack. The item is removed
+ * from the stack.
  */
 double pop(void);
 
@@ -41,7 +42,7 @@ int getop(char s[]);
 /**
  * @brief Fetches a character from input.
  *
- * @return int
+ * @return next input character
  */
 int getch(void);
 

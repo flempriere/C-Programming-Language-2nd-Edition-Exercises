@@ -4,18 +4,33 @@
  * @brief Main file implementation for a reverse polish notation calculator.
  * @version 0.1
  * @date 2025-05-06
- * 
+ *
  * @copyright Copyright (c) 2025
- * 
+ *
  */
+
+#include "calc.h"
 
 #include <stdio.h>
 #include <stdlib.h>
-#include "calc.h"
 
-
+/**
+ * @brief Maximum size of operand or operator string.
+ *
+ */
 #define MAXOP 100
 
+/**
+ * @brief A basic calculator that handles reverse polish notation.
+ *
+ * Supports:
+ * - Operators: +, -, /, %, *
+ * - Functions: sin, cos, exp, log, etc..
+ * - Variables: A, B, ... Z, $ <- last printed
+ * - Stack manipulation operations.
+ *
+ * @return EXIT_SUCCESS
+ */
 int main(void) {
     char s[MAXOP];
 

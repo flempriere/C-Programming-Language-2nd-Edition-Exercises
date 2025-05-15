@@ -28,7 +28,7 @@ enum truth {
  * @brief Counts the number of set (1) bits in a given unsigned int x.
  *
  * @param x
- * @return int
+ * @return number of set bits in x.
  */
 int bitcount(unsigned x);
 

@@ -24,7 +24,7 @@
 /**
  * @brief Indicates the read is not in a blank substring
  *
- * @see OUT
+ * @see IN
  */
 #define OUT 0
 

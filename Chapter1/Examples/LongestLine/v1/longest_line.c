@@ -67,7 +67,7 @@ int main(void) {
     return EXIT_SUCCESS;
 }
 
-int get_line(int maxline, char line[maxline]) {
+int get_line(int maxline, char line[]) {
     int i;
     int c = EOF;
     for (i = 0; i < maxline - 1 && (c = getchar()) != EOF && c != '\n'; ++i) {
@@ -82,5 +82,5 @@ int get_line(int maxline, char line[maxline]) {
 }
 
 void copy(char src[], char dest[]) {
-    for (int i = 0; (src[i] = dest[i]) != '\0';) ++i;
+    for (int i = 0; (src[i] = dest[i]) != '\0';) { ++i; }
 }

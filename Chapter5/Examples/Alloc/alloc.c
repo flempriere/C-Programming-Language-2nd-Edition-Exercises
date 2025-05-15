@@ -5,9 +5,9 @@
  * arithmetic.
  * @version 0.1
  * @date 2025-05-09
- * 
+ *
  * @copyright Copyright (c) 2025
- * 
+ *
  */
 
 #include <stdio.h>
@@ -15,25 +15,25 @@
 
 /**
  * @brief Size of the memory buffer.
- * 
+ *
  */
 #define ALLOCSIZE 1000
 
 /**
  * @brief Storage for alloc
- * 
+ *
  */
 static char allocbuf[ALLOCSIZE];
 
 /**
  * @brief Next free position in the alloc buffer.
- * 
+ *
  */
 static char* allocp = allocbuf;
 
 /**
  * @brief Allocate memory from the buffer
- * 
+ *
  * @param n Number of bytes to allocate
  * @return char* pointer to allocated memory.
  */
@@ -41,8 +41,8 @@ char* alloc(int n);
 
 /**
  * @brief free storage pointed to by p
- * 
- * @param p 
+ *
+ * @param p
  */
 void afree(char* p);
 
@@ -59,29 +59,19 @@ enum truth {
 
 /**
  * @brief Tests allocating n bytes then freeing them
- * 
- * @param n 
+ *
+ * @param n
  * @return TRUE if n bytes successfully allocated and freed, else
  * @return FALSE
  */
 enum truth test_alloc(int n);
 
 int main(void) {
-    if (!test_alloc(0)) {
-        return EXIT_FAILURE;
-    }
-    if (!test_alloc(1)) {
-        return EXIT_FAILURE;
-    }
-    if (!test_alloc(10)) {
-        return EXIT_FAILURE;
-    }
-    if (!test_alloc(ALLOCSIZE)) {
-        return EXIT_FAILURE;
-    }
-    if (!test_alloc(ALLOCSIZE + 1)) {
-        return EXIT_FAILURE;
-    }
+    if (!test_alloc(0)) { return EXIT_FAILURE; }
+    if (!test_alloc(1)) { return EXIT_FAILURE; }
+    if (!test_alloc(10)) { return EXIT_FAILURE; }
+    if (!test_alloc(ALLOCSIZE)) { return EXIT_FAILURE; }
+    if (!test_alloc(ALLOCSIZE + 1)) { return EXIT_FAILURE; }
     printf("All tests passed successfully\n");
     return EXIT_SUCCESS;
 }
@@ -97,9 +87,7 @@ char* alloc(int n) {
 }
 
 void afree(char* p) {
-    if (p >= allocbuf && p < allocbuf + ALLOCSIZE) {
-        allocp = p;
-    }
+    if (p >= allocbuf && p < allocbuf + ALLOCSIZE) { allocp = p; }
 }
 
 enum truth test_alloc(int n) {

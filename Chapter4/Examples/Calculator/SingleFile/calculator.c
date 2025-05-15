@@ -55,7 +55,8 @@ void push(double v);
 /**
  * @brief Pop a value from the stack
  *
- * @return double
+ * @return value on top of the stack. The item is removed
+ * from the stack.
  */
 double pop(void);
 
@@ -82,7 +83,7 @@ int bufp = 0;
 /**
  * @brief Fetches a character from input.
  *
- * @return int
+ * @return next input character
  */
 int getch(void);
 
@@ -102,6 +103,17 @@ void ungetch(int c);
  */
 int getop(char s[]);
 
+/**
+ * @brief A basic calculator that handles reverse polish notation.
+ *
+ * Supports:
+ * - Operators: +, -, /, %, *
+ * - Functions: sin, cos, exp, log, etc..
+ * - Variables: A, B, ... Z, $ <- last printed
+ * - Stack manipulation operations.
+ *
+ * @return EXIT_SUCCESS
+ */
 int main(void) {
     char s[MAXOP];
 

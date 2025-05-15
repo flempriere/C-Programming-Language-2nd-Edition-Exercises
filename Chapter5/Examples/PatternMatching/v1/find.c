@@ -1,48 +1,47 @@
 /**
  * @file find.c
  * @author Felix Lempriere
- * @brief An improved version of the pattern-matching program in Chapter 4, that
- * takes in the patterrn to be matched as a command line argument.
+ * @brief An improved version of the pattern-matching program in Chapter 4 that
+ * takes in the pattern to be matched as a command line argument.
  *
  * @version 0.1
  * @date 2025-05-11
- * 
+ *
  * @copyright Copyright (c) 2025
- * 
+ *
  */
 
 #include <stdio.h>
-#include <stdlib.h>
 #include <string.h>
 
 /**
  * @brief Maximum size of an input line.
- * 
+ *
  */
 #define MAXLINE 1000
 
 /**
- * @brief Gets a line from standard input and stores it in line.
+ * @brief Reads a line from standard input and returns the
+ * length of the line read. This variant strips newlines.
  *
- * @param line line to read into
- * @param lim maximum size of input
- * @return length of the input line read, if no line is read then,
- * @return 0.
+ * @param maxline maximum size of an input line.
+ * @param line buffer to store the read line in, the indices [0, maxline) must
+ * be valid.
+ *
+ * @return length of the read input line, 0 is returned if no line is read.
  */
 int get_line(int lim, char* line);
-
 
 /**
  * @brief Find program. Takes a pattern to match as the first command-line
  * argument, then reads lines from stdin and reports the first match in a line
  * if it exists.
- * 
- * @param argc 
- * @param argv 
+ *
+ * @param argc
+ * @param argv
  * @return int The number of matched lines.
  */
 int main(int argc, char* argv[]) {
-    
     char line[MAXLINE];
     int found = 0;
 
@@ -53,12 +52,11 @@ int main(int argc, char* argv[]) {
             if (strstr(line, argv[1]) != NULL) {
                 printf("%s", line);
                 found++;
-            } 
+            }
         }
     }
-    return EXIT_SUCCESS;
+    return found;
 }
-
 
 int get_line(int lim, char* line) {
     int i = 0;

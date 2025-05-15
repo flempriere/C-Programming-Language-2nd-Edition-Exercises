@@ -76,9 +76,9 @@ void reverse(char s[]);
  * @param n integer to convert
  * @param w minimum field width
  * @param expected expected result of itoa(n,s,w).
+ *
  * @return TRUE if the results agree, else
  * @return FALSE
- *
  */
 enum truth test_itoa(int n, int w, char expected[]);
 

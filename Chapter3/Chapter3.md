@@ -68,7 +68,7 @@ We write our implementation to work for all of the control characters. The imple
 
 *Write a function `expand(s1, s2)` that expands shorthand notations like `a-z` in the string `s1` into the equivalent complete list `abc...xyz` in `s2`. Allow for letters of either case and digits, and be prepared to handle cases like `a-b-c` and `a-z0-9` and `-a-z`. Arrange that a leading or trailing `-` is taken literally.*
 
-Our implementation for this is quite involved. It correctly handles expansions of the form `a-c` -> `abc` or `c-a` -> `cba`, and for digits and uppercase. Leading `-` or trailing `-` are ignored, as are `-` in expansions without clear meaning like `A-z`. hexadecimal notations like `8-C` are expanded as one would expect. We also allow `...` to be used in place of a `-`.
+Our implementation for this is quite involved. It correctly handles expansions of the form `a-c` -> `abc` or `c-a` -> `cba`, and for digits and uppercase. Leading `-` or trailing `-` are ignored, as are `-` in expansions without clear meaning like `A-z`. Hexadecimal notations like `8-C` are expanded as one would expect. We also allow `...` to be used in place of a `-`.
 
 As one can see the logic of `expand` itself is quite simple. Most of the complex logic comes from determining the type of expansion and performing it correctly.
 

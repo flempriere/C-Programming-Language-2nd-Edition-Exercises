@@ -91,13 +91,13 @@ int binary_search(int v, int len, int a[]);
 
 /**
  * @brief Test array to sort
- * 
+ *
  */
 int a[TEST_SIZE];
 
 /**
  * @brief Stores the time differences between the two techniques
- * 
+ *
  */
 int results[TEST_SIZE + 1];
 

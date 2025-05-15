@@ -1,8 +1,8 @@
 /**
  * @file strcpy.c
  * @author Felix Lempriere
- * @brief Three versions of string copy demonstrating the use of pointer vs array
- * syntax.
+ * @brief Three versions of string copy demonstrating the use of pointer vs
+ * array syntax.
  * @version 0.1
  * @date 2025-05-09
  *
@@ -16,7 +16,7 @@
 
 /**
  * @brief Maximum size for the string
- * 
+ *
  */
 #define STRSIZE 100
 
@@ -33,7 +33,7 @@ enum truth {
 
 /**
  * @brief Strcpy implementation using an internal array syntax.
- * 
+ *
  * @param s string to copy to.
  * @param t string to copy from.
  */
@@ -41,7 +41,7 @@ void strcpy_a(char* s, char* t);
 
 /**
  * @brief strcpy implementation using an internal pointer syntax.
- * 
+ *
  * @param s string to copy to.
  * @param t string to copy from.
  */
@@ -58,8 +58,8 @@ void strcpy_o(char* s, char* t);
 /**
  * @brief Test both implementations of strcpy,
  * by performing a copy and checking the strings equal.
- * 
- * @param in 
+ *
+ * @param in
  * @return TRUE if test passed, else
  * @return FALSE.
  */
@@ -67,20 +67,14 @@ enum truth test_strcpy(char in[]);
 
 /**
  * @brief Test driver for strcpy implementations
- * 
+ *
  * @return EXIT_SUCCESS if all tests passed, else
  * @return EXIT_FAILURE.
  */
 int main(void) {
-    if (!test_strcpy("")) {
-        return EXIT_FAILURE;
-    }
-    if (!test_strcpy("a")) {
-        return EXIT_FAILURE;
-    }
-    if (!test_strcpy("abc")) {
-        return EXIT_FAILURE;
-    }
+    if (!test_strcpy("")) { return EXIT_FAILURE; }
+    if (!test_strcpy("a")) { return EXIT_FAILURE; }
+    if (!test_strcpy("abc")) { return EXIT_FAILURE; }
     printf("All tests passed successfully\n");
     return EXIT_SUCCESS;
 }
@@ -97,9 +91,7 @@ void strcpy_p(char* s, char* t) {
     }
 }
 
-void strcpy_o(char* s, char* t) {
-    while ((*s++ = *t++));
-}
+void strcpy_o(char* s, char* t) { while ((*s++ = *t++)); }
 
 enum truth test_strcpy(char in[]) {
     char t1[STRSIZE];

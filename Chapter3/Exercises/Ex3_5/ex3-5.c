@@ -27,6 +27,7 @@
 /**
  * @brief Largest possible base for itob
  *
+ * @see itob
  */
 #define MAX_BASE 36
 
@@ -52,8 +53,9 @@ enum truth {
  * @exception If b is greater than MAX_BASE (or less than 2), an
  * empty string is returned.
  *
+ * @see MAX_BASE
  */
-void itoa(int n, char s[], int b);
+void itob(int n, char s[], int b);
 
 /**
  * @brief Returns the absolute value of an integer n.
@@ -85,9 +87,9 @@ void reverse(char s[]);
  * @param n integer to convert
  * @param b base to convert to.
  * @param expected expected result of itoa(n, s).
+ *
  * @return TRUE if the results agree, else
  * @return FALSE
- *
  */
 enum truth test_itob(int n, char expected[], int b);
 

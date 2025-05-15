@@ -36,7 +36,7 @@
  * bigger than the buffer, it will be stripped.
  * @return length of the input line read, 0 is returned if no line is read.
  */
-int get_line(int maxline, char line[maxline]);
+int get_line(int maxline, char line[]);
 
 /**
  * @brief Copies the string stored in from, to the buffer to.
@@ -72,7 +72,7 @@ int main(void) {
     return EXIT_SUCCESS;
 }
 
-int get_line(int maxline, char line[maxline]) {
+int get_line(int maxline, char line[]) {
     int i;
     int c = EOF;
     for (i = 0; (c = getchar()) != EOF && c != '\n'; ++i) {

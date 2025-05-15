@@ -1,7 +1,9 @@
 /**
  * @file atof.c
  * @author Felix Lempriere
- * @brief
+ * @brief Demonstrates a function returning a non-integer value through
+ * conversion of a string to a floating point value.
+ *
  * @version 0.1
  * @date 2025-04-30
  *

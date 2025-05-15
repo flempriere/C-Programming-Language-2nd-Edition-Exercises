@@ -5,7 +5,7 @@
  *
  * Rewrite the function lower, which converts upper case letters to lower case,
  * with a conditional expression instead of if-else.
- * 
+ *
  * @warning Assumes an ASCII representation.
  *
  * @version 0.1
@@ -36,7 +36,8 @@ enum truth {
  *
  * @warning This function only works for ASCII implementations.
  *
- * @return int character converted to lower case or unchanged.
+ * @return int character converted to lower case or
+ * @return unchanged if it is not an upper case character.
  */
 int lower(int c);
 

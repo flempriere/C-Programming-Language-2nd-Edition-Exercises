@@ -27,45 +27,55 @@
 #define N_SYMBOLS 5
 
 // error states
+
 /**
  * @brief Standard no error state.
  */
 #define NO_ERROR 0
+
 /**
  * @brief Indicates found an unmatched parentheses.
  */
 #define UNBALANCED_PARENTHESES 1
+
 /**
  * @brief Indicates found an unmatched bracket.
  */
 #define UNBALANCED_BRACKETS 2
+
 /**
  * @brief Indicates found an unmatched brace.
  */
 #define UNBALANCED_BRACES 3
+
 /**
  * @brief Indicates found an unmatched single quote.
  */
 #define MISSING_SINGLE_QUOTE 4
+
 /**
  * @brief Indicates found an unmatched double quotes.
  */
 #define MISSING_DOUBLE_QUOTE 5
+
 /**
  * @brief Parse stack overflow.
  */
 #define STACK_OVERFLOW 6
 
 // parse state
+
 /**
  * @brief Parsing normal syntax.
  */
 #define NORMAL 0
+
 /**
  * @brief Parsing inside a char literal ''
  * construct.
  */
 #define IN_CHAR 1
+
 /**
  * @brief Parsing inside a string literal " "
  * construct.
@@ -73,10 +83,12 @@
 #define IN_STR 2
 
 // handling escaped character states
+
 /**
  * @brief Character is not escaped.
  */
 #define NOT_ESCAPED 0
+
 /**
  * @brief Character is escaped.
  */
@@ -140,6 +152,7 @@ int get_error(int a[]);
 void print_error(int error_code, int line);
 
 // stack management
+
 /**
  * @brief Removes the top element of the stack
  *
@@ -149,7 +162,7 @@ void pop_stack(int a[]);
 
 /**
  * @brief Push an element onto the stack.
- * 
+ *
  * @param len length of the stack
  * @param a stack
  * @param val value to push
@@ -157,17 +170,26 @@ void pop_stack(int a[]);
  */
 int push_stack(int len, int a[], int val);
 
+/**
+ * @brief Next free index in the stack.
+ *
+ */
 int stack_top = 0;
+
+/**
+ * @brief Indicates if we are currently handling an escaped symbol.
+ *
+ */
 int escaped = NOT_ESCAPED;
 
 /**
- * @brief Performs basic syntactic analysis on a C source file. 
- * 
+ * @brief Performs basic syntactic analysis on a C source file.
+ *
  * @warning Assumes all comments have already been removed.
  *
  * Currently checks for:
  * - Ensures all grouping symbols {}, [], (), "" and '' are closed.
- * 
+ *
  * @return EXIT_SUCCESS if no errors are found, else
  * @return EXIT_FAILURE
  */

@@ -15,6 +15,7 @@
 /**
  * @brief Error code for if binary search can't find a match.
  *
+ * @see binary_search
  */
 #define NOT_FOUND -1
 
@@ -70,7 +71,8 @@ enum truth test_binary_search(int val, int len, int a[], int expected);
 /**
  * @brief Test driver for binary search
  *
- * @return EXIT_SUCCESS if all tests passed, else return EXIT_FAILURE
+ * @return EXIT_SUCCESS if all tests passed else,
+ * @return EXIT_FAILURE
  */
 int main(void) {
     int a[] = { 1, 2, 3, 4, 5, 6, 7, 8, 9, 10 };

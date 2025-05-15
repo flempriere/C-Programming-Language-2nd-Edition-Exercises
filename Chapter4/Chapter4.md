@@ -33,7 +33,7 @@ Demonstrates the use of recursion to perform sort an array by partitioning the a
 
 ## Exercises
 
-### [Ex 4-1](./Exercises/Ex4_1/ex4-1.c)
+### [Ex 4-1](./Exercises/Ex4_01/ex4-1.c)
 
 *Write the function `strrindex(s,t)`, which returns the position of the **rightmost** occurrence of $`t`$ in $`s`$, or $`-1`$ if there is none.*
 
@@ -53,7 +53,7 @@ if $`s`$ = "abcdabcdabcdabcdabcdabcd" and $`t`$ = "abcd" we would perform notice
 
 There are of course other optimisations we could explore.
 
-### [Ex 4-2](./Exercises/Ex4_2/ex4-2.c)
+### [Ex 4-2](./Exercises/Ex4_02/ex4-2.c)
 
 *Extend `atof` to handle scientific notation of the form $`12345e-6`$ where a floating point number may be followed by an `e` or and `E` and an optionally signed exponent.*
 
@@ -81,19 +81,19 @@ The next series of exercises all deal with extending or modifying the implementa
 
 ---
 
-#### [Ex 4-3](./Exercises/Ex4_3-7/calculator.c)
+#### [Ex 4-3](./Exercises/Ex4_03-7/calculator.c)
 
 *Given the basic framework, it's straightforward to extend the calculator. Add the modulus ($`\%`$) operator and provisions for negative numbers.*
 
 This is straightforward, `atof` already handles the negative sign so we just need to update the `getop` function to check if a `-` is an operator or part of a number. For modulus, we have the fact that the native defined operator relies on `int`. We could use casts to enforce this, but since in [Ex 4-5](#ex-4-5) we are introduced to `math.h` we will use the `fmod` function from that header.
 
-#### [Ex 4-4](./Exercises/Ex4_3-7/calculator.c)
+#### [Ex 4-4](./Exercises/Ex4_03-7/calculator.c)
 
 *Add commands to print the top element of the stack without popping, to duplicate it, and to swap the top two elements. Add a command to clear the stack*.
 
 These are all straightforward, we use the symbols `?, ~, @, #` for the `top`, `duplicate`, `swap` and `clear` functions. We can either implement these through the `pop` and `push` operations if we want, but since these are *stack* operations, its reasonable to use the underlying stack representation. (Which allows us to implement them a bit more efficiently.)
 
-#### [Ex 4-5](./Exercises/Ex4_3-7/calculator.c)
+#### [Ex 4-5](./Exercises/Ex4_03-7/calculator.c)
 
 *Add access to library functions like `sin`, `exp` and `pow`. See `math.h`.*
 
@@ -102,7 +102,7 @@ We just have to parse this.
 
 We reference the `math.h` header and add the functions supplied there. We also add an error function which reports an error message if a function is called with a value outside its domain.
 
-#### [Ex 4-6](./Exercises/Ex4_3-7/calculator.c)
+#### [Ex 4-6](./Exercises/Ex4_03-7/calculator.c)
 
 *Add commands for handling variables. (It's easy to provide twenty-six variables with single-letter names.) Add a variable for the most recently printed value.*
 
@@ -112,9 +112,9 @@ We use uppercase letters (`A...Z`) to make them distinct to parse from functions
 - A variable in an input stream is replaced by its value.
 - `=` is used to track variable assignment using the syntax `3 A =` to mean assign $`3`$ to $`A`$.
 
-This implementation has a few consequences, we need to introduce a variable `var` to track the last seen token, as we can't tell until we see an `=` if the variable was used in an *access-its-value* context or a *set-its-value* context, and for assignments we have to `pop` the `push` of the variables current value from the stack, *then* get the actual assigned value.
+This implementation has a few consequences, we need to introduce a variable `var` to track the last seen token. This is because we can't tell until we see the next operator or operand if the variable was used in an *access-its-value* context or a *set-its-value* (`=`) context. For assignments we have to `pop` the `push` of the variables current value from the stack, *then* get the actual assigned value.
 
-#### [Ex 4-7](./Exercises/Ex4_3-7/calculator.c)
+#### [Ex 4-7](./Exercises/Ex4_03-7/calculator.c)
 
 *Write a routine `ungets(s)` that will push back an entire string onto the input. Should `ungets(s)` know about `buf` and `bufp`, or should it just use `ungetch`?*
 
@@ -124,17 +124,17 @@ We don't need to know about the *how* the buffer is managed then, and `ungetch` 
 
 **Note:** We don't use `ungets` in our calculator implementation. But we will use it later in [Chapter 5](../Chapter5/Chapter5.md#ex-5-10).
 
-#### [Ex 4-8](./Exercises/Ex4_8-9/calculator_v2.c)
+#### [Ex 4-8](./Exercises/Ex4_08-9/calculator_v2.c)
 
 *Suppose that there will never be more than one character of pushback. Modify `getch` and `ungetch` accordingly.*
 
 Rather than use a buffer and an index in the buffer, we just need one variable that stores the *ungetched* character and a *sentinel value* to denote the variable being empty. We use the null-terminator `\0`.
 
-#### [Ex 4-9](./Exercises/Ex4_8-9/calculator_v2.c)
+#### [Ex 4-9](./Exercises/Ex4_08-9/calculator_v2.c)
 
 *Our `getch` and `ungetch` do not handle a pushed-back `EOF` correctly. Decide what their properties ought to be if an `EOF` is pushed back, then implement your design.*
 
-In the original implementation the buffer is a `char`. This may not handle `EOF` correctly in the case that `EOF` is negative (e.g. $`-1`$) and `char` is unsigned.
+In the original implementation the buffer is a `char`. This may not handle `EOF` correctly in the case that `EOF` is negative (e.g. $`-1`$) and `char` is unsigned. To handle this replace the underlying type of the buffer with `int`.
 
 #### [Ex 4-10](./Exercises/Ex4_10/calculator_v3.c)
 
@@ -164,7 +164,7 @@ The order we do things in is important, we recurse to the end of the string, and
 
 Again, like the previous function, the direct interface doesn't match what we need for a recursion. In this case we use `reverse(s)` as a wrapper function around the recursive routine `reverse_r(s, i, j)`.
 
-`reverse_r(s, i, j)` swaps the characters at `s[i]` and `s[j]` then calls itself again with `i` incremented by $`1`$ and `j` decremented by $`1`$. The base case is once $`i == j`$. `reverse(s)` starts by calling `reverse_r(s, 0, strlen(s) - 1)`.
+`reverse_r(s, i, j)` swaps the characters at `s[i]` and `s[j]` then calls itself again with `i` incremented by $`1`$ and `j` decremented by $`1`$. The base case is to stop once $`i >= j`$. `reverse(s)` starts by calling `reverse_r(s, 0, strlen(s) - 1)`.
 
 ### [Ex 4-14](./Exercises/Ex4_14/ex4-14.c)
 

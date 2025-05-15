@@ -55,8 +55,7 @@ int word_end = MAX_COL;
  *
  * @param len total used length of the buffer
  * @param s buffer to store the string
- * @param idx current index in the buffer
- * @return new index in the buffer
+ * @return next free index in the buffer
  */
 int detab(int len, char s[]);
 

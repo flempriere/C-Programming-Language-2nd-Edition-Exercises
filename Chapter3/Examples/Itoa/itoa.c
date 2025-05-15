@@ -33,7 +33,7 @@ enum truth {
 };
 
 /**
- * @brief Write a string representation of n in s
+ * @brief Write a string representation of n into s
  *
  * @param n integer to write
  * @param s string to store representation of n
@@ -60,9 +60,9 @@ void reverse(char s[]);
  *
  * @param n integer to convert
  * @param expected expected result of itoa(n, s).
+ *
  * @return TRUE if the results agree, else
  * @return FALSE
- *
  */
 enum truth test_itoa(int n, char expected[]);
 

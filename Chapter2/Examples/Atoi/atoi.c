@@ -27,7 +27,7 @@ enum truth {
  * @brief Converts the string s to an integer
  *
  * @param s string to convert.
- * @return int
+ * @return integer result of converting s
  */
 int my_atoi(char s[]);
 

@@ -67,7 +67,10 @@ enum truth test_shellsort(int len, int a[]);
  *
  * @return EXIT_SUCCESS if all tests pass, else
  * @return EXIT_FAILURE
- * 
+ *
+ * @remark For consistency in testing we use a fixed seed, but this can
+ * be changed if needed.
+ *
  * @see N_TESTS, @see TEST_SIZE
  */
 int main(void) {

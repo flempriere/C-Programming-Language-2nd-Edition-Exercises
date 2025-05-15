@@ -1,16 +1,17 @@
 /**
  * @file ex4_13.c
  * @author Felix Lempriere
- * @brief Solution to Exercise 4.13 from The C Programming Language, 2nd Edition.
+ * @brief Solution to Exercise 4.13 from The C Programming Language, 2nd
+ * Edition.
  *
  * Write a recursive version of the function `reverse(s)`, which reverses the
  * string `s` in place.
- * 
+ *
  * @version 0.1
  * @date 2025-05-09
- * 
+ *
  * @copyright Copyright (c) 2025
- * 
+ *
  */
 
 #include <stdio.h>
@@ -28,7 +29,7 @@ void reverse(char s[]);
  * @brief Recursive reverse subroutine.
  *
  * Swaps the characters s[i] and s[j].
- * 
+ *
  * @param s string to reverse
  * @param i index to swap
  * @param j index to swap
@@ -37,7 +38,7 @@ void reverse_r(char s[], int i, int j);
 
 /**
  * @brief Swaps two characters in a string
- * 
+ *
  * @param s string
  * @param i index to swap
  * @param j index to swap
@@ -87,9 +88,7 @@ int main(void) {
     return EXIT_SUCCESS;
 }
 
-void reverse(char s[]) {
-    reverse_r(s, 0, strlen(s) - 1);
-}
+void reverse(char s[]) { reverse_r(s, 0, strlen(s) - 1); }
 
 void reverse_r(char s[], int i, int j) {
     if (i < j) {

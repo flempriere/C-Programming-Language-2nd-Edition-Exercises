@@ -30,7 +30,7 @@ unsigned long int next = 1;
 /**
  * @brief Returns a pseudo random number from [0, MY_RAND_MAX)
  *
- * @return int
+ * @return PRN between [0, MY_RAND_MAX)
  */
 int my_rand(void);
 

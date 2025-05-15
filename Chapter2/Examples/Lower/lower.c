@@ -32,7 +32,8 @@ enum truth {
  *
  * @warning This function only works for ASCII implementations.
  *
- * @return int character converted to lower case or unchanged.
+ * @return int character converted to lower case or unchanged
+ * if it is not an upper case character.
  */
 int lower(int c);
 

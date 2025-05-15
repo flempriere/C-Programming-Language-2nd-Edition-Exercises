@@ -1,13 +1,13 @@
 /**
- * @file monthname.c
+ * @file month_name.c
  * @author Felix Lempriere
  * @brief Demonstrates the use of an array of pointers to convert numerical
  * representations of months to their string representation.
  * @version 0.1
  * @date 2025-05-11
- * 
+ *
  * @copyright Copyright (c) 2025
- * 
+ *
  */
 
 #include <stdio.h>
@@ -35,7 +35,7 @@ enum month {
 
 /**
  * @brief Returns a string representation of the given month m.
- * 
+ *
  * @param m month of the year
  * @return char* string representation of the month m.
  */
@@ -43,7 +43,7 @@ char* month_name(enum month m);
 
 /**
  * @brief Demonstration driver of the month_name function.
- * 
+ *
  * @return EXIT_SUCCESS
  */
 int main(void) {
@@ -54,10 +54,10 @@ int main(void) {
 }
 
 char* month_name(enum month m) {
-    static char* name[] = {
-        "Illegal Month", "January", "February", "March",
-        "April", "May", "June", "July", "August",
-        "September", "October", "November", "December"
-    };
-    return (m < JAN || m  > DEC) ? name[0] : name[m];
+    static char* name[] = { "Illegal Month", "January", "February",
+                            "March",         "April",   "May",
+                            "June",          "July",    "August",
+                            "September",     "October", "November",
+                            "December" };
+    return (m < JAN || m > DEC) ? name[0] : name[m];
 }

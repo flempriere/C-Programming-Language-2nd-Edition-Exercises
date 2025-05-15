@@ -32,9 +32,11 @@ enum truth {
  *
  * @param x
  * @param y
- * @return TRUE is test passes, else FALSE.
+ * @return TRUE is test passes, else
+ * @return FALSE.
  */
 enum truth test_swap(int x, int y);
+
 /**
  * @brief Swaps the value of the integers pointed
  * to by px and py.

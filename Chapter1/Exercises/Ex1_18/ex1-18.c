@@ -32,17 +32,19 @@
  * for proper wrap around behaviour.
  *
  */
-#define QUEUE_SIZE MAX_BLANKS + 1
+#define QUEUE_SIZE (MAX_BLANKS + 1)
 
 /**
  * @brief Indicates a value is true
  *
+ * @see FALSE
  */
 #define TRUE 1
 
 /**
  * @brief Indicates a value is false
  *
+ * @see TRUE
  */
 #define FALSE 0
 
@@ -93,7 +95,7 @@ int main(void) {
             if (tail == QUEUE_SIZE) { tail = 0; }
         } else {
             // print the queue since found a non-blank
-            if (head == QUEUE_SIZE) head = 0;
+            if (head == QUEUE_SIZE) { head = 0; }
             while (head != tail) {
                 putchar(blanks[head]);
                 head = head + 1;

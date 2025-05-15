@@ -2,16 +2,23 @@
  * @file main.c
  * @author Felix Lempriere
  * @brief Main file implementation for a reverse polish notation calculator.
+ * Front end of a solution to Exercise 4.11 from The C Programming Language,
+ * 2nd Edition.
+ *
+ * Modify `getop` so that it doesn't need to use `ungetch`. Hint: use an
+ * internal static variable.
+ *
  * @version 0.1
  * @date 2025-05-06
- * 
+ *
  * @copyright Copyright (c) 2025
- * 
+ *
  */
+
+#include "calc.h"
 
 #include <stdio.h>
 #include <stdlib.h>
-#include "calc.h"
 
 /**
  * @brief Maximum size of operand or operator string.

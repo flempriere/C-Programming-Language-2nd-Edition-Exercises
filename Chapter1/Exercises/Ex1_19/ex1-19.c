@@ -24,17 +24,15 @@
 
 /**
  * @brief Reads a line from standard input and returns the
- * length of the line read.
- *
- * @remark This variant strips the newline character
+ * length of the line read. This variant strips newlines.
  *
  * @param maxline maximum size of an input line.
- * @param s buffer to store the read line in, the indices [0, maxline) must
+ * @param line buffer to store the read line in, the indices [0, maxline) must
  * be valid.
  *
- * @return int length of the read line.
+ * @return length of the read input line, 0 is returned if no line is read.
  */
-int get_line(int maxline, char line[maxline]);
+int get_line(int maxline, char line[]);
 
 /**
  * @brief reverses a string.
@@ -62,7 +60,7 @@ int main(void) {
     return EXIT_SUCCESS;
 }
 
-int get_line(int maxline, char line[maxline]) {
+int get_line(int maxline, char line[]) {
     int i;
     int c = EOF;
     for (i = 0; i < maxline - 1 && (c = getchar()) != EOF && c != '\n'; ++i) {

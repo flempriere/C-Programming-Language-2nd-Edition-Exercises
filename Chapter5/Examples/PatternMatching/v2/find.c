@@ -16,7 +16,6 @@
  */
 
 #include <stdio.h>
-#include <stdlib.h>
 #include <string.h>
 
 /**
@@ -74,12 +73,10 @@ int main(int argc, char* argv[]) {
     } else {
         char line[MAXLINE];
         long lineno = 0;
-        while(get_line(MAXLINE, line)) {
+        while (get_line(MAXLINE, line)) {
             lineno++;
             if ((strstr(line, *argv) != NULL) != except) {
-                if (number) {
-                    printf("%ld:", lineno);
-                }
+                if (number) { printf("%ld:", lineno); }
                 printf("%s", line);
                 found++;
             }

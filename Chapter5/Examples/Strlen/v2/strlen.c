@@ -7,9 +7,9 @@
  * instead of indexing.
  * @version 0.1
  * @date 2025-05-09
- * 
+ *
  * @copyright Copyright (c) 2025
- * 
+ *
  */
 
 #include <stdio.h>
@@ -30,7 +30,7 @@ enum truth {
  * @brief Tests strlen by reading in a string in, and running strlen,
  * the result is compared to the expected result, expected. An error diagnostic
  * is printed if the test is failed.
- * 
+ *
  * @param in string to test
  * @param expected expected result
  * @return TRUE if the test is passed, else
@@ -40,39 +40,29 @@ enum truth test_strlen(char in[], int expected);
 
 /**
  * @brief Calculate the length of the string.
- * 
- * @param s 
+ *
+ * @param s
  * @return int length of the string
  */
 int my_strlen(char* s);
 
 /**
  * @brief Test driver for string length
- * 
+ *
  * @return EXIT_SUCCESS if all tests passed, else
  * @return EXIT_FAILURE.
  */
 int main(void) {
-
-    if (!test_strlen("", 0)) {
-        return EXIT_FAILURE;
-    }
-    if (!test_strlen("a", 1)) {
-        return EXIT_FAILURE;
-    }
-    if (!test_strlen("abc", 3)) {
-        return EXIT_FAILURE;
-    }
+    if (!test_strlen("", 0)) { return EXIT_FAILURE; }
+    if (!test_strlen("a", 1)) { return EXIT_FAILURE; }
+    if (!test_strlen("abc", 3)) { return EXIT_FAILURE; }
     printf("All tests passed successfully\n");
     return EXIT_SUCCESS;
 }
 
-
 int my_strlen(char* s) {
     char* p = s;
-    while (*p != '\0') {
-        p++;
-    }
+    while (*p != '\0') { p++; }
     return p - s;
 }
 

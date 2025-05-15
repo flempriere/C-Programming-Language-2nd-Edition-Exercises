@@ -4,9 +4,9 @@
  * @brief Implementation of the file I/O functions in calc.h
  * @version 0.1
  * @date 2025-05-06
- * 
+ *
  * @copyright Copyright (c) 2025
- * 
+ *
  */
 
 #include <stdio.h>

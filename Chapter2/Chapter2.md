@@ -36,7 +36,7 @@ Extract a bit pattern from an integer.
 
 ## Exercises
 
-### [Ex 2-1](./Exercises/Ex2_1/ex2-1.c)
+### [Ex 2-1](./Exercises/Ex2_01/ex2-1.c)
 
 *Write a program to determine the ranges of `char`, `short`, `int` and `long` variables, both `signed` and `unsigned`, by printing appropriate values from standard headers and by direct computation. **Harder if you compute them:** Determine the ranges of the various floating point types.*
 
@@ -46,23 +46,23 @@ For the unsigned types, this is straightforward, since we can use wrap around: $
 
 However the C23 standard **mandates** that the signed integer representation is *two's complement* which is what we'll use to do this programatically.
 
-For the floating point, we notice that at least on our machine, the calculated minimum is smaller than that reported in `float.h`. This is due to the existence of [subnormal numbers](https://en.wikipedia.org/wiki/Subnormal_number), which should generally be avoided.
+For the floating point, we notice that at least on our machine, the calculated minimum is smaller than that reported in `float.h`. This is due to the existence of [subnormal numbers](https://en.wikipedia.org/wiki/Subnormal_number), which should generally be avoided due to portability issues.
 
-### [Ex 2-2](./Exercises/Ex2_2/ex2-2.c)
+### [Ex 2-2](./Exercises/Ex2_02/ex2-2.c)
 
 *Write a loop equivalent to original `get_line` for loop without using `&&` and `||`.*
 
 We effectively have to introduce a flag variable to denote if we keep looping, and then check each condition in the loop step by step. We can see that the resulting implementation is significantly uglier.
 
-### [Ex 2-3](./Exercises/Ex2_3/ex2-3.c)
+### [Ex 2-3](./Exercises/Ex2_03/ex2-3.c)
 
 *Write the function `htoi(s)` which converts a string of hexadecimal digits (including an optional `0x` or `0x`) into its
 equivalent integer value. The allowable digits are $`0`$ though $`9`$, $`a`$ through $`f`$, and $`A`$ through $`F`$.*
 
 Our implementation, is relatively simple, we first check for a prefix, and skip it if its exists. Then while we continue to read
-hexdigits we convert them to the appropriate number. We handle uppercase latters by converting them to lower case.
+hexdigits we convert them to the appropriate number. We handle uppercase letters by converting them to lower case.
 
-### [Ex 2-4](./Exercises/Ex2_4/ex2-4.c)
+### [Ex 2-4](./Exercises/Ex2_04/ex2-4.c)
 
 *Write an alternate version of `squeeze(s1, s2)` that deletes each character in `s1` that matches any character in the string `s2`.*
 
@@ -72,7 +72,7 @@ Our implementation has the advantage that as `s1` shrinks each time we squeeze, 
 
 If `s2` has duplicate characters, we could use an array to track the characters we've seen and ignore them. However the overhead of setting up this array for all possible characters (128 in ASCII) or mutating `s2` means this is only worth doing if `s2` is long and contains many duplicates.
 
-### [Ex 2-5](./Exercises/Ex2_5/ex2-5.c)
+### [Ex 2-5](./Exercises/Ex2_05/ex2-5.c)
 
 *Write the function `any(char s1[], char s2[])` which returns the first location in the string `s1` where any character from the string `s2` occurs, or `-1` if `s1` contains no characters from `s2`. (The standard library function `strpbrk` does the same job but returns a pointer.)*
 
@@ -87,7 +87,7 @@ follows
 
 This means that we only have to scan `s1` once, and `s2` once, respectively. Which notionally seems faster. However, we have to initialise the array (for ASCII 128 characters). So for small `s2` strings or `s1` strings this overhead may be more costly than the naive approach we've implemented.
 
-### [Ex 2-6](./Exercises/Ex2_6/ex2-6.c)
+### [Ex 2-6](./Exercises/Ex2_06/ex2-6.c)
 
 *Write a function `setbits(x, p, n, y)` that returns `x` with the `n` bits that begin at position `p` set to the rightmost bits of `y`, leaving the other bits unchanged.*
 
@@ -120,7 +120,7 @@ Clears the $`n`$ bits in `x`. By
 5. **AND** with `x` to clear the bits.
 6. **OR** with our previous selection from `y` to get the final result.
 
-### [Ex 2-7](./Exercises/Ex2_7/ex2-7.c)
+### [Ex 2-7](./Exercises/Ex2_07/ex2-7.c)
 
 *Write a function `invert(x,p, n)` that returns`x` with the `n` bits that begin at position `p`inverted (i.e. $`1`$ bits set to $`0`$ and $`0`$ bits set to $`1`$.), leaving the others unchanged.*
 
@@ -135,7 +135,7 @@ x ^ (~(~0U << n) << (p - n + 1))
 3. Place the ones at the desired inversion point, leaving zero elsewhere `(~(~0U << n) << (p - n + 1))`.
 4. Perform the inversion with **XOR** `^`.
 
-### [Ex 2-8](./Exercises/Ex2_8/ex2-8.c)
+### [Ex 2-8](./Exercises/Ex2_08/ex2-8.c)
 
 *Write a function `rightrot(x, n)` that returns the value of the integer `x` rotated to the right by `n` bit positions.*
 
@@ -172,7 +172,7 @@ x = (x >> n) | rotbits
 
 We shift `x` right by $`n`$, (using unsigned to ensure $`0`$ padding.), then **OR** with the rotated bits.
 
-### [Ex 2-9](./Exercises/Ex2_9/ex2-9.c)
+### [Ex 2-9](./Exercises/Ex2_09/ex2-9.c)
 
 *In a two's complement number system `x &= (x - 1)` deletes the righmost $`1`$-bit in `x`. Explain Why. Use this observation to write a faster version of bitcount.*
 
