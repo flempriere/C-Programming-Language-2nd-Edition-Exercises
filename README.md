@@ -15,6 +15,7 @@ This repository has been broken down by Chapter. Each Chapter contains a markdow
 2. [Chapter 2](./Chapter2/Chapter2.md) - Types, Operators and Expressions.
 3. [Chapter 3](./Chapter3/Chapter3.md) - Control Flow.
 4. [Chapter 4](./Chapter4/Chapter4.md) - Functions and Program Structure.
+5. [Chapter 5](./Chapter5/Chapter5.md) - Pointers and Arrays
 
 ## Code Style
 
