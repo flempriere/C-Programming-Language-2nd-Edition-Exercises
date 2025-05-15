@@ -48,8 +48,8 @@ However if $`s`$ is reasonably long and repeated in $`t`$ with some regularity, 
 **E.g.**
 if $`s`$ = "abcdabcdabcdabcdabcdabcd" and $`t`$ = "abcd" we would perform noticeably more scans over $`s`$ operating forward than in reverse. A naive count is:
 
-1. Forward: $`5`$ full scans over $`s`$ (~$`25`$ comparisons) plus $`18`$ single comparisons against $`s`$ and $`5`$ updates of `found`. (~$`48`$ comparisons / updates)
-2. Backwards: ~$`25`$ comparisons to determine the length of $`s`$ and $`1`$ full scan over $`s`$ (~$`5`$ comparisons), plus $`3`$ single comparisons. (~$`33`$ comparisons.)
+1. Forward: $`5`$ full scans over $`s`$ (approx $`25`$ comparisons) plus $`18`$ single comparisons against $`s`$ and $`5`$ updates of `found`. (approx $`48`$ comparisons / updates)
+2. Backwards: ~$`25`$ comparisons to determine the length of $`s`$ and $`1`$ full scan over $`s`$ (approx $`5`$ comparisons), plus $`3`$ single comparisons. (approx $`33`$ comparisons.)
 
 There are of course other optimisations we could explore.
 
