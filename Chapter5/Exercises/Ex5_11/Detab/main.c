@@ -18,27 +18,21 @@
 #include <stdlib.h>
 
 /**
- * @brief Index of the first column.
- *
- */
-#define START_COL 1
-
-/**
  * @brief Detabs a file, taking a custom list of tab stops as command line
  input.
  *
  * Detabs a file converting tabs to spaces, using either a default of tabstops
  * every TABSTOP columns, or taing a user supplied list of tabstops. If the user
  * supplied list is exhausted, the default tabstops are used as a fallback.
- * 
+ *
  * @param argc Number of arguments
  * @param argv List of columns to be used as tabstops.
  *
  * @warning Assumes the tab stop list is an ascending list of numbers,
- * duplicated or  non-ascending numbers will be ignored. Non-numeric inputs 
+ * duplicated or  non-ascending numbers will be ignored. Non-numeric inputs
  * will cause undefined behaviour.
  *
- * @return EXIT_SUCCESS if program successfully detabed, else 
+ * @return EXIT_SUCCESS if program successfully detabed, else
  * @return EXIT_FAILURE.
  */
 int main(int argc, char* argv[]) {
@@ -61,21 +55,6 @@ int main(int argc, char* argv[]) {
         }
         set_tabs(m, tabs);
     }
-    int col = START_COL;
-    for (int c; (c = getchar()) != EOF;) {
-        switch (c) {
-        case '\t':
-            for (int nxt = next_tab(col); col < nxt; col++) { putchar(' '); }
-            break;
-        case '\n':
-            putchar(c);
-            col = START_COL;
-            break;
-        default:
-            putchar(c);
-            col++;
-            break;
-        }
-    }
+    detab();
     return EXIT_SUCCESS;
 }

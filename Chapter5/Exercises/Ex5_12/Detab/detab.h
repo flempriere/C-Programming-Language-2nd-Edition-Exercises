@@ -5,67 +5,83 @@
  * managing the tab list.
  *
  * @version 0.1
- * @date 2025-05-14
- * 
+ * @date 2025-05-15
+ *
  * @copyright Copyright (c) 2025
- * 
+ *
  */
 
 /**
- * @brief Maximum number of tabs in the tab list.
- * 
+ * @brief Index of the first column.
+ *
  */
- #define MAXTABS 100
+ #define START_COL 1
 
  /**
-  * @brief The default size frequency of tabstops.
-  * 
+  * @brief Maximum number of tabs in the tab list.
+  *
   */
- #define DEFAULT_TABSTOP 8
+ #define MAXTABS 100
+ 
+ /**
+  * @brief The default frequency of tabstops.
+  *
+  * @see DEFAULT_START, @see set_tab_frequency
+  */
+ #define DEFAULT_FREQUENCY 8
 
 /**
- * @brief The default column to start tab stops from.
- * 
+ * @brief The default start column for frequency based tabbing.
+ *
+ * @see DEFAULT_FREQUENCY, @see set_tab_frequency
  */
- #define DEFAULT_START_COL 1
- 
+#define DEFAULT_START 1
+
 /**
-* @brief Configures tab stops to be generated from the array
-* tabs on size m
-* 
-* @param m size of the tab arrays
-* @param tabs array containing tabs
-*
-* @remark set_tab_list sets the start column for frequency-based tapping to be
-* the last tab stop in the array. To override this call set_tab_frequency after.
-* @pre tabs must an array sorted in ascending order with no
-* duplicates. 
-*/
+ * @brief Configures tab stops to be generated from the array
+ * tabs on size m.
+ *
+ * @param m size of the list of tab stops
+ * @param tabs ascending non-duplicate array of tabs
+ *
+ * @pre tabs must an array sorted in ascending order with no
+ * duplicates.
+ *
+ * @warning Calling set_tab_list sets the start column for frequency based
+ * tabbing to the last element of the tab list. If this is not desired call
+ * set_tab_frequency after calling set_tab_list.
+ *
+ * @see set_tab_frequency
+ */
 void set_tab_list(int m, int tabs[]);
 
 /**
- * @brief Sets tab stops to occur every @frequency columns, starting from 
- * start_col.
+ * @brief Sets the tab frequency
+ * 
+ * Sets tabstops to occur every freq columns starting from start. 
+ * - If freq is passed as 0, the frequency is set to DEFAULT_FREQUENCY.
+ * - If start is  passed as 0, the start column is inferred as follows,
+ *  - If the tab_list is non-empty, the start col is the last tab in the list
+ *  - If the tab_list is empty, the start_col is DEFAULT_START
  *
- * Configures the tabs to generated every frequency columns, starting at the
- * start_col. If an argument of zero is passed to start_col the start_col is
- * inferred as follows,
- *      - If the tab list is set start_col will be the last element of the
- * tab list
- *      - If the tab list is not set, start_col is set to the default start col.
- *
- * @param frequency frequency of tab stops
- * @param start_col starting column for tab stops. If 
+ * @param freq frequency of tab stops
+ * @param start starting column of tab stops
+ * 
+ * @see DEFAULT_START, @see DEFAULT_FREQ
  */
-void set_tab_frequency(int frequency, int start_col);
- 
+ void set_tab_frequency(int freq, int start);
+
  /**
   * @brief Get the next tab stop after the column col.
-  * 
-  * @param col 
-  * @return int 
+  *
+  * @param col
+  * @return int
   */
  int next_tab(int col);
  
- 
+ /**
+  * @brief Entabs I/O received over stdin, according to the tabstops.
+  *
+  */
+ void detab(void);
  

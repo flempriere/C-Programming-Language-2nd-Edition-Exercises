@@ -188,6 +188,8 @@ The advantage of this implementation aside from letting *entab* and *detab* easi
 1. We assume tabs are generally accessed linearly so we track where we are along the line rather than search from the beginning everytime we get the `next_tab`. (*With some logic to detect a line reset*)
 2. A further improvement could be to use binary search for the least upper bound. However since we expect the array to be small we have not yet implemented this, **but** we easily could without impacting clients.
 
+Moreover for further simplicity we have refactored `detab` and `entab` themselves into seperate files from `main`. `main` now has the responsiblity of parsing the command line arguments and passing them onto `set_tab`, then calling either `detab` or `entab` depending on which solution. In fact we can see that this leaves the `main` of both implementations identical except for the function call. It would thus be easy to marry these programs using a command line argument to choose between `entab` or `detab` if we desired!
+
 A simple UML below demonstrates.
 
 ```mermaid
@@ -197,16 +199,30 @@ title: Entab and Detab Shared Architecture
 ---
 classDiagram
     class detab.h
+    detab.h : #define START_COL 1
     detab.h : #define MAXTABS
     detab.h : #define TABSTOP
     detab.h : set_tabs(int m, int tabs[])
     detab.h : next_tab(int col)
+    detab.h : +void detab(void)
 
     class entab.h
+    entab.h : #define START_COL 1
     entab.h : #define MAXTABS
     entab.h : #define TABSTOP
     entab.h : set_tabs(int m, int tabs[])
     entab.h : next_tab(int col)
+    entab.h : +void entab(void)
+
+    class entab.c
+    entab.c ..|> entab.h
+    entab.c : #include ~entab.h~
+    entab.c : +void entab(void)
+
+    class detab.c
+    detab.c ..|> detab.h
+    detab.c : #include ~entab.h~
+    detab.c : +void entab(void)
 
     class set_tab.c
     set_tab.c ..|> entab.h
@@ -219,17 +235,15 @@ classDiagram
     set_tab.c : +void set_tabs(int m, int tabs[])
     set_tab.c : +int set_tabs(int col) 
 
-    class entab.c
-    entab.c ..> entab.h
-    entab.c : #include ~entab.h~
-    entab.c : #define START_COL 1
-    entab.c : int main(int argc, char* argv)
+    class entab_main.c
+    entab_main.c ..> entab.h
+    entab_main.c : #include ~entab.h~
+    entab_main.c : int main(int argc, char* argv)
 
-    class detab.c
-    detab.c ..> detab.h
-    detab.c : #include ~detab.h~
-    detab.c : #define START_COL 1
-    detab.c : int main(int argc, char* argv)
+    class detab_main.c
+    detab_main.c ..> detab.h
+    detab_main.c : #include ~entab.h~
+    detab_main.c : int main(int argc, char* argv)
 
 ```
 

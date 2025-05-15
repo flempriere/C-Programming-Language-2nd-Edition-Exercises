@@ -6,41 +6,51 @@
  *
  * @version 0.1
  * @date 2025-05-11
- * 
+ *
  * @copyright Copyright (c) 2025
- * 
+ *
  */
 
 /**
+ * @brief Index of the first column.
+ *
+ */
+#define START_COL 1
+
+/**
  * @brief Maximum number of tabs in the tab list.
- * 
+ *
  */
 #define MAXTABS 100
 
 /**
  * @brief The default size frequency of tabstops.
- * 
+ *
  */
 #define TABSTOP 8
 
 /**
  * @brief Configures tab stops to be generated from the array
  * tabs on size m.
- * 
- * @param m 
+ *
+ * @param m
  * @param tabs
  *
  * @pre tabs must an array sorted in ascending order with no
- * duplicates. 
+ * duplicates.
  */
 void set_tabs(int m, int tabs[]);
 
 /**
  * @brief Get the next tab stop after the column col.
- * 
- * @param col 
- * @return int 
+ *
+ * @param col
+ * @return int
  */
 int next_tab(int col);
 
-
+/**
+ * @brief Entabs I/O received over stdin, according to the tabstops.
+ *
+ */
+void detab(void);

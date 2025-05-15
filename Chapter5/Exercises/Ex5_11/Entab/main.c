@@ -19,12 +19,6 @@
 #include <stdlib.h>
 
 /**
- * @brief Index of the first column.
- *
- */
-#define START_COL 1
-
-/**
  * @brief Entabs a program, replacing strings of blanks and spaces with the
  * minimum number of tabs and spaces to acheive the same spacing.
  *
@@ -63,46 +57,5 @@ int main(int argc, char* argv[]) {
         }
         set_tabs(m, tabs);
     }
-    int col = START_COL;
-    int n_blanks = 0;
-    int nxt_tab = next_tab(col);
-    for (int c; (c = getchar()) != EOF;) {
-        switch (c) {
-        case '\t':
-            if (col == (nxt_tab - 1)) {
-                putchar(' ');
-            } else {
-                putchar('\t');
-            }
-            nxt_tab = next_tab(col = nxt_tab);
-            n_blanks = 0;
-            break;
-        case ' ':
-            if (col == (nxt_tab - 1)) {
-                putchar(' ');
-                n_blanks = 0;
-                nxt_tab = next_tab(col++);
-            } else {
-                n_blanks++;
-                if (col + n_blanks == nxt_tab) {
-                    putchar('\t');
-                    n_blanks = 0;
-                    nxt_tab = next_tab(col += n_blanks);
-                }
-            }
-            break;
-        default:
-            col += n_blanks + 1;
-            for (; n_blanks; n_blanks--) { putchar(' '); }
-            putchar(c);
-            if (c == '\n') {
-                col = START_COL;
-                nxt_tab = next_tab(col);
-            } else {
-                nxt_tab = (col >= nxt_tab) ? next_tab(col) : nxt_tab;
-            }
-            break;
-        }
-    }
-    return EXIT_SUCCESS;
+    entab();
 }
