@@ -52,7 +52,7 @@ For the floating point, we notice that at least on our machine, the calculated m
 
 *Write a loop equivalent to original `get_line` for loop without using `&&` and `||`.*
 
-We can see that the resulting implementation is significantly uglier.
+We effectively have to introduce a flag variable to denote if we keep looping, and then check each condition in the loop step by step. We can see that the resulting implementation is significantly uglier.
 
 ### [Ex 2-3](./Exercises/Ex2_3/ex2-3.c)
 
@@ -64,14 +64,13 @@ hexdigits we convert them to the appropriate number. We handle uppercase latters
 
 ### [Ex 2-4](./Exercises/Ex2_4/ex2-4.c)
 
-*Write an alternate version of `squeeze(s1, s2)` that deletes each character in `s1` that matches any character in the string
-`s2`.*
+*Write an alternate version of `squeeze(s1, s2)` that deletes each character in `s1` that matches any character in the string `s2`.*
 
 Our implementation loops over the characters in `s2` and runs the previous single character version of `squeeze` on `s1`. An alternative would be to loop over `s1`, check `s2` if the current character is in `s2` and discard it if it is.
 
 Our implementation has the advantage that as `s1` shrinks each time we squeeze, successive searches become faster.
 
-If `s2` has duplicate characters, we could use an array to track the characters we've seen and ignore them. However the overhead of setting up this array for all possible characters (128 in ASCII) means this would only be worthwhile if `s2` is long with a large number of duplicates.
+If `s2` has duplicate characters, we could use an array to track the characters we've seen and ignore them. However the overhead of setting up this array for all possible characters (128 in ASCII) or mutating `s2` means this is only worth doing if `s2` is long and contains many duplicates.
 
 ### [Ex 2-5](./Exercises/Ex2_5/ex2-5.c)
 
@@ -86,15 +85,55 @@ follows
 2. Scan through `s2` and mark the characters that appear in the array.
 3. Scan through `s1` and check the array.
 
-This means that we only have to scan `s1` once, and `s2` once, respectively. Which notionally seems faster. However, we have to initialise the array (for ASCII 128 characters). So for small `s2` strings or `s1` strings this overhead would be more costly than the naive approach we've implemented.
+This means that we only have to scan `s1` once, and `s2` once, respectively. Which notionally seems faster. However, we have to initialise the array (for ASCII 128 characters). So for small `s2` strings or `s1` strings this overhead may be more costly than the naive approach we've implemented.
 
 ### [Ex 2-6](./Exercises/Ex2_6/ex2-6.c)
 
 *Write a function `setbits(x, p, n, y)` that returns `x` with the `n` bits that begin at position `p` set to the rightmost bits of `y`, leaving the other bits unchanged.*
 
+We need to clear the $`n`$ bits in `x` leaving the rest of `x` unchanged. Select the $`n`$ bits in `y` clearing the remainder and then **OR** the results together.
+
+```C
+(y & ~(~0U << n)) << (p + 1 - n)
+```
+
+Selects the rightmost $`n`$ bits of `y` and clears the rest.
+
+1. Get a mask of all $`1`$ `(~0U)`.
+2. Set the rightmost $`n`$ bits to $`0`$ and the rest to $`1`$ `(~0U << n)`.
+3. Invert to set the rightmost $`n`$ bits to $`1`$
+and the rest to $`0`$. `~(0U << n)`.
+4. **AND** with `y` to select the rightmost $`n`$ bits, then shift result by $`(p + 1 -n)`$ to align these bits with $`x`$.
+
+For `x`:
+
+```C
+x & ~(~(~0U << n) << (p + 1 - n))
+```
+
+Clears the $`n`$ bits in `x`. By
+
+1. Get a mask of all $`1`$ `(~0U)`.
+2. Get a mask of all $`1`$ but the bottom $`n`$ bits $`0`$. `(~0U << n)`.
+3. Invert the mask, and shift the $`1`$ bits to the appropriate point in `x`. `~(~0U << n) << (p + 1 - n)`.
+4. Invert the mask again giving the region we want to set as a mask of $`0`$ values and the rest as $`1`$. `~(~(~0U << n) << (p + 1 - n))`.
+5. **AND** with `x` to clear the bits.
+6. **OR** with our previous selection from `y` to get the final result.
+
 ### [Ex 2-7](./Exercises/Ex2_7/ex2-7.c)
 
 *Write a function `invert(x,p, n)` that returns`x` with the `n` bits that begin at position `p`inverted (i.e. $`1`$ bits set to $`0`$ and $`0`$ bits set to $`1`$.), leaving the others unchanged.*
+
+**Note**: If we want to invert an entire `int`, then we can just use **XOR** with a mask of all $`1$. We can use this to craft a solution.
+
+```C
+x ^ (~(~0U << n) << (p - n + 1))
+```
+
+1. Get a mask of all $`1`$ and set the rightmost $`n`$ bits to $`0`$. `(~0U << n)`.
+2. Invert the mask `~(~0U << n)`.
+3. Place the ones at the desired inversion point, leaving zero elsewhere `(~(~0U << n) << (p - n + 1))`.
+4. Perform the inversion with **XOR** `^`.
 
 ### [Ex 2-8](./Exercises/Ex2_8/ex2-8.c)
 
@@ -103,6 +142,35 @@ This means that we only have to scan `s1` once, and `s2` once, respectively. Whi
 Implementing `rightrot` requires us to calculate the word length of an unsigned. Ideally we would do this once at compile time. This can be done in **C23** using the *_WIDTH macros, but for us we unfortunately have to calculate it every time the function runs.
 
 A potential extension to this function would be to allow negative values for `n` and to interpret that as a `leftrot` by the absolute value of `n`.
+
+Given the discussion above our solution looks like this
+
+First we calculate the width,
+
+```C
+unsigned unsigned_width(void) {
+  unsigned i = 0;
+  for (unsigned j = 1; j > 0; j = j << 1U) {
+    ++i;
+  }
+  return i;
+}
+```
+
+by shifting a bit along the word until the word is cleared. Then we select the rotated bits and align
+them with the left end of `x` via
+
+```C
+rotbits = ((x & ~(~0U << n)) << (width - n))
+```
+
+The rotation is then,
+
+```C
+x = (x >> n) | rotbits
+```
+
+We shift `x` right by $`n`$, (using unsigned to ensure $`0`$ padding.), then **OR** with the rotated bits.
 
 ### [Ex 2-9](./Exercises/Ex2_9/ex2-9.c)
 
@@ -132,9 +200,33 @@ i.e. If we look at every "column" we are adding a $`1`$. Ignoring carry digits f
 
 Hence the binary representation of `x` and `x - 1` differ only in the value of the bit corresponding to the lowest $`1`$-bit in `x` and the lower $`0`$-bits. So `x &= (x - 1)` clears the lowest $`1`$-bit in `x` leaving the rest untouched.
 
+Thus to perform a fast two's complement bitcount, we simply use
+
+```C
+int bitcount(unsigned x) {
+  int b;
+  for (b = 0; x != 0; x &= x - 1) {
+    b++;
+  }
+  return b;s
+}
+```
+
+We check if $`x`$ is non-zero, if it is, then there is at least one set bit, so we increment the counter, use `x &= x - 1` to remove a set bit, and repeat until $`x`$ is zero.
+
 ### [Ex 2-10](./Exercises/Ex2_10/ex2-10.c)
 
 *Rewrite the function `lower`, which converts upper case letters to lower case, with a conditional expression instead of `if-else`.*
+
+Straightforward.
+
+```C
+int lower(int c) {
+  return ((c >= 'A' && c <= 'Z') ? c + ('a' - 'A') : c);
+}
+```
+
+**Note**: This implementation relies on an ASCII representation.
 
 ## 2.0 Introduction
 

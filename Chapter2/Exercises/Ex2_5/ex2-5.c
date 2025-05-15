@@ -31,6 +31,7 @@ enum truth {
 /**
  * @brief Indicates that no match was found.
  *
+ * @see any
  */
 #define NO_MATCH -1
 

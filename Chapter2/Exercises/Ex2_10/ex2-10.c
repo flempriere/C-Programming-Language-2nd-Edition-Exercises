@@ -5,6 +5,9 @@
  *
  * Rewrite the function lower, which converts upper case letters to lower case,
  * with a conditional expression instead of if-else.
+ * 
+ * @warning Assumes an ASCII representation.
+ *
  * @version 0.1
  * @date 2025-04-27
  *
