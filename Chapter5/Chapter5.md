@@ -353,7 +353,7 @@ classDiagram
 
 ```
 
-### [Ex 5-13](./Exercises/Ex5_13/)
+### [Ex 5-13](./Exercises/Ex5_13/tail.c)
 
 *Write the program `tail` which prints the last $`n`$ lines of its input. By default $`n`$ is $`10`$, let us say, but it can be changed by an optional argument, so that*
 
@@ -362,6 +362,36 @@ tail -n
 ```
 
 *prints the last $`n`$ lines. The program should behave rationally no matter how unreasonable the input or the value of $`n`$. Write the program so it makes the best use of available storage; lines should be stored as in the sorting program of Section 5.6, not in a two-dimensional array of fixed size*.
+
+Let us first define our behaviour. Since we're reading line-by-line we set a *max line size* and an upper bound on the number of lines *tail* can produce. Now in the case that we have a line that is longer than the max line size, we have two options
+
+1. Truncate the line and discard the rest.
+2. Split the line at the limit
+
+We'll choose the second for now, we also modify `get_line` to ensure that all lines are terminated by a *newline*.
+
+Now the edge cases for the number of lines to print $`n`$ are $`n < 0`$, $`n = 0`$ and $`n > \text{MAX_LINES}`$. For the first edge case, our solution is to reject negative $`n`$ when parsing the arguments. If $`n = 0`$, we don't print anything. For the last case, we clamp $`n`$ to $`MAX_LINES`$.
+
+Now that we've defined our behavior we can build a solution fairly easily.
+
+First let us work out how we will store our lines. Since we know upfront that we will have to store at most $`\text{MAX_LINES}`$ each of size $`\text{MAX_SIZE}`$, we use a static `char` buffer `buf`. Then we use to index the buffer, copying each string into $`\text{MAX_SIZE}`$ blocks. Once the buffer is full, `bufp` wraps around to the start of the buffer, and will write over the *oldest* string.
+
+At each step we need to store the value of `bufp`, so that we can print the lines at the end. To do so we define a *queue* to hold up to $`\text{MAX_LINES}`$ pointers to lines. The queue behaves circularly, i.e. when the queue is full the oldest element is overwritten and elements are accessed in a *First-in-first-out* manner.
+
+The last step is to parse the value of $`n`$ if it exists. Our parse code is very simple, we check if the there are any command line arguments. If there are we check that the first is of the form `-n`. If it is not we throw an error. Since there are two error sources:
+
+1. The first command line argument is not prefixed by `-`.
+2. The first command line argument is prefixed by `-` but is not followed by a non-negative integer
+
+There are two seperate paths that lead to the some error. A simple and clean way to handle this is to put the error code in the `default` path, and use a `goto` to jump from the the error case in the `-` branch to `default`.
+Otherwise we collect the value of $`n`$, clamp it, if it is too large and set-up the queue values to make the queue handle $`n`$ elements.
+
+The program then runs as follows,
+
+1. Parse the value of $`n`$ if it exists and configure the *queue*.
+2. Reads lines into the buffer and their pointers into the *queue*
+3. The construction of the queue ensures it contains the last $`n`$ lines in the *FIFO* order.
+4. Print the strings pointed to in the queue.
 
 ## 5.0 Introduction
 
