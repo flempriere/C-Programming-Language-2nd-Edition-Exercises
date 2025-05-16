@@ -133,6 +133,7 @@ int read_lines(int maxlines, char* lineptr[]) {
 
     int nlines = 0;
     for (int len; (len = get_line(line, MAXLEN));) {
+        printf("read line: %s", line);
         if (nlines >= maxlines || (p = alloc(len + 1)) == NULL) {
             return -1;
         } else {

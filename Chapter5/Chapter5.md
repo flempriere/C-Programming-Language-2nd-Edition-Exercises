@@ -10,9 +10,15 @@ Swaps two integer values.
 
 Reads a series of integers from standard input and stores them in an array.
 
-### [Line Sorting](./Examples/SortLines/sort_lines.c)
+### Line Sorting
+
+#### [Line Sorting v1](./Examples/SortLines/v1/sort_lines.c)
 
 Sorts a set of lines into lexigraphical order by using an array of pointers.
+
+#### [Line Sorting v2](./Examples/SortLines/v2/sort_lines_v2.c)
+
+Sorts a set of lines, with optional command-line arguments to switch between lexigraphical or numerical sorts.
 
 ### String Length
 
@@ -392,6 +398,111 @@ The program then runs as follows,
 2. Reads lines into the buffer and their pointers into the *queue*
 3. The construction of the queue ensures it contains the last $`n`$ lines in the *FIFO* order.
 4. Print the strings pointed to in the queue.
+
+### Sorting Program
+
+The next exercises all extend the example [sorting program](#line-sorting-v2).
+
+#### [Ex 5-14](./Exercises/Ex5_14/ex5-14.c)
+
+*Modify the sort program to handle a `-r` flag, which indicates sorting in reverse (decreasing) order. Be sure that `-r` works with `-n`.*
+
+There is a design decision we can make here, how we perform the reversal. There are several options,
+
+1. Sort the lines as normal then reverse them.
+2. Add a reversed version of each comparison function.
+3. Add a reverse parameter to qsort to flip the comparison direction
+4. Do the above but global.
+
+We want to avoid modifying the signature of `qsort`, so we discount option $`3.`$. Option $`2`$ would result in an
+explosion in the number of comparison functions to supply. Option $`1`$ is good, however it has disdvantage that if the sort is *stable* (i.e. the order of duplicate keys is preserved), the reverse sort is no longer *stable*.
+
+Hence we choose option $`4`$. We set a global variable `order` initially to $`1`$, and if we get the parameter,
+`-r` we set it to $`-1`$. Then the comparison line in `qsort` becomes
+
+```C
+if (order * (*comp)(lineptr[i], lineptr[left]) < 0)
+```
+
+Since the comparison is in the inner part of the *sorting* loop, we want to make this as fast as possible, hence by multiplying by `order` we reduce the need for a branch condition.
+
+To parse multiple arguments we define an options enum,
+
+```C
+enum options {
+  NONE = 0,
+  NUMERIC = 1,
+  REVERSE = 2
+};
+```
+
+Then when we parse arguments we `OR` the appropriate flag into a variable, by using powers of $`2`$, these flags are orthogonal to each other. This allows us to pack all our options into a single `int`. To then determine if we want to use a `strcmp` or a `numeric` comparison we simply use the
+bit operation
+
+```C
+cmp = (options & numeric) ? numeric : strcmp;
+```
+
+This will be useful for the next set of exercises.
+
+#### [Ex 5-15](./Exercises/Ex5_15/ex5-15.c)
+
+*Add the option `-f` to fold upper and lower case together, so that case distinctions are not made during sorting; for example, $`a`$ and $`A`$ compare equal.*
+
+An option if we had `-f` would be to convert all uppercase letters to lowercase when we read the lines in. However this would change the behaviour of the sort. We just want to sort the lines not modify them. So we instead have two
+options,
+
+1. Write a replacement for `strcmp` that checks if we are folding a variable against a flag.
+    1. This means we can use the same comparison function regardless of if `-f` is on or not.
+2. Write a seperate function `foldcmp` to handle the case that we have `-f` on.
+
+Like we mentioned in [Ex 5.14](#ex-5-14), we want the comparison function to be as fast as possible. So we want to eliminate the branch to check if `-f` is selected each time we call `cmp`. So we go with option $`2`$.
+
+To implement, we extend our *options enum* to,
+
+```C
+enum options {
+  NONE = 0,
+  NUMERIC = 1,
+  REVERSE = 2,
+  FOLD = 4
+};
+```
+
+and extend the parsing code. Reverse and fold become trivially compatible, but the question becomes how to we handle a combination of `-f` and `-n`. We can't fold a number, so we have the following options,
+
+1. Treat a combination of `-f` and `-n` as an invalid call and raise an error.
+2. Ignore the `-f`.
+
+We generally like to handle errors gracefully, so we'll go with option $`2`$.
+
+#### [Ex 5-16](./Exercises/Ex5_16/ex5-16.c)
+
+*Add the `-d` ("directory order") option, which makes comparisons only on letters, numbers and blanks. Make sure it works in conjuction with `-f`.*
+
+Now again we have two options for how to implement directory order, (and make it compatible with `-f` [(Ex5.15)](#ex-5-15).)
+
+1. Modify `foldcmp` to a generic `charcmp` and use flags to check if we need to *fold* or use *directory* mode.
+2. Add a new `dircmp` comparison function. However this then means we would also need to implement a `folddircmp`.
+
+Now option $`2`$ is not great, as it suggests as we add more mutually compatible tags, we face an exponential increase in the number comparison functions we need to support. However like we've said, we want to avoid loading up our comparison functions with branch statements to ensure that `comp` runs as fast as possible. So for now we will go with option $`2`$. In the future as we consider if speed or maintainability is more important, we might
+refactor the approach. To perform the implementation, we again extend our *option enum* as,
+
+```C
+enum options {
+  NONE = 0,
+  NUMERIC = 1,
+  REVERSE = 2,
+  FOLD = 4,
+  DIR = 8
+};
+```
+
+As we've now reached the point where the code to select the comparison function is starting to get long. To improve readability we factor this out into a function `select_comparator` which takes in the `options` argument and returns the appropriate comparison function.
+
+#### [Ex 5-17](./Exercises/Ex5_17/)
+
+*Add a field-handling capability, so sorting may be done on fields within lines, each field sorted according to an independent set of options. (The index for this book was sorted with `-df` for the index category and `-n` for the page numbers.)*
 
 ## 5.0 Introduction
 
@@ -820,7 +931,7 @@ See [Ex 5.3](#ex-5-3), [Ex 5.4](#ex-5-4), [Ex 5.5](#ex-5-5) and [Ex 5.6](#ex-5-6
 
 - Pointers can be stored in arrays.
 
-### Example [Sort Lines](#line-sorting)
+### Example [Sort Lines Lexigraphically](#line-sorting-v1)
 
 - Sort text lines into alphabetic order.
 - Rather than re-sort the lines *sort* the *pointers* to the lines.
@@ -1244,3 +1355,132 @@ int main(char *line, int max);
 See [Ex 5.10](#ex-5-10), [Ex 5.11](#ex-5-11), [Ex 5.12](#ex-5-12), [Ex 5.13](#ex-5-13).
 
 ## 5.11 Pointers to Functions
+
+- Functions are not variables in **C**.
+- *However*, functions live in memory, therefore we can define *pointers* to functions.
+
+### Example [Sort Lines Numerically](#line-sorting-v2)
+
+- A *sort* consists of **three** parts.
+
+1. A comparison that determines the ordering of elements.
+2. An exchange that reverses their order.
+3. And a sorting algorithm to call comparisons and exchanges.
+
+- The *sort* can be done independently of the *comparison* and *exchange*.
+- By passing *function pointers* we can make the comparison a variable of the implementation.
+  - In theory we could the same for the *exchange*.
+  - **Lexigraphical** sort can be performed by *strcmp*.
+  - **Numerical** sort requires us to write a comparison function.
+- These functions are declared ahead of `main` so we can pass a pointer to `qsort`.
+
+```C
+#include <stdio.h>
+#include <string.h>
+
+#define MAXLINES 5000 /* max #lines to be sorted */
+char* lineptr[MAXLINES]; /* pointers to text lines */
+
+int readlines(char* lineptr[], int nlines);
+void writelines(char* lineptr[], int nlines);
+
+void qsort(void* lineptr[], int left, int right,
+          int (*comp)(void* void* ));
+int numcmp(char*, char*);
+
+/* sort input lines */
+int main(int argc, char *argv[]) {
+  int nlines; /* number of read lines */
+  int numeric = 0; /* flag to indicate if sort is numeric */
+
+  if (argc > 1 && strcmp(argv[1], "-n") == 0) {
+    numeric = 1;
+  }
+  if ((nlines = readlines(lineptr, MAXLINES)) >= 0) {
+    qsort((void**) lineptr, 0, nlines - 1, (int (*)(void*, void*))(numeric ? numcmp : strcmp));
+    writelines(lineptr, nlines);
+    return 0;
+  } else {
+    printf("input too big to sort\n");
+    return 1;
+  }
+}
+```
+
+- In the call to `qsort`, `strcmp` and `numcmp` are addresses of functions.
+- Functions don't need the `&` operator, taking the address is implicit.
+- We want `qsort` to be able to process any data type so we declare the array as `void* a[]`.
+  - i.e. an array of void pointers.
+
+- Any pointer may be cast to `void *` and back without a loss of information.
+
+The line
+
+```C
+(int (*)(void*, void*))((numeric) ? numcmp : strcmp)
+```
+
+casts the functions to have the appropriate signature.
+
+- Let us examine the declarations
+
+The first is the fourth parameter of `qsort`.
+
+```C
+int (*comp)(void*, void*)
+```
+
+This says that `comp` is a pointer to a function that has two `void*` arguments and returns and `int`. To use `comp` this looks like,
+
+```C
+if ((*comp)(v[i], v[left]) < 0)
+```
+
+This reads as dereference the pointer `comp` to access the function `(*comp)`. Then the function is called as, `(*comp)(v[i], v[left])`.
+
+- Function call operator `()` has higher precedence than pointer dereference `*`.
+  - We need to use parantheses, `(*comp)` to ensure the derefence happens first.
+  - The alternative,
+
+```C
+int *comp(void*, void*)
+```
+
+declares a function `comp` taking two `void` pointers and returning an `int` pointer.
+
+- We can use `numcmp`
+
+```C
+#include <stdlib.h>
+
+/* numcmp: compare s1 and s2 numerically */
+int numcmp(char* s1, char* s2) {
+  double v1, v2;
+  v1 = atof(s1);
+  v2 = atof(s2);
+  if (v1 < v2) {
+    return -1;
+  } else if (v1 > v2) {
+    return 1;
+  } else {
+    return 0;
+  }
+}
+```
+
+The `swap` function also has to modified to handle the `void*` arguments.
+
+```C
+void swap(void* v[], int i, int j) {
+  void* temp;
+  temp = v[i];
+  v[i] = v[j];
+  v[j] = temp;
+}
+```
+
+### Relevant Exercises
+
+See [Ex 5.14](#ex-5-14), [Ex 5.15](#ex-5-15), [Ex 5.16](#ex-5-16) and [Ex 5.17](#ex-5-17).
+
+## 5.12 Complicated Declarations
