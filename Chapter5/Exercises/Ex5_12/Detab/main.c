@@ -1,12 +1,12 @@
 /**
  * @file main.c
  * @author Felix Lempriere
- * @brief Implementation of Detab in partial fulfillment of Exercise 5.11 from
+ * @brief Implementation of Detab in partial fulfillment of Exercise 5.12 from
  * The C Programming Language, 2nd Edition.
  *
  *
  * @version 0.1
- * @date 2025-05-11
+ * @date 2025-05-15
  *
  * @copyright Copyright (c) 2025
  *

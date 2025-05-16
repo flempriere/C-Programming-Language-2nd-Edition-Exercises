@@ -1,11 +1,11 @@
 /**
- * @file detab.h
+ * @file entab.h
  * @author Felix Lempriere
- * @brief Header file for detab containing macro and function definitions for
+ * @brief Header file for entab containing macro and function definitions for
  * managing the tab list.
  *
  * @version 0.1
- * @date 2025-05-15
+ * @date 2025-05-16
  *
  * @copyright Copyright (c) 2025
  *
@@ -80,8 +80,8 @@ void set_tab_list(int m, int tabs[]);
  int next_tab(int col);
  
  /**
-  * @brief Detabs I/O received over stdin, according to the tabstops.
+  * @brief Entabs I/O received over stdin, according to the tabstops.
   *
   */
- void detab(void);
+ void entab(void);
  

@@ -8,7 +8,7 @@
  * tabstop with an initial column `m` and frequency `n`.
  *
  * @version 0.1
- * @date 2025-05-11
+ * @date 2025-05-15
  *
  * @copyright Copyright (c) 2025
  *

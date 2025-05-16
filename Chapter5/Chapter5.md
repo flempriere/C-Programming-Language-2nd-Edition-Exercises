@@ -200,16 +200,16 @@ title: Entab and Detab Shared Architecture
 classDiagram
     class detab.h
     detab.h : #define START_COL 1
-    detab.h : #define MAXTABS
-    detab.h : #define TABSTOP
+    detab.h : #define MAXTABS 100
+    detab.h : #define TABSTOP 8
     detab.h : set_tabs(int m, int tabs[])
     detab.h : next_tab(int col)
     detab.h : +void detab(void)
 
     class entab.h
     entab.h : #define START_COL 1
-    entab.h : #define MAXTABS
-    entab.h : #define TABSTOP
+    entab.h : #define MAXTABS 100
+    entab.h : #define TABSTOP 8
     entab.h : set_tabs(int m, int tabs[])
     entab.h : next_tab(int col)
     entab.h : +void entab(void)
@@ -256,6 +256,102 @@ entab -m +n
 ```
 
 *to mean tab stops every $`n`$ columns, starting at column $`m`$. Choose convenient (for the user) default behaviour.*
+
+We'll extend the previous implementation in [Ex 5.11](#ex-5-11). This means we need to combine the *optional* shorthand `-m +n` with the *optional* tab list. Let us build up the behaviour by first considering defaults,
+
+1. In the absence of any arguments the default tabbing of [Ex 1.20](../Chapter1/Chapter1.md#ex-1-20) and [Ex 1.21](../Chapter1/Chapter1.md#ex-1-21) should be used. This corresponds to `-1 +8`.
+2. If a *tab list* is supplied we should use the tab list, until we run out of tabs, then based on Exercise 5.11 we default to frequency based tabbing, but we'll choose to make the start column correspond to the last tabstop in the list.
+3. The user should be able to define the fallback frequency of tab stops using `+n` while leaving the start column to be the last element of the tab list by omitting `-n`.
+4. The user should be able to intermix frequency based tabs and the tab list if the full set `-m +n x y z` is provided.
+
+With our desired behaviour complete, lets look at our implementations. We can leave `entab` and `detab` untouched, since they call `next_tab`. `set_tab` sets the tab list. We want to rename this to `set_tab_list` to make this clear. We will also make it so that `set_tab_list` sets the start column for frequency-based tabbing to the last element. Now we introduce a new method `set_tab_frequency` which takes in `start_col` and a `freq`. Now we want the user to be able to change the frequency but leave the `start_col` to be inferred from the `tab_list`. So we use a `start_col` value of `0` to denote that it should be inferred (since cols are 1-indexed) by the following rules
+
+1. If there is a tab list, start_col is set to the last element of the tab_list.
+2. If there is no tab list, `start_col` is set to a compile-time default.
+
+For symmetry we also allow `freq` to be passed as `0` in which case it is also set to a compile-time default.
+
+Now note, this means that to properly set `-m +n x y z` the correct call order is `set_tab_list` then `set_tab_frequency`, so document this in the interface.
+
+We then have to modify `next_tab` slightly. Now rather than reading from the tab list and falling back on frequency based tabbing, we calculate the next tab in the tab list and the next frequency-based tab, returning which ever is smaller.
+
+As mentioned we do not need to change `entab` or `detab`, we only need to now change `main` to handle the argument parsing. We do this as follows,
+
+1. We set a parameter `start_col` to `0`, meaning in the absence of a flag `-m` the starting column is inferred.
+2. We set a parameter `frequency` to a defined default.
+3. If there are command line arguments we process them sequentially as follows:
+    1. First attempt to read the optional arguments by switching on the first character,
+    2. If it is `-` read the rest of the string as an integer and set `start_col`.
+    3. If it is a `+` read the rest of the string as an integer and set `frequency`.
+    4. Else, use a `goto` to break out of the switch and move onto to processing the tab list
+4. To process the tab list convert and store all remaining arguments in an array removing non-ascending elements.
+
+**Note**: In our implementation we have largely neglected error handling in parsing the command-line arguments. This is because while important in real applications, the error-checking code obscures the mechanics of how the
+safe path works.
+
+An updated UML is shown below, observe the only changes to the descriptions is in the `.h` files and `set_tab.c`.
+
+```mermaid
+---
+
+title: Ex 5.12 Modification of Entab and Detab Architecture
+---
+
+classDiagram
+    class detab.h
+    detab.h : #define START_COL 1
+    detab.h : #define MAXTABS 100
+    detab.h : #define DEFAULT_START 1
+    detab.h : #define DEFAULT_FREQUENCY 8
+    detab.h : set_tab_list(int m, int tabs[])
+    detab.h : set_tab_frequency(int freq, int col)
+    detab.h : next_tab(int col)
+    detab.h : +void detab(void)
+
+    class entab.h
+    entab.h : #define START_COL 1
+    entab.h : #define MAXTABS 100
+    entab.h : #define DEFAULT_START 1
+    entab.h : #define DEFAULT_FREQUENCY 8
+    entab.h : set_tab_list(int m, int tabs[])
+    entab.h : set_tab_frequency(int freq, int col)
+    entab.h : next_tab(int col)
+    entab.h : +void entab(void)
+
+    class entab.c
+    entab.c ..|> entab.h
+    entab.c : #include ~entab.h~
+    entab.c : +void entab(void)
+
+    class detab.c
+    detab.c ..|> detab.h
+    detab.c : #include ~entab.h~
+    detab.c : +void entab(void)
+
+    class set_tab.c
+    set_tab.c ..|> entab.h
+    set_tab.c ..|> detab.h
+    set_tab.c : -int n_tabs
+    set_tab.c : -int a[]
+    set_tab.c : -int ap
+    set_tab.c : -int prev
+    set_tab.c : -int TAB_start
+    set_tab.c : -int TAB_freq
+    set_tab.c : -int NEXT_FREQUENCY_TAB(int col)
+    set_tab.c : +void set_tabs(int m, int tabs[])
+    set_tab.c : +int set_tabs(int col) 
+
+    class entab_main.c
+    entab_main.c ..> entab.h
+    entab_main.c : #include ~entab.h~
+    entab_main.c : int main(int argc, char* argv)
+
+    class detab_main.c
+    detab_main.c ..> detab.h
+    detab_main.c : #include ~entab.h~
+    detab_main.c : int main(int argc, char* argv)
+
+```
 
 ### [Ex 5-13](./Exercises/Ex5_13/)
 
