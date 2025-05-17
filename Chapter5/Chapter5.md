@@ -228,7 +228,7 @@ classDiagram
     class detab.c
     detab.c ..|> detab.h
     detab.c : #include ~entab.h~
-    detab.c : +void entab(void)
+    detab.c : +void detab(void)
 
     class set_tab.c
     set_tab.c ..|> entab.h
@@ -332,7 +332,7 @@ classDiagram
     class detab.c
     detab.c ..|> detab.h
     detab.c : #include ~entab.h~
-    detab.c : +void entab(void)
+    detab.c : +void detab(void)
 
     class set_tab.c
     set_tab.c ..|> entab.h
@@ -376,13 +376,13 @@ Let us first define our behaviour. Since we're reading line-by-line we set a *ma
 
 We'll choose the second for now, we also modify `get_line` to ensure that all lines are terminated by a *newline*.
 
-Now the edge cases for the number of lines to print $`n`$ are $`n < 0`$, $`n = 0`$ and $`n > \text{MAX_LINES}`$. For the first edge case, our solution is to reject negative $`n`$ when parsing the arguments. If $`n = 0`$, we don't print anything. For the last case, we clamp $`n`$ to $`MAX_LINES`$.
+Now the edge cases for the number of lines to print $`n`$ are $`n < 0`$, $`n = 0`$ and $`n > \text{MAX LINES}`$. For the first edge case, our solution is to reject negative $`n`$ when parsing the arguments. If $`n = 0`$, we don't print anything. For the last case, we clamp $`n`$ to $`MAX_LINES`$.
 
 Now that we've defined our behavior we can build a solution fairly easily.
 
-First let us work out how we will store our lines. Since we know upfront that we will have to store at most $`\text{MAX_LINES}`$ each of size $`\text{MAX_SIZE}`$, we use a static `char` buffer `buf`. Then we use to index the buffer, copying each string into $`\text{MAX_SIZE}`$ blocks. Once the buffer is full, `bufp` wraps around to the start of the buffer, and will write over the *oldest* string.
+First let us work out how we will store our lines. Since we know upfront that we will have to store at most $`\text{MAX LINES}`$ each of size $`\text{MAX SIZE}`$, we use a static `char` buffer `buf`. Then we use to index the buffer, copying each string into $`\text{MAX SIZE}`$ blocks. Once the buffer is full, `bufp` wraps around to the start of the buffer, and will write over the *oldest* string.
 
-At each step we need to store the value of `bufp`, so that we can print the lines at the end. To do so we define a *queue* to hold up to $`\text{MAX_LINES}`$ pointers to lines. The queue behaves circularly, i.e. when the queue is full the oldest element is overwritten and elements are accessed in a *First-in-first-out* manner.
+At each step we need to store the value of `bufp`, so that we can print the lines at the end. To do so we define a *queue* to hold up to $`\text{MAX LINES}`$ pointers to lines. The queue behaves circularly, i.e. when the queue is full the oldest element is overwritten and elements are accessed in a *First-in-first-out* manner.
 
 The last step is to parse the value of $`n`$ if it exists. Our parse code is very simple, we check if the there are any command line arguments. If there are we check that the first is of the form `-n`. If it is not we throw an error. Since there are two error sources:
 

@@ -208,7 +208,6 @@ int numcmp(char* s1, char* s2);
  * @return int(*)(void*, void*) comparison flag
  */
 int (*select_comparator(enum option_flags options))(void*, void*);
-// enum
 
 /**
  * @brief global variable used to reverse the direction of a sort.
